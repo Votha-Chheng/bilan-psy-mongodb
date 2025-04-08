@@ -1,0 +1,4 @@
+model Ecole {
+  id  String @id @default(cuid()) @map("_id")
+  nom String
+}

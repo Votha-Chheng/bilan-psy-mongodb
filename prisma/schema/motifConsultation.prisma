@@ -1,0 +1,4 @@
+model MotifConsultation {
+  id  String @id @default(cuid()) @map("_id")
+  motif String
+}
