@@ -1,7 +1,8 @@
 import React, { Dispatch, FC, SetStateAction } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog'
+
 import AddEcoleForm from '@/components/forms/ecole/AddEcoleForm'
 import DeleteEcoleForm from '@/components/forms/ecole/DeleteEcoleForm'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 type AddorDeleteEcoleDialogProps = {
   open: boolean

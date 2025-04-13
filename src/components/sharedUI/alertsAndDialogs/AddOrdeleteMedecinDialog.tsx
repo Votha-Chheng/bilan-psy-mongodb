@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../dialog'
 import AddMedecinForm from '@/components/forms/medecin/AddMedecinForm'
 import DeleteMedecinForm from '@/components/forms/medecin/DeleteMedecinForm'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 type AddOrdeleteMedecinDialogProps = {
   open: boolean

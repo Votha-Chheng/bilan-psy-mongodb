@@ -17,32 +17,33 @@ const SignInForm: FC = () => {
 
   
   useEffect(()=> {
-    if(session?.session && !isLoading){
+    if(session?.session && !isLoading && !isPending){
       router.replace("/dashboard")
     }
-  }, [router, isLoading, session, state])
+  }, [router, isLoading, isPending, session, state])
 
   
-  if(!isLoading && !session) {
+  if(isLoading || isPending) {
     return (
-      <Card className='w-96 mx-auto p-5'>
-        <CardTitle className='text-center'>Se connecter</CardTitle>
-        <CardContent>
-          <form action={formAction}>
-            <TextInput type='email' label='E-mail' name="email" placeholder='Adresse e-mail' />
-            <TextInput type='password' label='Mot de passe' name="password" placeholder='Mot de passe' />
-            <SubmitButton isPending={isPending} label='Connexion' />
-          </form>
-        </CardContent>
-      </Card>
+      <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
+        <p className='font-bold'>Chargement de la page ou redirection... </p>
+        <LoaderCircle className='animate-spin' />
+      </div>
     )
-  } 
+  }
   return (
-    <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
-      <p className='font-bold'>Chargement de la page ou redirection... </p>
-      <LoaderCircle className='animate-spin' />
-    </div>
-)
+    <Card className='w-96 mx-auto p-5'>
+      <CardTitle className='text-center'>Se connecter</CardTitle>
+      <CardContent>
+        <form action={formAction}>
+          <TextInput type='email' label='E-mail' name="email" placeholder='Adresse e-mail' />
+          <TextInput type='password' label='Mot de passe' name="password" placeholder='Mot de passe' />
+          <SubmitButton isPending={isPending} label='Connexion' />
+        </form>
+      </CardContent>
+    </Card>
+  )
+  
 }
 
 export default SignInForm

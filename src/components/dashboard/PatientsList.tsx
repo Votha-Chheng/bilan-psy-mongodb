@@ -6,11 +6,12 @@ import PatientCard from './PatientCard'
 import { PatientInfoFromDB } from '@/@types/PatientTypes'
 
 const PatientsListe = () => {
-  const {fetchAllPatients, updateAllPatients, allPatients} = usePatientInfoStore()
+  const {fetchAllPatients, allPatients} = usePatientInfoStore()
 
   useEffect(()=> {
     fetchAllPatients()
   }, [])
+
 
   return (
     <div className='mx-5'>

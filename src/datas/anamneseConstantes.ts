@@ -1,6 +1,5 @@
 import { AnamneseResultsDomaineKeyLabel, AnamneseTheme } from "@/@types/Anamnese"
 
-
 export const anamneseThemesDefault: AnamneseTheme[] = [
   {
     domaine: "Famille",
@@ -27,11 +26,6 @@ export const anamneseThemesDefault: AnamneseTheme[] = [
     theme: "Autres",
     keyTheme: "autres"
   },
-] as const
-
-export  const familleKeys = [
-  "fratrie",
-  "compositionFamiliale",
 ] as const
 
 export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
@@ -95,4 +89,113 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
     key: "autres",
     theme: true
   },
+  {
+    domaine: "Développement psychomoteur",
+    label: "Grossesse",
+    key: "grossesse",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    label: "Accouchement",
+    key: "accouchement",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    label: "Commentaire sur l'accouchement",
+    key: "accouchementCommentaire",
+    theme: false
+  },
+  {
+    domaine: "Développement psychomoteur",
+    label: "Age de la station assise",
+    key: "stationAssise",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "quadrupedie",
+    label: "Quadrupédie",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "ageMarche",
+    label: "Âge de la marche",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "acquisitionLangage",
+    label: "Acquisition du langage",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "continence",
+    label: "Continence",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "sommeil",
+    label: "Sommeil",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "alimentation",
+    label: "Alimentation",
+    theme: true
+  },
+  {
+    domaine: "Développement psychomoteur",
+    key: "autresDevPsy",
+    label: "Autres",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "motriciteGlobale",
+    label: "Motricité globale",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "motriciteFine",
+    label: "Motricité fine",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "velo",
+    label: "Acquisition du vélo sans les roulettes",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "praxiesGestuelles",
+    label: "Praxies gestuelles",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "extraScolaire",
+    label: "Activités extra-scolaires",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "sensorialite",
+    label: "Sensorialité",
+    theme: true
+  },
+  {
+    domaine: "Motricité",
+    key: "autresMotricite",
+    label: "Autres",
+    theme: true
+  },
+
 ]

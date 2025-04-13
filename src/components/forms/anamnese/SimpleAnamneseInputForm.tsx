@@ -6,8 +6,9 @@ import { useParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { camelCaseToNormal } from '@/utils/convertCamelCaseToNormal'
-import { upsertAnamneseBySingleKeyValueAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { Anamnese } from '@prisma/client'
+import { AnamneseResults } from '@/@types/Anamnese'
 
 type SimpleInputFormProps={
   name: string
@@ -15,12 +16,12 @@ type SimpleInputFormProps={
   setEditData:Dispatch<SetStateAction<string[]>>
   buttonLabel?: string
   defaultValue?: string
-  keyAnamnese: keyof Anamnese
+  keyAnamnese: keyof AnamneseResults
 }
 
 const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({name, defaultValue="", setEditData, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese}) => {
   const {id} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueAction, {})
+  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {updatePatientInfoFromDB} = usePatientInfoStore()
 
   useEffect(()=> {

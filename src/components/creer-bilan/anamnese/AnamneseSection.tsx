@@ -5,15 +5,19 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import AntecedentsPart from './antecedents/AntecedentsPart'
 import FamillePart from './famille/FamillePart'
+import DeveloppementPsyPart from './developpementPsy/DeveloppementPsyPart'
+import MotricitePart from './motricite/MotricitePart'
+import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
+import ScolaritePart from './scolarite/ScolaritePart'
+import QuoditienPart from './quotidien/QuoditienPart'
 
 const AnamneseSection = () => {
-  const {id} = useParams<{id: string}>()
-  const [partieAnamnese, setPartieAnamnese] = useState<number>(0)
-  const {fetchSinglePatientById, fetchAllPatients} = usePatientInfoStore()
+  //const [partieAnamnese, setPartieAnamnese] = useState<number>(0)
+  const {fetchAllPatients} = usePatientInfoStore()
+  const {anamenesePart} = useAnamnesePartStore()
 
   useEffect(()=> {
     fetchAllPatients()
-    fetchSinglePatientById(id)
   }, [])
   
   return (
@@ -22,16 +26,14 @@ const AnamneseSection = () => {
         Anamnèse
       </Card>
       <div className='overflow-hidden'>
-        <div className='transition-transform duration-100 w-full flex' style={{transform: `translateX(${partieAnamnese * -100}%)`}} >
-          <TexteBrutAnamnese setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} />
-          <FamillePart setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} />
-          <AntecedentsPart setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} />
-          {/* <InfosGenerauxScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} />
-          <AntecedentScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} />
-          <DevPsyScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese}/>
-          <MotriciteScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese}/>
-          <EcoleScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese}/>
-          <QuotidienScreen setPartieAnamnese={setPartieAnamnese} partieAnamnese={partieAnamnese} /> */}
+        <div className='transition-transform duration-100 w-full flex' style={{transform: `translateX(${anamenesePart * -100}%)`}} >
+          <TexteBrutAnamnese />
+          <FamillePart />
+          <AntecedentsPart/>
+          <DeveloppementPsyPart/>
+          <MotricitePart/>
+          <ScolaritePart/>
+          <QuoditienPart/>
         </div>
       </div>
     </article>

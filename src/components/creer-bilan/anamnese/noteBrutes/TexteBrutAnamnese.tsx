@@ -1,35 +1,38 @@
+import { ServiceResponse } from '@/@types/ServiceResponse'
 import RecueilProposForm from '@/components/forms/RecueilProposForm'
 import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import useAutoSave from '@/customHooks/useAutoSave'
+import { useToast } from '@/customHooks/useToast'
 import { saveTextBrutAnamneseAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useTextBrutAnamneseStore } from '@/stores/textBrutAnamneseStore'
 import { useParams } from 'next/navigation'
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { set } from 'zod'
 
 type TexteBrutAnamneseProps = {
-  setPartieAnamnese: Dispatch<SetStateAction<number>>
-  partieAnamnese: number
+  
 }
 
-const TexteBrutAnamnese: FC<TexteBrutAnamneseProps> = ({ partieAnamnese, setPartieAnamnese }) => {
+const TexteBrutAnamnese: FC<TexteBrutAnamneseProps> = ({ }) => {
   const {id} = useParams<{id: string}>()
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const [state, setState] = useState<ServiceResponse<any>>({})
 
   const [text, setText] = useState<string>("")
-  const [success, setSuccess] = useState<boolean|undefined>(undefined)
-  const [message, setMessage] = useState<string>("")
 
   const savetext = async(text: string, id: string)=> {
     const res = await saveTextBrutAnamneseAction(text, id)
-    setSuccess(res?.success)
+    res && setState(res)
     res && updatePatientInfoFromDB(id)
-    res && setMessage(res?.message ?? "")
-    res.success && setText(res?.data ?? "")
   }
+
+  const preventAutoSave: boolean = useMemo(()=> {
+    return (text.trim() === "") || (text === anamneseResults?.notesBrutes)
+  }, [text, anamneseResults?.notesBrutes])
 
   useEffect(()=> {
     if(anamneseResults?.notesBrutes ){
@@ -37,30 +40,19 @@ const TexteBrutAnamnese: FC<TexteBrutAnamneseProps> = ({ partieAnamnese, setPart
     }
   }, [anamneseResults?.notesBrutes])
 
-  useEffect(() => {
-    if (text.trim() === "") return
-    if (text === anamneseResults?.notesBrutes) return
-    // Lancer un timer de 10 secondes à chaque changement de "text"
-    const timer = setTimeout(() => {
-      // Ici, on effectue l'action de sauvegarde
-      savetext(text, id)
-    }, 2000);
+  const updateFunction = ()=> {
+    updatePatientInfoFromDB(id)
+  }
 
-    // Nettoyage : si "text" change avant les 5 secondes, on annule le timer
-    return () => clearTimeout(timer);
-  }, [text])
+  const autosaveFunction = ()=> {
+    savetext(text, id)
+  }
 
-  useEffect(()=> {
-    if(success===true){
-      toast.success(message)
-    }
-    if(success===false){
-      toast.error(message)
-    }
-  }, [anamneseResults])
+  useToast({ state, updateFunction })
+  useAutoSave({preventAutoSave, delay:3, autosaveFunction, dependenciesArray: [text]})
 
   return (
-    <AnamneseItemLayout setPartieAnamnese={setPartieAnamnese}  partieAnamnese={partieAnamnese} >
+    <AnamneseItemLayout >
       <RecueilProposForm />
       <h3 className='font-bold italic my-5'>
         Prenez des notes brutes de ce que vous dit le patient pour pouvoir l'organiser plus tard dans les différentes parties de l'anamnèse. Le texte est enregistré automatiquement 10 secondes après la dernière frappe de touche.

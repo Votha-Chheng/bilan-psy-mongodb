@@ -1,13 +1,13 @@
 
-import { AnamneseDTO, AnamneseResults, BilanMedicauxResults } from '@/@types/Anamnese'
+import { AnamneseResults, BilanMedicauxResults } from '@/@types/Anamnese'
 import { PatientInfosGenerales } from '@/@types/PatientTypes'
-import { fetchPatientById, fetchPatientsList } from '@/serverActions/patientActions'
-import { Anamnese, BilanMedical } from '@prisma/client'
+import { fetchBilanMedicalResultByKey } from '@/serverActions/anamneseActions'
+import { fetchAllPatientsWithCache, fetchPatientByIdWithCache } from '@/serverActions/fetchingWithCache'
 import { create } from 'zustand'
 
 type PatientInfoState = {
   patientInfoGenerales: PatientInfosGenerales|null
-  allPatients: Partial<PatientInfosGenerales>[]|null
+  allPatients: PatientInfosGenerales[]|null
   loadingPatientInfoFromDB: boolean
   loadingAllPatients: boolean
   fetchAllPatients : ()=> Promise<void>
@@ -16,9 +16,10 @@ type PatientInfoState = {
   updatePatientInfoFromDB: (id: string) => Promise<void>
   anamneseResults: AnamneseResults|null
   bilansMedicauxResults: BilanMedicauxResults|null
+  updateBilanMedicalByKey : (key: keyof BilanMedicauxResults, anamneseId: string|null|undefined)=> Promise<void>
 }
 
-export const usePatientInfoStore = create<PatientInfoState>((set) => ({
+export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
   patientInfoGenerales: null,
   anamneseResults: null,
   bilansMedicauxResults: null,
@@ -28,7 +29,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   fetchAllPatients: async()=> {
     set({loadingAllPatients: true})
     try {
-      const response = await fetchPatientsList()
+      const response = await fetchAllPatientsWithCache()
       set({ allPatients: response.data })
 
     } catch (error) {
@@ -40,7 +41,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   fetchSinglePatientById: async (id: string) => {
     set({loadingPatientInfoFromDB: true})
     try {
-      const response = await fetchPatientById(id)
+      const response = await fetchPatientByIdWithCache(id)
       const {data} = response ?? {}
       const {anamnese} = data ?? {}
       const {bilansMedicauxResults} = anamnese ?? {}
@@ -71,8 +72,27 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
           dossierMDPH: anamnese?.dossierMDPH,
           maladiesEventuelles: anamnese?.maladiesEventuelles,
           handicap: anamnese?.handicap,
+          confereDevPsy: anamnese?.confereDevPsy,
           autres: anamnese?.autres,
-        }
+          accouchement: anamnese?.accouchement,
+          accouchementCommentaire: anamnese?.accouchementCommentaire,
+          grossesse: anamnese?.grossesse,
+          stationAssise: anamnese?.stationAssise,
+          quadrupedie: anamnese?.quadrupedie,
+          ageMarche: anamnese?.ageMarche,
+          acquisitionLangage: anamnese?.acquisitionLangage,
+          continence : anamnese?.continence,
+          sommeil: anamnese?.sommeil,
+          alimentation: anamnese?.alimentation,
+          autresDevPsy: anamnese?.autresDevPsy,
+          velo: anamnese?.velo,
+          motriciteGlobale: anamnese?.motriciteGlobale,
+          motriciteFine: anamnese?.motriciteFine,
+          praxiesGestuelles: anamnese?.praxiesGestuelles,
+          extraScolaire: anamnese?.extraScolaire,
+          autresMotricite: anamnese?.autresMotricite,
+          sensorialite: anamnese?.sensorialite,
+        } as AnamneseResults
       })
 
       set({
@@ -85,7 +105,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
           bilanNeuropsy: bilansMedicauxResults?.bilanNeuropsy,
           bilanNeuropediatre: bilansMedicauxResults?.bilanNeuropediatre,
           bilanORL: bilansMedicauxResults?.bilanORL
-        }
+        } as BilanMedicauxResults
       })
       
     } catch (error) {
@@ -96,10 +116,9 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   },
   updatePatientInfoFromDB: async (id: string) => {
     try {
-      const response = await fetchPatientById(id)
+      const response = await fetchPatientByIdWithCache(id)
       const {data} = response ?? {}
       const {anamnese} = data ?? {}
-      const {bilansMedicauxResults} = anamnese ?? {}
       set({ 
         patientInfoGenerales: {
           id: data?.id,
@@ -128,28 +147,53 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
           maladiesEventuelles: anamnese?.maladiesEventuelles,
           handicap: anamnese?.handicap,
           autres: anamnese?.autres,
-        }
-      })
-
-      set({
-        bilansMedicauxResults:{
-          id: bilansMedicauxResults?.id,
-          selectedBilans: bilansMedicauxResults?.selectedBilans,
-          bilanOphtalmo: bilansMedicauxResults?.bilanOphtalmo,
-          bilanOrthophonique: bilansMedicauxResults?.bilanOrthophonique,
-          bilanOrthoptique: bilansMedicauxResults?.bilanOrthoptique,
-          bilanNeuropsy: bilansMedicauxResults?.bilanNeuropsy,
-          bilanNeuropediatre: bilansMedicauxResults?.bilanNeuropediatre,
-          bilanORL: bilansMedicauxResults?.bilanORL
+          confereDevPsy: anamnese?.confereDevPsy,
+          accouchement: anamnese?.accouchement,
+          accouchementCommentaire: anamnese?.accouchementCommentaire,
+          grossesse: anamnese?.grossesse,
+          stationAssise: anamnese?.stationAssise,
+          quadrupedie: anamnese?.quadrupedie,
+          ageMarche: anamnese?.ageMarche,
+          acquisitionLangage: anamnese?.acquisitionLangage,
+          continence : anamnese?.continence,
+          sommeil: anamnese?.sommeil,
+          alimentation: anamnese?.alimentation,
+          autresDevPsy: anamnese?.autresDevPsy,
+          velo: anamnese?.velo,
+          motriciteGlobale: anamnese?.motriciteGlobale,
+          motriciteFine: anamnese?.motriciteFine,
+          praxiesGestuelles: anamnese?.praxiesGestuelles,
+          extraScolaire: anamnese?.extraScolaire,
+          autresMotricite: anamnese?.autresMotricite,
+          sensorialite: anamnese?.sensorialite,
         }
       })
     } catch (error) {
       console.log("Can't fetch PatientById")
     }
   },
+  updateBilanMedicalByKey :async (key: keyof BilanMedicauxResults, anamneseId: string|null|undefined)=> {
+    try {
+      const response = await fetchBilanMedicalResultByKey(key, anamneseId) 
+      const prevState = get().bilansMedicauxResults
+      console.log(response.data)
+      
+      set({bilansMedicauxResults: {
+        ...prevState,
+        ...response.data
+      } })
+      
+      console.log({
+        ...prevState,
+        ...response.data
+      })
+    } catch (error) {
+      
+    }
+  },
   updateAllPatients: async () => {
     try {
-      const response = await fetchPatientsList()
+      const response = await fetchAllPatientsWithCache()
       set({ allPatients: response.data })
       
     } catch (error) {

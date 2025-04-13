@@ -1,27 +1,28 @@
-import { BilanMedicalKeys } from '@/@types/Anamnese'
+import { BilanMedicalKeys, BilanMedicauxResults } from '@/@types/Anamnese'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertBilanMedicalByKeyAction, upsertSelectedBilansMedicauxAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
 
 type BilanMedicalCardProps = {
   bilanNom: string
-  keyBilan: BilanMedicalKeys
+  keyBilan: keyof BilanMedicauxResults
 }
 
 const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => {
   const { id: patientId }  = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB, bilansMedicauxResults} = usePatientInfoStore()
+  const {anamneseResults, bilansMedicauxResults, updateBilanMedicalByKey} = usePatientInfoStore()
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
+  const [dateIsFocused, setDateIsFocused] = useState<boolean>(false)
 
   const [dossierTransmis, setDossierTransmis] = useState<string>("")
   const [dateBilanMedical, setDateBilanMedical] = useState<string>("")
@@ -41,29 +42,20 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
       setDateBilanMedical(bilansMedicauxResults[keyBilan][0])
       setDossierTransmis(bilansMedicauxResults[keyBilan][1])
     }
-  }, [state, anamneseResults])
+  }, [bilansMedicauxResults?.[keyBilan]])
 
   useEffect(()=> {
+    if(dateIsFocused) return
     if(!needToBesaved) return
     // Lancer un timer de 5 secondes à chaque changement de "text"
     const timer = setTimeout(() => {
       // Ici, on effectue l'action de sauvegarde
-      saveDataAction(keyBilan as BilanMedicalKeys, [dateBilanMedical, dossierTransmis])
-    }, 5000);
+      saveDataAction(keyBilan, [dateBilanMedical, dossierTransmis])
+    }, 3000);
 
     // Nettoyage : si "dateBilanMedical" ou "dossierTransmis" change avant les 5 secondes, on annule le timer
     return () => clearTimeout(timer);
-  }, [dateBilanMedical, dossierTransmis])
-
-  useEffect(()=> {
-    if(state.success === true){
-      toast.success(state.message)
-      updatePatientInfoFromDB(patientId)
-    }
-    if(state.success === false){
-      toast.error(state.message)
-    }
-  }, [state])
+  }, [dateBilanMedical, dossierTransmis, dateIsFocused])
 
   //On enregistre dans la BD la liste des bilans utilisées.
   const selectBilanMedical = async(checked: boolean, bilan: string)=> {
@@ -80,28 +72,22 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
     }
     
     const res = await upsertSelectedBilansMedicauxAction(newArray, patientId, anamneseResults?.id ?? undefined, keyToSetToNull)
-
-    if(res) {
-      setState(res)
-      setIsPending(false)
-    }
-    if(res.success){
-      updatePatientInfoFromDB(patientId)
-    }
+    res &&  setState(res)
+    res &&  setIsPending(false)
+    
   }
 
-
-  const saveDataAction = async(key: BilanMedicalKeys, value: string[])=> {
+  const saveDataAction = async(key: keyof BilanMedicauxResults, value: string[])=> {
     setIsPending(true)
     const res = await upsertBilanMedicalByKeyAction<string[]>(key, value, patientId, anamneseResults?.id ?? undefined)
-    if(res){
-      setState(res)
-      setIsPending(false)
-    }
-    if(res.success){
-      updatePatientInfoFromDB(patientId)
-    }
+    res && setState(res)
+    res && setIsPending(false)
   }
+
+  const updateFunction = ()=> {
+    updateBilanMedicalByKey(keyBilan, anamneseResults?.id)
+  }
+  useToast({state, updateFunction})
 
   return (
     <div 
@@ -120,9 +106,10 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
             value={dateBilanMedical ?? ""} 
             disabled={isPending} 
             className='w-36 cursor-pointer' 
+            onBlur={()=> setDateIsFocused(false)}
+            onFocus={()=> setDateIsFocused(true)}
             onChange={(event)=> {
               setDateBilanMedical(event.currentTarget.value)
-              console.log(event.currentTarget.value)
             } }
           />
           |

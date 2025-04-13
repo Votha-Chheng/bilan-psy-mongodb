@@ -9,13 +9,8 @@ import MotifConsultation from './MotifConsultation'
 import { useParams } from 'next/navigation'
 
 const EnTete = () => {
-  const {id} = useParams<{id: string}>()
   const {patientInfoGenerales, fetchSinglePatientById, loadingPatientInfoFromDB} = usePatientInfoStore()
   const [changeDateBilan, setChangeDateBilan] = useState<boolean>(false)
-
-  useEffect(()=> {
-    fetchSinglePatientById(id)
-  }, [])
 
   return (
     <article>

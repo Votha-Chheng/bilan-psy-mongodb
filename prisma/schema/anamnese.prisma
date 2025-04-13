@@ -1,26 +1,44 @@
 model Anamnese {
-  id                    String              @id @default(cuid()) @map("_id")
-  patient               Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade) 
-  patientId             String              @unique
-  neant                 String              @default("false")
-  notesBrutes           String?
-  proposPapaOuMaman     String? 
-  fratrie               String?
-  compositionFamiliale  String?
-  dossierMDPH           String?             //<--- Données JSON de type [string, string]
-  maladiesEventuelles   String?
-  accompagnementSuivi   String?
-  handicap              String?
-  autres                String?
-
-  bilansMedicauxResults BilanMedical?
-  anamneseExtraThemes   String? // JSON field for extra themes --> Array of Themes + description
+  id                                String              @id @default(cuid()) @map("_id")
+  patient                           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade) 
+  patientId                         String              @unique
+  neant                             String              @default("false")
+  notesBrutes                       String?
+  proposPapaOuMaman                 String? 
+  fratrie                           String?
+  compositionFamiliale              String?
+  dossierMDPH                       String?             //<--- Données JSON de type [string, string]
+  maladiesEventuelles               String?
+  accompagnementSuivi               String?
+  handicap                          String?
+  autresAntecedents                 String?
+  confereDevPsy                     String?
+  accouchement                      String?             //<--- Données JSON de type [semaines, jours +, voies naturelles/césarienne, déclenché ?]
+  accouchementCommentaire           String?             //<--- Données JSON de type [semaines, jours +, voies naturelles/césarienne, déclenché ?]
+  grossesse                         String?
+  stationAssise                     String?
+  quadrupedie                       String?
+  ageMarche                         String?
+  continence                        String?             //<--- Données JSON de type string[]
+  acquisitionLangage                String?             //<--- Données JSON de type string[]
+  sommeil                           String?
+  alimentation                      String?
+  autresDevPsy                      String?
+  velo                              String?           //<--- Données JSON de type string[]
+  motriciteGlobale                  String?           //<--- Données JSON de type string[]
+  motriciteFine                     String?           //<--- Données JSON de type string[]
+  praxiesGestuelles                 String?	
+  extraScolaire                     String?
+  autresMotricite                   String?
+  sensorialite                      String?           //<--- Données JSON de type string[type, commentaires]    
+  bilansMedicauxResults             BilanMedical?
 }
+
+
 model BilanMedical {
   id                    String              @id @default(cuid()) @map("_id")
   anamnese              Anamnese            @relation(fields: [anamneseId], references: [id], onDelete: Cascade)
   anamneseId            String              @unique 
-
   selectedBilans        String[]
   bilanOphtalmo         String[]            //[date, dossier transmis]
   bilanOrthophonique    String[]            //[date, dossier transmis]
@@ -31,3 +49,17 @@ model BilanMedical {
 }
 
 
+model DevPsyConfere {
+  id                    String              @id @default(cuid()) @map("_id")
+  confere               String
+}
+
+model ListeTypeSensorialite {
+  id                    String              @id @default(cuid()) @map("_id")
+  typesSensorialite     String              //<---- Données JSON de type string[liste] 
+}
+
+model ListeAdjectifs {
+  id                    String              @id @default(cuid()) @map("_id")
+  adjectifs             String            //<---- Données JSON de type string[liste] 
+}

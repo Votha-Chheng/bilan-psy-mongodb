@@ -4,34 +4,20 @@ import React, { useEffect, useState } from 'react'
 import AnamneseThemeCard from '../AnamneseThemeCard'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import ChooseThemes from '@/components/sharedUI/ChooseThemes'
-import { AnamneseResults } from '@/@types/Anamnese'
 import { getChosenThemeArray } from '@/utils/sortAnamneseDatas'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AntecedentsBody = () => {
   const antecedentsThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Antécédents médicaux personnels et suivis médicaux" && theme.theme)
   
   const {anamneseResults} = usePatientInfoStore()
   const {maladiesEventuelles, handicap, autres} = anamneseResults ?? {}
+  const {chosenThemes, setChosenThemes} = useAnamneseSearchDBStore()
+
   const [editData, setEditData] = useState<string[]>([])
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [deleteDialogTheme, setDeleteDialogTheme] = useState<string>("")
-  const [chosenThemes, setChosenThemes] = useState<string[]>([])
 
-  const handleChosenThemes = (theme: string, keyTheme: keyof AnamneseResults) => {
-    if(chosenThemes.includes(theme)){
-      setDeleteDialogTheme(theme)
-      if( anamneseResults && anamneseResults[keyTheme]){
-        setOpenDeleteDialog(true)
-      } else {
-        setChosenThemes(prev => prev.filter(item => item !== theme))
-      }
-    }else{
-      if(anamneseResults || (anamneseResults && !anamneseResults[keyTheme])){
-        setEditData([...editData, theme])
-      }
-      setChosenThemes(prev => [...prev, theme])
-    }
-  }
 
   useEffect(()=> {
     const result = getChosenThemeArray(anamneseResults)
@@ -40,7 +26,14 @@ const AntecedentsBody = () => {
 
   return (
     <div className='mb-20'>
-      <ChooseThemes listeThemes={antecedentsThemes} chosenThemes={chosenThemes} handleChosenThemes={handleChosenThemes }/>
+      <ChooseThemes 
+        listeThemes={antecedentsThemes} 
+        setDeleteDialogTheme={setDeleteDialogTheme}
+        editData={editData}
+        setEditData={setEditData}
+        openDialog={openDeleteDialog}
+        setOpenDialog={setOpenDeleteDialog}
+      />
       {
         chosenThemes.includes("Maladies éventuelles") &&
         <AnamneseThemeCard

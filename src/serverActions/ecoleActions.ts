@@ -71,6 +71,7 @@ export const deleteEcoleByIdAction = async (prevState: any, formData: FormData):
 }
 
 export const fetchAllEcoles = async (): Promise<ServiceResponse<Ecole[]|null>> => {
+  console.log("fetchAllEcoles is triggered")
   try {
     const response = await db.ecole.findMany()
 
@@ -79,7 +80,6 @@ export const fetchAllEcoles = async (): Promise<ServiceResponse<Ecole[]|null>> =
     return {
       success: true,
       data: response,
-
     }
   } catch (error) {
     console.log("Impossible de trouver la liste des écoles.", error)

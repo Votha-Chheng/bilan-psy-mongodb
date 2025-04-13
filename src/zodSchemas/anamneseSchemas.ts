@@ -21,3 +21,9 @@ export const KeyValueAnamneseSchema = z.object({
   patientId: z.string().min(1, "L'identifiant du patient est nécessaire.")
 
 })
+
+export const KeyAnamneseSchema = z.object({
+  key: z.string().min(1, "La clé est nécessaire.").refine(value=> isAnamneseResultsKey(value)),
+  patientId: z.string().min(1, "L'identifiant du patient est nécessaire.")
+
+})

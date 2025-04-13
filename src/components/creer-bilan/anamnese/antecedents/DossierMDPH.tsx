@@ -2,6 +2,7 @@ import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2, MoveRight } from 'lucide-react'
@@ -17,24 +18,14 @@ const DossierMDPH = () => {
   const [isPending, setIsPending] = useState<boolean>(false)
   const [addInfo, setAddInfo] = useState<string>("")
 
-  const dossierMDPHArray = useMemo(()=> {
-    if(dossierMDPH) return JSON.parse(dossierMDPH) 
-    return ["", ""]
-  }, [dossierMDPH]) 
+  const dossierMDPHArray = dossierMDPH ? JSON.parse(dossierMDPH) : ["", ""]
 
   useEffect(()=> {
     setAddInfo(dossierMDPHArray[1])
   }, [dossierMDPH])
 
-  useEffect(()=> {
-    if(state.success === true){
-      toast.success(state.message)
-      updatePatientInfoFromDB(patientId)
-    }
-    if(state.success === false){
-      toast.error(state.message)
-    }
-  }, [state])
+  const updateFunction = ()=> updatePatientInfoFromDB(patientId)
+  useToast({state, updateFunction})
 
   useEffect(()=> {
     if(!dossierMDPH) return

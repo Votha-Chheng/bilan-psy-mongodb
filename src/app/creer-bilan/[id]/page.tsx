@@ -6,9 +6,7 @@ import { ArrowLeftCircle } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-const CompleteBilanPage = async({params} : {params: Promise<{id: string}>}) => {
-  const { id } = await params
-  
+const CompleteBilanPage = async() => {
   return (
     <main>
       <header className='flex justify-between mx-7.5 py-4 items-center'>

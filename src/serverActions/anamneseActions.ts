@@ -1,13 +1,13 @@
 'use server'
 
-import { AnamneseDTO, BilanMedicalDTO, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
+import { AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { AnamneseDataSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
+import { KeyAnamneseSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
 import { BilanMedicalSchema } from "@/zodSchemas/bilanMedicalSchema"
-import { Anamnese, BilanMedical } from "@prisma/client"
+import { Anamnese, BilanMedical, DevPsyConfere } from "@prisma/client"
 import { z } from "zod"
 
 export const createAnamneseAction = async(patientId: string): Promise<ServiceResponse<string|null>> => {
@@ -116,7 +116,8 @@ export const upsertProposPapaOuMamanAction = async(patientId: string, proposPapa
   }
 }
 
-export const fetchAnamneseByKeys = async(keys: (keyof AnamneseDTO)[]): Promise<ServiceResponse<AnamneseDTO[]>> => {
+export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promise<ServiceResponse<AnamneseResults[]|null>> => {
+  console.log("fetchAnamneseByKeys is triggered")
   const selectObject = keys.reduce((acc, key) => {
     acc[key] = true;
     return acc;
@@ -133,9 +134,27 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseDTO)[]): Promise<S
       where: whereObject
     })
 
+    const datasArray = res.map((record: Record<string, string>) => {
+      const newRecord = {...record}
+      if ("motriciteGlobale" in newRecord){
+        newRecord["motriciteGlobale"] = JSON.parse(record["motriciteGlobale"]) 
+        console.log("newRecord", newRecord)
+      }
+      if ("motriciteFine" in newRecord){
+        newRecord["motriciteFine"] = JSON.parse(record["motriciteFine"]) 
+      }
+      if ("velo" in newRecord){
+        newRecord["velo"] = JSON.parse(record["velo"]) 
+      }
+      if ("sensorialite" in newRecord){
+        newRecord["sensorialite"] = JSON.parse(record["sensorialite"]) 
+      }
+      return newRecord
+    })
+
     return {
       success: true,
-      data: res as unknown as AnamneseDTO[],
+      data: datasArray as unknown as AnamneseResults[],
       message: "Descriptions récupérées avec succès."
     }
   } catch (error) {
@@ -144,13 +163,14 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseDTO)[]): Promise<S
   }
 }
 
-export const upsertAnamneseBySingleKeyValueAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<Anamnese|null>>=> {
+//upsertAnamneseBySingleKeyValueAction need {key, value, patientId}
+export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
 
   if(!parsedData.success) return validationError(parsedData)
-  const data = parsedData.data as {key: keyof Anamnese, value: string, patientId: string}
-  const {key, value, patientId} = data
+  const dataFinal = parsedData.data as {key: keyof Anamnese, value: string, patientId: string}
+  const {key, value, patientId} = dataFinal
 
   try {
     const res = await db.anamnese.upsert({
@@ -158,7 +178,7 @@ export const upsertAnamneseBySingleKeyValueAction = async(prevState: any, formDa
         patientId
       },
       create: {
-        [key]: value,
+        [key]: value === "undefined" ? null : value, //<---- Pour les cas où on veut reset la valeur à null, mettre un input pour value avec la valeur "undefinded" en string
         patient: {
           connect: {
             id: patientId
@@ -166,14 +186,38 @@ export const upsertAnamneseBySingleKeyValueAction = async(prevState: any, formDa
         }
       },
       update: {
-        [key]: value,
+        [key]: value === "undefined" ? null : value,
       }
     })
+
+    if(!res) return dataBaseError("Impossible de mettre à jour l'anamnèse.")
+
+    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = res
+    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
+    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
+    const parseContinence: string[] = continence ? JSON.parse(continence) : null
+    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
+    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
+    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
+    const parseVelo: string[] = velo ? JSON.parse(velo) : null
+    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
+        
+    const data: AnamneseResults = { 
+      ageMarche:parseAgeMarche, 
+      acquisitionLangage: parseAcquisitionLangage, 
+      continence: parseContinence, 
+      accouchement: parseAccouchement,
+      motriciteGlobale: parseMotriciteGlobale,
+      motriciteFine: parseMotriciteFine,
+      velo: parseVelo,
+      sensorialite: parseSensorialite,
+      ...rest
+    }
 
     return {
       success: true,
       message: "Anamnèse mise à jour avec succès.",
-      data: res
+      data
     }
   } catch (error) {
     console.log("Error in upsertAnamneseBySingleKeyValueAction", error)
@@ -181,56 +225,15 @@ export const upsertAnamneseBySingleKeyValueAction = async(prevState: any, formDa
   }
 }
 
-//Généraliser cette fonction prenant pour paramètres des keys et des values
-export const upsertFamilleAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseDTO|null>> => {
-  const rawData = Object.fromEntries(formData.entries())
-  const validateData = validateWithZodSchema(AnamneseDataSchema, rawData)
-
-  if(!validateData.success) return validationError(validateData)
-  
-  const data = validateData.data as AnamneseDTO
-
-  try {
-    const res = await db.anamnese.upsert({
-      where: {
-        patientId: data.patientId
-      },
-      create: {
-        patient: {
-          connect: {
-            id: data.patientId
-          }
-        },
-        fratrie: data.fratrie,
-        compositionFamiliale: data.compositionFamiliale
-      },
-      update: {
-        fratrie: data.fratrie,
-        compositionFamiliale: data.compositionFamiliale
-      }
-    })
-    if(!res) return dataBaseError("Impossible de mettre à jour l'anamnèse.")
-    return {
-      success: true,
-      message: "Anamnèse mise à jour avec succès.",
-      data: res
-    }
-  } catch (error) {
-    console.log("Error in upsertAnamneseAction", error)
-    return serverError(error, "Erreur lors de la mise à jour de l'anamnèse.")
-  }
-}
-
-export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Exclude<Anamnese, "bilansMedicauxResults">, value: T, patientId: string): Promise<ServiceResponse<Exclude<Anamnese, "bilansMedicauxResults">|null>>=> {
-
+export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof AnamneseResults, value: T, patientId: string): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const validateValue = validateWithZodSchema(
-    z.string().min(1, "Valeur absente"),
+    z.any().refine(value => value !== null && value !== undefined && !value.includes("<"), {message: "Valeur absente !"}),
     value
   )
 
   if(!validateValue.success) return validationError(validateValue)
 
-  const data: T = validateValue.data as T
+  const dataParsed: T = validateValue.data as T
 
   try {
     const res = await db.anamnese.upsert({
@@ -238,7 +241,7 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Exclud
         patientId
       },
       create: {
-        [anamneseKey]: data,
+        [anamneseKey]: dataParsed,
         patient: {
           connect: {
             id: patientId
@@ -246,13 +249,36 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Exclud
         }
       },
       update: {
-        [anamneseKey]: data
+        [anamneseKey]: dataParsed
       }
     })
 
+    if(!res) return dataBaseError("Données de l'anamnèse introuvable !")
+    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = res
+    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
+    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
+    const parseContinence: string[] = continence ? JSON.parse(continence) : null
+    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
+    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
+    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
+    const parseVelo: string[] = velo ? JSON.parse(velo) : null
+    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
+        
+    const data: AnamneseResults = { 
+      ageMarche:parseAgeMarche, 
+      acquisitionLangage: parseAcquisitionLangage, 
+      continence: parseContinence, 
+      accouchement: parseAccouchement,
+      motriciteGlobale: parseMotriciteGlobale,
+      motriciteFine: parseMotriciteFine,
+      velo: parseVelo,
+      sensorialite: parseSensorialite,
+      ...rest
+    }
+
     return {
       success: true,
-      data: res,
+      data: data,
       message: "Anamnèse modifiée avec succès."
     }
   } catch (error) {
@@ -262,29 +288,15 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Exclud
 
 }
 
-export const setPropertyToNullByKeyValueAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseDTO|null>> => {
+export const setPropertyToNullByKeyAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>> => {
   const rawData = Object.fromEntries(formData.entries())
-  const validateData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
+  const validateData = validateWithZodSchema(KeyAnamneseSchema, rawData)
 
   if(!validateData.success) return validationError(validateData)
-  const {key, patientId: idData} = validateData.data as {key: keyof Anamnese, patientId: string}
+  const {key, patientId} = validateData.data as {key: keyof Anamnese, patientId: string}
 
   try {
-    const record = await db.anamnese.findUnique({
-      where: {
-        patientId:idData
-      }
-    })
-    if(!record) {
-      return {
-        success: false,
-        data: null,
-        message: "Données non trouvées."
-      }
-    }
-
-    const {id, patientId, bilansMedicauxResults, ...data} = record as AnamneseDTO
-    const updatedData = {...data, [key]: null }
+    const updatedData = key === "accouchement" ? {[key]: null, accouchementCommentaire: null }:{[key]: null}
 
     const updatedRecord = await db.anamnese.update({
       where: {
@@ -294,10 +306,33 @@ export const setPropertyToNullByKeyValueAction = async(prevState: any, formData:
     })
 
     if(!updatedRecord) return dataBaseError("Impossible de mettre à jour l'anamnèse.")
+
+    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = updatedRecord
+    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
+    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
+    const parseContinence: string[] = continence ? JSON.parse(continence) : null
+    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
+    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null    
+    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null  
+    const parseVelo: string[] = velo ? JSON.parse(velo) : null  
+    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null  
+
+    const data: AnamneseResults = {
+      ageMarche:parseAgeMarche, 
+      acquisitionLangage: parseAcquisitionLangage, 
+      continence: parseContinence, 
+      accouchement:parseAccouchement, 
+      motriciteGlobale: parseMotriciteGlobale,
+      motriciteFine: parseMotriciteFine,
+      velo: parseVelo,
+      sensorialite: parseSensorialite,
+      ...rest
+    }
+
     return {
       success: true,
       message: "Anamnèse mise à jour avec succès.",
-      data: updatedRecord
+      data
     }
 
   } catch (error) {
@@ -331,7 +366,7 @@ export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedi
   }
 }
 
-export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId?: string, keyToNull?: BilanMedicalKeys):Promise<ServiceResponse<BilanMedical|null>>=> {
+export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId?: string, keyToNull?: keyof BilanMedicauxResults):Promise<ServiceResponse<BilanMedical|null>>=> {
   let createdAnamneseId = undefined
 
   try {
@@ -369,7 +404,7 @@ export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], p
   }
 }
 
-export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: BilanMedicalKeys, value: T, patientId: string, anamneseId?: string): Promise<ServiceResponse<BilanMedical|null>> => {
+export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof BilanMedicauxResults, value: T, patientId: string, anamneseId?: string): Promise<ServiceResponse<BilanMedical|null>> => {
   let createdAnamneseId = undefined
   const parsedData = validateWithZodSchema(BilanMedicalSchema, {bilanMedicalKey, value, patientId, anamneseId})
   
@@ -417,6 +452,28 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: BilanMedi
     }
   } catch (error) {
     console.log("upsertBilanMedicalByKeyAction", error)
+    return serverError(error)
+  }
+}
+
+export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamneseId: string|null|undefined): Promise<ServiceResponse<Record<string, string[]>|null>>=> {
+  try {
+    if(!anamneseId) return { success: false, message: "L'anamnese n'a pas été encore créee."}
+    const selectOptions = {
+      [key]: true
+    }
+    const res = await db.bilanMedical.findUnique({
+      where: {
+        anamneseId
+      },
+      select: selectOptions
+    })
+    return {
+      success: true,
+      data: res
+    }
+  } catch (error) {
+    console.log("fetchBilanMedicalResultByKey", error)
     return serverError(error)
   }
 }

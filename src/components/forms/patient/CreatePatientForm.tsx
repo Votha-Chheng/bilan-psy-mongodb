@@ -11,16 +11,16 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
-import AddOrdeleteMedecinDialog from '@/components/ui/alertsAndDialogs/AddOrdeleteMedecinDialog'
 import { createPatientAction } from '@/serverActions/patientActions'
 import { Ecole, Medecin } from '@prisma/client'
 import { useEcoleStore } from '@/stores/ecoleStore'
 import SubmitButton from '@/components/ui/SubmitButton'
 import { Textarea } from '@/components/ui/textarea'
-import AddorDeleteEcoleDialog from '@/components/ui/alertsAndDialogs/AddorDeleteEcoleDialog'
-import MotifsListeDialog from '@/components/ui/alertsAndDialogs/MotifsListeDialog'
 import { getIssueMessage } from '@/utils/captureIssue'
 import { authClient } from '@/utils/auth-client'
+import AddOrdeleteMedecinDialog from '@/components/sharedUI/alertsAndDialogs/AddOrdeleteMedecinDialog'
+import AddorDeleteEcoleDialog from '@/components/sharedUI/alertsAndDialogs/AddorDeleteEcoleDialog'
+import MotifsListeDialog from '@/components/sharedUI/alertsAndDialogs/MotifsListeDialog'
 
 const CreatePatientForm = () => {
   const [state, formAction, isPending] = useActionState(createPatientAction, {})

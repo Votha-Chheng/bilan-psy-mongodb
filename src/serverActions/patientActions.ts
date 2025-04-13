@@ -59,6 +59,7 @@ export const createPatientAction = async (prevState: any, formData: FormData): P
 }
 
 export const fetchPatientsList = async (): Promise<ServiceResponse<PatientInfosGenerales[]|null>> => {
+  console.log("fetchPatientsList is triggered")
   try {
     const res = await db.patient.findMany({
       select: {
@@ -93,6 +94,8 @@ export const fetchPatientsList = async (): Promise<ServiceResponse<PatientInfosG
 }
 
 export const fetchPatientById = async (id: string): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
+  console.log("fetchPatientById is triggered");
+  
   try {
     const res = await db.patient.findUnique({
       where: {
@@ -122,7 +125,7 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
             dossierMDPH: true,
             maladiesEventuelles : true,
             accompagnementSuivi: true,
-            autres : true,
+            autresAntecedents : true,
             handicap: true,
             bilansMedicauxResults: {
               select: {
@@ -135,16 +138,62 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
                 bilanNeuropediatre: true,
                 selectedBilans: true
               }
-            }
+            },
+            confereDevPsy: true,
+            accouchement: true,
+            accouchementCommentaire: true,
+            grossesse: true,
+            stationAssise: true,
+            quadrupedie: true,
+            ageMarche: true,
+            acquisitionLangage: true,
+            continence : true,
+            sommeil: true,
+            alimentation: true,
+            autresDevPsy: true,
+            velo: true,
+            motriciteGlobale: true,
+            motriciteFine: true,
+            praxiesGestuelles: true,
+            extraScolaire: true,
+            sensorialite: true,
+            autresMotricite: true,
           }
         }
       }
     })
 
-    if(!res) return dataBaseError(`Aucun patient ne correspond à l'id n° ${id}`)
+    if(!res) return dataBaseError(`Aucun patient ne correspond à l'id n° ${id}`) 
+
+    const {anamnese: { ...anamneseNested }, ...patientInfoRest} = res
+
+    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = anamneseNested
+    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
+    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
+    const parseContinence: string[] = continence ? JSON.parse(continence) : null
+    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
+    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
+    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
+    const parseVelo: string[] = velo ? JSON.parse(velo) : null
+    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
+        
+    const data: PatientInfoFromDB = {
+      ...patientInfoRest, 
+      anamnese: {
+        ageMarche: parseAgeMarche, 
+        acquisitionLangage: parseAcquisitionLangage, 
+        continence: parseContinence, 
+        accouchement: parseAccouchement,
+        motriciteGlobale: parseMotriciteGlobale,
+        motriciteFine: parseMotriciteFine,
+        velo: parseVelo,
+        sensorialite: parseSensorialite,
+        ...rest
+      }
+    }
 
     return {
-      data: res,
+      data,
       success: true,
     }
 

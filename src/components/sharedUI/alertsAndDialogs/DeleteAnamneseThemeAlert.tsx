@@ -1,14 +1,16 @@
 import React, { Dispatch, FC, SetStateAction, useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { setPropertyToNullByKeyValueAction } from '@/serverActions/anamneseActions'
+import { setPropertyToNullByKeyAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
-import { normalToCamelCase } from '@/utils/convertCamelCaseToNormal'
 import SubmitButton from '@/components/ui/SubmitButton'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { AnamneseResults } from '@/@types/Anamnese'
+import { useToast } from '@/customHooks/useToast'
 
 type DeleteAnamneseThemeAlertProps = {
   themeToDelete: string
+  keyToDelete: keyof AnamneseResults|null
   openDialog: boolean
   setOpenDialog: Dispatch<SetStateAction<boolean>>
   setEditData: Dispatch<SetStateAction<string[]>>
@@ -16,26 +18,20 @@ type DeleteAnamneseThemeAlertProps = {
   setDeleteDialogTheme: Dispatch<SetStateAction<string>>
 }
 
-const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDelete, openDialog, setOpenDialog, setEditData, editData, setDeleteDialogTheme }) => {
+const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDelete, openDialog, setOpenDialog, setEditData, editData, setDeleteDialogTheme, keyToDelete }) => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(setPropertyToNullByKeyValueAction, {})
+  const [state, formAction, isPending] = useActionState(setPropertyToNullByKeyAction, {})
   const {updatePatientInfoFromDB} = usePatientInfoStore()
 
-  useEffect(()=> {
-    if(state.success){
-      updatePatientInfoFromDB(patientId)
-      setOpenDialog(false)
-      setEditData([...editData, themeToDelete])
-      setDeleteDialogTheme("")
 
-      toast.success("Données supprimées...", {
-        action: {
-          label: "Fermer",
-          onClick: () => console.log("Fermer"),
-        },
-      })
-    }
-  }, [state])
+  const updateFunction = ()=> {
+    updatePatientInfoFromDB(patientId)
+    setOpenDialog(false)
+    setEditData([...editData, themeToDelete])  //<--- On le rajoute ici car quand on reclique sur le thème il se met en mode Edit.
+    setDeleteDialogTheme("")
+  }
+
+  useToast({state, updateFunction})
 
   
   return (
@@ -55,7 +51,7 @@ const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDe
           <AlertDialogAction asChild >
             <form action={formAction}>
               <input type='hidden' name="patientId" value={patientId} />
-              <input type='hidden' name="key" value={normalToCamelCase(themeToDelete)} />
+              <input type='hidden' name="key" value={keyToDelete ?? ""} />
               <SubmitButton label='Supprimer les données' isPending={isPending} />
             </form>
           </AlertDialogAction>

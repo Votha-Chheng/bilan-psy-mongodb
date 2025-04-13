@@ -1,11 +1,10 @@
-import { AnamneseDTO, AnamneseResults } from '@/@types/Anamnese'
+import { AnamneseResults } from '@/@types/Anamnese'
 import SimpleAnamneseInputForm from '@/components/forms/anamnese/SimpleAnamneseInputForm'
 import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBDialog'
 import DeleteAnamneseThemeAlert from '@/components/sharedUI/alertsAndDialogs/DeleteAnamneseThemeAlert'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { upsertFamilleAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { CornerUpLeft, Database, EditIcon } from 'lucide-react'
 import React, { Dispatch, FC, SetStateAction, useState } from 'react'
@@ -34,14 +33,6 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ editData, setEditData, o
         dialogTitle={`Données enregistrées précédemment concernant le thème ${label} :`}
         searchKeys={[keyLabel]}
       />
-      <DeleteAnamneseThemeAlert 
-        editData={editData} 
-        setEditData={setEditData} 
-        openDialog={openDeleteDialog} 
-        setOpenDialog={setOpenDeleteDialog} 
-        themeToDelete={deleteDialogTheme} 
-        setDeleteDialogTheme={setDeleteDialogTheme}
-      />
       <span className={`flex gap-x-2 items-center border border-transparent hover:border-slate-500 w-fit p-2 rounded-md mb-1`}>&bull; 
         <span className='underline underline-offset-2 whitespace-nowrap font-bold'>{label} : </span> 
         <span className={`${editData.includes(label) && "opacity-30"}`}>{anamneseResults && anamneseResults[keyLabel]}</span>
@@ -63,7 +54,7 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ editData, setEditData, o
           buttonLabel={anamneseResults && anamneseResults[keyLabel] ? "Remplacer la description":"Ajouter la description"} 
           setEditData={setEditData} 
           name={keyLabel} 
-          defaultValue={(anamneseResults && anamneseResults[keyLabel]) ?? undefined}
+          defaultValue={(anamneseResults && anamneseResults[keyLabel] as string|null|undefined) ?? undefined}
           keyAnamnese={keyLabel}
         />
       }
