@@ -2,6 +2,7 @@
 
 import { ListeAdjectifsDTO, ListeTypeSensorialiteDTO } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
+import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
@@ -13,60 +14,91 @@ export const upsertListeSensorialiteAction = async(prevState: any, formData: For
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({
-      typesSensorialite: z.string().min(1, "Liste de types sensoriels absent."), 
+      typesSensorialite: z.string().min(1, "Type de sensorialité absente !"), 
       listeId: z.string().optional()
     }), rawData)
+
   if(!parsedData.success) return validationError(parsedData)
 
   const validatedData = parsedData.data as {typesSensorialite: string, listeId?: string}
   const {typesSensorialite, listeId} = validatedData
-  try {
-    const res = await db.listeTypeSensorialite.upsert({
-      where : {
-        id: listeId
-      },
-      create: {
-        typesSensorialite
-      },
-      update: {
-        typesSensorialite
-      }
-    })
 
-    return {
-      success: true,
-      data: res,
-      message: "Elément ajouté dans la liste !"
+  let sensorialiteArray = null
+
+  try {
+
+    if(listeId){
+      sensorialiteArray = await db.listeTypeSensorialite.findFirst()
+      if(sensorialiteArray){
+        const listSensorialite = JSON.parse(sensorialiteArray.typesSensorialite) as string[]
+        const checkIfTypeExists = listSensorialite.find(value => value === typesSensorialite)
+
+        if(checkIfTypeExists){
+          return {
+            success : false,
+            message: "Ce type de sensorialité est déjà dans les choix !"
+          }
+        }
+
+        const newList = [...listSensorialite, typesSensorialite]
+        const res = await db.listeTypeSensorialite.update({
+          where: {
+            id: listeId
+          },
+          data: {
+            typesSensorialite: JSON.stringify(newList)
+          }
+        })
+        return {
+          success: true,
+          data: res,
+          message: "Elément ajouté dans la liste !"
+        }
+      }
+    } else {
+      const res = await db.listeTypeSensorialite.create({
+        data: {
+          typesSensorialite: JSON.stringify([typesSensorialite])
+        }
+      })
+      return {
+        success: true,
+        data: res,
+        message: "Elément ajouté dans la liste !"
+      }
     }
+
+    return dataBaseError("Impossible d'ajouter l'élément !")
+
   } catch (error) {
     console.log("Error in upsertListeSensorialiteAction", error)
     return serverError(error, "Erreur lors de la mise à jour de a liste des types sensoriels.")
   }
 }
 
-//formData = {listeId, adjectifs}
-export const upsertListeAdjectifsAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<ListeAdjectifs>> => {
+//formData = {listeId, adjectifsComportement}
+export const upsertListeAdjectifsComportementAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<ListeAdjectifs>> => {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({
-      adjectifs: z.string().min(1, "Liste d'adjectifs absente."), 
+      adjectifsComportement: z.string().min(1, "Liste d'adjectifs absente."), 
       listeId: z.string().optional()
     }), 
     rawData)
   if(!parsedData.success) return validationError(parsedData)
 
-  const validatedData = parsedData.data as {adjectifs: string, listeId?: string}
-  const {adjectifs, listeId} = validatedData
+  const validatedData = parsedData.data as {adjectifsComportement: string, listeId?: string}
+  const {adjectifsComportement, listeId} = validatedData
   try {
     const res = await db.listeAdjectifs.upsert({
       where : {
         id: listeId
       },
       create: {
-        adjectifs
+        adjectifsComportement
       },
       update: {
-        adjectifs
+        adjectifsComportement
       }
     })
 
@@ -76,7 +108,7 @@ export const upsertListeAdjectifsAction = async(prevState: any, formData: FormDa
       message: "Adjectif ajouté dans la liste !"
     }
   } catch (error) {
-    console.log("Error in upsertListeSensorialiteAction", error)
+    console.log("Error in upsertListeAdjectifsComportementAction", error)
     return serverError(error, "Erreur lors de la mise à jour de a liste des types sensoriels.")
   }
 }
@@ -119,11 +151,11 @@ export const fetchAllAdjectifs = async(): Promise<ServiceResponse<ListeAdjectifs
       }
     }
 
-    const copy: ListeAdjectifsDTO = {...rawData, adjectifs: rawData?.adjectifs ? JSON.parse(rawData.adjectifs) as string[] : []}
+    const data: ListeAdjectifsDTO = {...rawData, adjectifsComportement: returnArrayIfJson(rawData.adjectifsComportement)}
 
     return {
       success: true,
-      data: copy
+      data
     }
   } catch (error) {
     console.log("Error in upsertListeSensorialiteAction", error)

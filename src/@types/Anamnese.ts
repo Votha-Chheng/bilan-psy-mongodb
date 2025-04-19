@@ -1,3 +1,5 @@
+import { string } from "zod"
+
 export const anamneseResultsKeys = [
   "id",
   "notesBrutes",
@@ -7,10 +9,9 @@ export const anamneseResultsKeys = [
   "dossierMDPH",
   "maladiesEventuelles",
   "handicap",
-  "autres",
+  "autresAntecedents",
   "confereDevPsy",
   "accouchement",
-  "accouchementCommentaire",
   "grossesse",
   "stationAssise",
   "quadrupedie",
@@ -28,7 +29,17 @@ export const anamneseResultsKeys = [
   "extraScolaire",
   "autresMotricite",
   "sensorialite",
-  "listeSensorialite"
+  "listeSensorialite",
+  "classe",
+  "apprentissages",
+  "outils" ,
+  "ecriture",
+  "cartableBureau",
+  "relationsPairs",
+  "comportement" ,
+  "attention" ,
+  "cahiers" ,
+  "anterieur",
 ] as const
 
 export type BilanMedicalKeys = "bilanORL"|"bilanOphtalmo"|"bilanOrthophonique"| "bilanOrthoptique" | "bilanNeuropsy" | "bilanNeuropediatre"|"selectedBilans"
@@ -42,16 +53,15 @@ export type AnamneseDTO = {
   proposPapaOuMaman?: string|null
   fratrie?: string|null
   compositionFamiliale?: string|null
-  neant: string
+  neant?: string
   dossierMDPH?: string|null
   maladiesEventuelles?: string|null
   accompagnementSuivi?: string|null
-  autres?: string|null
+  autresAntecedents?: string|null
   handicap?: string|null
   bilansMedicauxResults ?: BilanMedicauxResults|null
   confereDevPsy?: string|null
   accouchement?: string[]|null                           //<-- JSON tranformé en string[] côté serveur
-  accouchementCommentaire?: string|null
   grossesse?: string|null
   stationAssise?: string|null
   quadrupedie?: string|null
@@ -68,6 +78,16 @@ export type AnamneseDTO = {
   extraScolaire?: string|null
   autresMotricite?: string|null
   sensorialite?: string[]|null                  //<--- JSON de type string[type, commentaires] transformé coté serveur   
+  classe ?: string|null
+  apprentissages?: string[]|null                //<--- JSON de type string[niveau, commentaires] transformé coté serveur   
+  outils ?: string[]|null                       //<--- JSON de type string[type, commentaires] transformé coté serveur  
+  ecriture?: string[]|null                       //<--- JSON de type [niveau, douleurs, observations] transformé coté serveur 
+  cartableBureau?: string[]|null                    //<--- JSON de type [type difficultés, observations] transformé coté serveur 
+  relationsPairs?: string[]|null                  //<--- JSON de type [sociable ou pas, observations] transformé coté serveur 
+  comportement ?: string[]|null                   //<---JSON [observations, suite d'adjectifs...]
+  attention ?: string[]|null                      //<---JSON [attentif, observations]
+  cahiers ?: string|null
+  anterieur?: string|null
 }
 
 export type AnamneseResults = {
@@ -77,15 +97,14 @@ export type AnamneseResults = {
   proposPapaOuMaman?: string|null
   fratrie?: string|null
   compositionFamiliale?: string|null
-  neant: string
+  neant?: string
   dossierMDPH?: string|null
   maladiesEventuelles?: string|null
   accompagnementSuivi?: string|null
-  autres?: string|null
+  autresAntecedents?: string|null
   handicap?: string|null
   confereDevPsy?: string|null
   accouchement?: string[]|null                        //<-- JSON tranformé en string[] côté serveur
-  accouchementCommentaire?: string|null
   grossesse?: string|null
   stationAssise?: string|null
   quadrupedie?: string|null
@@ -102,10 +121,21 @@ export type AnamneseResults = {
   sensorialite?: string[]|null                  //<--- JSON de type string[type, commentaires] transformé coté serveur   
   extraScolaire?: string|null
   autresMotricite?: string|null
+  classe ?: string|null
+  apprentissages?: string[]|null 
+  outils ?: string[]|null                       //<--- JSON de type string[type, commentaires] transformé coté serveur  
+  ecriture?: string[]|null                        //<--- JSON de type [niveau, douleurs, observations] transformé coté serveur 
+  cartableBureau?: string[]|null
+  relationsPairs?: string[]|null                  //<--- JSON de type [sociable ou pas, observations] transformé coté serveur 
+  comportement ?: string[]|null                   //<---JSON [observations, suite d'adjectifs...]
+  attention ?: string[]|null                      //<---JSON [attentif, observations]
+  cahiers ?: string|null
+  anterieur?: string|null
 }
 
 export type BilanMedicauxResults = {
   id?: string,
+  anamneseId?: string,
   bilanORL?: string[],
   bilanOphtalmo?: string[],
   bilanOrthophonique?: string[],
@@ -136,5 +166,5 @@ export type ListeTypeSensorialiteDTO = {
 
 export type ListeAdjectifsDTO = {
   id: string
-  adjectifs: string[]|null
+  adjectifsComportement: string[]|null
 }

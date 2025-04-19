@@ -1,32 +1,5 @@
-import { AnamneseResultsDomaineKeyLabel, AnamneseTheme } from "@/@types/Anamnese"
+import { AnamneseResultsDomaineKeyLabel } from "@/@types/Anamnese"
 
-export const anamneseThemesDefault: AnamneseTheme[] = [
-  {
-    domaine: "Famille",
-    theme: "Fratrie",
-    keyTheme: "fratrie"
-  },
-  {
-    domaine: "Famille",
-    theme: "Composition familiale",
-    keyTheme: "compositionFamiliale"
-  },
-  {
-    domaine: "Antécédents médicaux personnels et suivis médicaux",
-    theme: "Maladies éventuelles",
-    keyTheme: "maladiesEventuelles"
-  },
-  {
-    domaine: "Antécédents médicaux personnels et suivis médicaux",
-    theme: "Handicap",
-    keyTheme: "handicap"
-  },
-  {
-    domaine: "Antécédents médicaux personnels et suivis médicaux",
-    theme: "Autres",
-    keyTheme: "autres"
-  },
-] as const
 
 export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   {
@@ -85,8 +58,8 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   },
   {
     domaine: "Antécédents médicaux personnels et suivis médicaux",
-    label: "Autres",
-    key: "autres",
+    label: "Autres (antécédents)",
+    key: "autresAntecedents",
     theme: true
   },
   {
@@ -100,12 +73,6 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
     label: "Accouchement",
     key: "accouchement",
     theme: true
-  },
-  {
-    domaine: "Développement psychomoteur",
-    label: "Commentaire sur l'accouchement",
-    key: "accouchementCommentaire",
-    theme: false
   },
   {
     domaine: "Développement psychomoteur",
@@ -139,12 +106,6 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   },
   {
     domaine: "Développement psychomoteur",
-    key: "sommeil",
-    label: "Sommeil",
-    theme: true
-  },
-  {
-    domaine: "Développement psychomoteur",
     key: "alimentation",
     label: "Alimentation",
     theme: true
@@ -152,7 +113,7 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   {
     domaine: "Développement psychomoteur",
     key: "autresDevPsy",
-    label: "Autres",
+    label: "Autres (développement psychomoteur)",
     theme: true
   },
   {
@@ -194,8 +155,74 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   {
     domaine: "Motricité",
     key: "autresMotricite",
-    label: "Autres",
+    label: "Autres (motricité)",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "classe",
+    label: "Classe",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "apprentissages",
+    label: "Apprentissages",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "outils",
+    label: "Utilisation des outils scolaires",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "ecriture",
+    label: "Écriture",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "cartableBureau",
+    label: "Organisation du cartable et du bureau",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "relationsPairs",
+    label: "Relations avec les pairs",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "comportement",
+    label: "Comportement",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "attention",
+    label: "Sphère attentionnelle",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "cahiers",
+    label: "Observations des cahiers",
+    theme: true
+  },
+  {
+    domaine: "Scolarité",
+    key: "anterieur",
+    label: "Scolarité antérieure",
     theme: true
   },
 
+  {
+    domaine: "Quotidien",
+    key: "sommeil",
+    label: "Sommeil",
+    theme: true
+  },
 ]

@@ -9,6 +9,8 @@ import { CreatePatientSchema } from "@/zodSchemas/patientSchemas";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createMotifConsultationAction, motifConsultationExistsAction } from "./motifActions";
+import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions";
+import { BilanMedicauxResults } from "@/@types/Anamnese";
 
 export const createPatientAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
   const rawData = Object.fromEntries(formData)
@@ -117,6 +119,7 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
         anamnese: {
           select: {
             id: true,
+            patientId: true,
             proposPapaOuMaman: true,
             notesBrutes: true,
             fratrie: true,
@@ -141,7 +144,6 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
             },
             confereDevPsy: true,
             accouchement: true,
-            accouchementCommentaire: true,
             grossesse: true,
             stationAssise: true,
             quadrupedie: true,
@@ -158,6 +160,27 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
             extraScolaire: true,
             sensorialite: true,
             autresMotricite: true,
+            classe: true,
+            apprentissages: true,
+            outils: true,
+            ecriture: true,
+            cartableBureau: true,
+            relationsPairs: true,
+            comportement: true,
+            attention: true,
+            cahiers: true,
+            anterieur: true,
+            decritAuQuotidien: true, 
+            autonomie: true, 
+            ecouteConsignes: true,
+            agitationMotrice: true, 
+            devoirs: true, 
+            gestionEmotions: true, 
+            gestionTemps: true,
+            temperament: true, 
+            sommeilQuotidien: true, 
+            alimentationQuotidien: true, 
+            autresQuotidien: true
           }
         }
       }
@@ -166,30 +189,22 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
     if(!res) return dataBaseError(`Aucun patient ne correspond à l'id n° ${id}`) 
 
     const {anamnese: { ...anamneseNested }, ...patientInfoRest} = res
+    const {bilansMedicauxResults} = anamneseNested
+    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans, ...rest} = bilansMedicauxResults ?? {}
 
-    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = anamneseNested
-    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
-    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
-    const parseContinence: string[] = continence ? JSON.parse(continence) : null
-    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
-    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
-    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
-    const parseVelo: string[] = velo ? JSON.parse(velo) : null
-    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
-        
+    const bilansParsed: BilanMedicauxResults = {
+      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
+      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
+      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
+      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
+      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
+      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
+      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
+    }
+
     const data: PatientInfoFromDB = {
       ...patientInfoRest, 
-      anamnese: {
-        ageMarche: parseAgeMarche, 
-        acquisitionLangage: parseAcquisitionLangage, 
-        continence: parseContinence, 
-        accouchement: parseAccouchement,
-        motriciteGlobale: parseMotriciteGlobale,
-        motriciteFine: parseMotriciteFine,
-        velo: parseVelo,
-        sensorialite: parseSensorialite,
-        ...rest
-      }
+      anamnese: {...returnParseAnamneseResult(anamneseNested), bilansMedicauxResults : {...bilansParsed, ...rest}}
     }
 
     return {

@@ -1,91 +1,64 @@
 
 import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
+import { AnamneseResults } from '@/@types/Anamnese'
+import CardWrapper from '../CardWrapper'
 import AnamneseThemeCard from '../AnamneseThemeCard'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import ChooseThemes from '@/components/sharedUI/ChooseThemes'
-import { getChosenThemeArray } from '@/utils/sortAnamneseDatas'
-import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AntecedentsBody = () => {
   const antecedentsThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Antécédents médicaux personnels et suivis médicaux" && theme.theme)
   
   const {anamneseResults} = usePatientInfoStore()
-  const {maladiesEventuelles, handicap, autres} = anamneseResults ?? {}
-  const {chosenThemes, setChosenThemes} = useAnamneseSearchDBStore()
-
-  const [editData, setEditData] = useState<string[]>([])
+  const {maladiesEventuelles, handicap, accompagnementSuivi, autresAntecedents} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
-  const [deleteDialogTheme, setDeleteDialogTheme] = useState<string>("")
-
-
-  useEffect(()=> {
-    const result = getChosenThemeArray(anamneseResults)
-    setChosenThemes(result)
-  }, [maladiesEventuelles, handicap, autres])
+  const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
+  const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
 
   return (
     <div className='mb-20'>
-      <ChooseThemes 
+      <ChooseThemesAlt
         listeThemes={antecedentsThemes} 
-        setDeleteDialogTheme={setDeleteDialogTheme}
-        editData={editData}
-        setEditData={setEditData}
         openDialog={openDeleteDialog}
         setOpenDialog={setOpenDeleteDialog}
+        setKeyToDelete={setKeyToDelete}
+        setThemeToDelete={setThemeToDelete}
+        themeToDelete={themeToDelete}
+        keyToDelete={keyToDelete}
       />
-      {
-        chosenThemes.includes("Maladies éventuelles") &&
+
+      <CardWrapper themeLabel="Maladies éventuelles" >
         <AnamneseThemeCard
           keyLabel='maladiesEventuelles'
-          editData={editData}
-          setEditData={setEditData}
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
           label={"Maladies éventuelles"}
-          deleteDialogTheme={deleteDialogTheme}
-          setDeleteDialogTheme={setDeleteDialogTheme}
+          data={maladiesEventuelles}
         />
-      }
-      {
-        chosenThemes.includes("Handicap") &&
+      </CardWrapper>
+
+      <CardWrapper themeLabel="Handicap" >
         <AnamneseThemeCard
           keyLabel='handicap'
-          editData={editData}
-          setEditData={setEditData}
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
           label={"Handicap"}
-          deleteDialogTheme={deleteDialogTheme}
-          setDeleteDialogTheme={setDeleteDialogTheme}
+          data={handicap}
         />
-      }
-      {
-        chosenThemes.includes("Accompagnements et suivis") &&
+      </CardWrapper>
+
+      <CardWrapper themeLabel="Accompagnements et suivis" >
         <AnamneseThemeCard
           keyLabel='accompagnementSuivi'
-          editData={editData}
-          setEditData={setEditData}
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
           label={"Accompagnements et suivis"}
-          deleteDialogTheme={deleteDialogTheme}
-          setDeleteDialogTheme={setDeleteDialogTheme}
+          data={accompagnementSuivi}
         />
-      }
-      {
-        chosenThemes.includes("Autres") &&
+      </CardWrapper>
+
+      <CardWrapper themeLabel="Autres (antécédents)" >
         <AnamneseThemeCard
-          keyLabel='autres'
-          editData={editData}
-          setEditData={setEditData}
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
-          label={"Autres"}
-          deleteDialogTheme={deleteDialogTheme}
-          setDeleteDialogTheme={setDeleteDialogTheme}
+          keyLabel='autresAntecedents'
+          label={"Autres (antécédents)"}
+          data={autresAntecedents}
         />
-      }
+      </CardWrapper>
     </div>
   )
 }

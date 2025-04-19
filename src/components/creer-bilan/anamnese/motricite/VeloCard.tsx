@@ -5,66 +5,45 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
-import { upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { Database } from 'lucide-react'
+import { Database, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
+import { ServiceResponse } from '@/@types/ServiceResponse'
+import { AnamneseResults } from '@/@types/Anamnese'
 
-const VeloCard = () => {
+const VeloCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {updatePatientInfoFromDB, anamneseResults} = usePatientInfoStore()
   const {velo} = anamneseResults ?? {}
   
+  const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
+  const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [veloLocal, setVeloLocal] = useState<string[]>(["", "", ""])                //<-- [age, difficulté, remarques]
-  const [ageFocus, setAgeFocus] = useState<boolean>(false)
-  const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(()=> {
     if(!velo) return
     setVeloLocal(velo)
   }, [velo])
 
-
-  const needsToBeSaved: boolean = useMemo(()=> {
-    if(velo){
-      if((velo[1] !== veloLocal[1]) || ((velo[0] !== veloLocal[0]) && !ageFocus)){
-        if(veloLocal[0] !== "" || veloLocal[1] || ""){
-          return true
-        }
-      }
-    }
-    if(!velo) {
-      if((veloLocal[1] !== "") || ((veloLocal[0] !== "") && !ageFocus)){
-        return true
-      }
-    }
-  
-    return false
-  }, [veloLocal[0], veloLocal[1] , ageFocus, velo?.[0], velo?.[1]])
-
-  useEffect(()=> {
-    if(needsToBeSaved) {
-      formRef.current?.requestSubmit()
-    }
-  },[needsToBeSaved] )
-
-  const handleChangeVeloLocal = (value: string, index: number)=> {
+  const handleChangeVeloLocal = async(value: string, index: number)=> {
     let newState = [...veloLocal]
     newState[index] = value
-    setVeloLocal(newState)
+    const res = await upsertAnamneseByKeyValueAction("velo", JSON.stringify(newState), patientId)
+    res && setStateSelect(res)
+    res && setIsPendingSelect(false)
   }
 
   const updateFunction = ()=> {
     updatePatientInfoFromDB(patientId)
   }
-  useToast({state, updateFunction})
+  useToast({state: stateSelect, updateFunction})
   
   return (
-    <Card className='mb-5  gap-y-2'>
+    <Card className='mb-5 gap-y-2'>
       <AnamneseDBDialog
         open={openDBDialog} 
         setOpen={setOpenDBDialog} 
@@ -78,13 +57,12 @@ const VeloCard = () => {
         <Input 
           type="number" 
           value={veloLocal[0]}
-          onBlur={()=> setAgeFocus(false)} 
-          onFocus={()=> setAgeFocus(true)} 
+          onBlur={()=>handleChangeVeloLocal(veloLocal[0], 0)} 
           className='w-16' 
-          onChange={(event)=> handleChangeVeloLocal(event.currentTarget.value, 0)} 
+          onChange={(event)=> setVeloLocal([event.target.value, veloLocal[1], veloLocal[2]])} 
         />
         ans 
-        <Select disabled={isPending} value={veloLocal[1]} onValueChange={(value)=> handleChangeVeloLocal(value, 1)}>
+        <Select disabled={isPendingSelect} value={veloLocal[1]} onValueChange={(value)=> handleChangeVeloLocal(value, 1)}>
           <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="avec difficulté/sans difficulté" />
           </SelectTrigger>
@@ -93,12 +71,8 @@ const VeloCard = () => {
             <SelectItem value="sans difficulté">sans difficulté</SelectItem>
           </SelectContent>
         </Select>
+        {isPendingSelect && <Loader2 className="animate-spin" />}
       </div>
-      <form ref={formRef} action={formAction}>
-        <Input type='hidden' name="value" value={JSON.stringify(veloLocal)}/>
-        <Input type='hidden' name="key" value="velo" />
-        <Input type='hidden' name="patientId" value={patientId}/>
-      </form>
       <AddComentaireOuObservations
         actionFunction = {upsertAnamneseBySingleKeyValueWithFormDataAction}
         commentaireObservationFromDB={velo?.[2]}
@@ -109,8 +83,9 @@ const VeloCard = () => {
         stateIfCommentObsIsNull={[veloLocal[0], veloLocal[1], ""]}
         commentObsIndex={2}
         label='commentaire'
+        themeTitle='Acquisition du vélo sans les roulettes'
       />
-      <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
+      <Button className='w-fit ml-5 mt-2.5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème "Acquisition du vélo sans les roulettes"
       </Button>
     </Card>

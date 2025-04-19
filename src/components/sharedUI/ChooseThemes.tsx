@@ -1,20 +1,20 @@
-import { AnamneseDTO, AnamneseResults, AnamneseResultsDomaineKeyLabel, AnamneseTheme } from '@/@types/Anamnese'
-import React, { Dispatch, FC, SetStateAction, useState } from 'react'
+import { AnamneseResults, AnamneseResultsDomaineKeyLabel } from '@/@types/Anamnese'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { Badge } from '../ui/badge'
 import DeleteAnamneseThemeAlert from './alertsAndDialogs/DeleteAnamneseThemeAlert'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { elementsInArrayAllEpmty } from '@/utils/checkIfNullOrEmptyFunctions'
 
 type ChooseThemesProps = {
   listeThemes: AnamneseResultsDomaineKeyLabel[]
-  setDeleteDialogTheme: Dispatch<SetStateAction<string>>
   editData: string[]
   setEditData: Dispatch<SetStateAction<string[]>>
   openDialog: boolean
   setOpenDialog: Dispatch<SetStateAction<boolean>>
 }
 
-const ChooseThemes: FC<ChooseThemesProps> = ({listeThemes, editData, setEditData, openDialog, setOpenDialog, setDeleteDialogTheme}) => {
+const ChooseThemes: FC<ChooseThemesProps> = ({listeThemes, editData, setEditData, openDialog, setOpenDialog,}) => {
   const {anamneseResults} = usePatientInfoStore()
   const {chosenThemes, setChosenThemes} = useAnamneseSearchDBStore()
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
@@ -23,7 +23,8 @@ const ChooseThemes: FC<ChooseThemesProps> = ({listeThemes, editData, setEditData
   const handleChosenThemes = (theme: string, keyTheme: keyof AnamneseResults|null) => {
     if(!keyTheme) return
     if(chosenThemes.includes(theme)){
-      setDeleteDialogTheme(theme)
+      setThemeToDelete(theme)
+      setKeyToDelete(keyTheme)
       if(anamneseResults && anamneseResults[keyTheme]){
         setOpenDialog(true)
       } else {
@@ -31,15 +32,23 @@ const ChooseThemes: FC<ChooseThemesProps> = ({listeThemes, editData, setEditData
         setChosenThemes(prev.filter(item => item !== theme))
       }
     }else{
-      if(anamneseResults || (anamneseResults && !anamneseResults[keyTheme])){
-        setEditData([...editData, theme])
+      if(anamneseResults){
+        if(!anamneseResults[keyTheme] && !Array.isArray(anamneseResults[keyTheme])){
+          setEditData([...editData, theme])
+        } else {
+          if(anamneseResults[keyTheme] && Array.isArray(anamneseResults[keyTheme])){
+            if(elementsInArrayAllEpmty(anamneseResults?.[keyTheme])){
+              setEditData([...editData, theme])
+            }
+          }
+        }
       }
       setChosenThemes([...chosenThemes, theme])
     }
   }
-
+  
   return (
-    <div className='flex justify-center gap-x-3 mb-5' >
+    <div className='flex justify-center gap-x-3 mb-5 flex-wrap' >
       <DeleteAnamneseThemeAlert 
         editData={editData} 
         setEditData={setEditData} 
@@ -55,11 +64,7 @@ const ChooseThemes: FC<ChooseThemesProps> = ({listeThemes, editData, setEditData
             key={index} 
             variant="outline" 
             className={`mb-2 cursor-pointer text-sm font-bold tracking-wider ${chosenThemes.includes(theme.label) && "bg-slate-300"}`} 
-            onClick={()=> {
-              handleChosenThemes(theme.label, theme.key)
-              setKeyToDelete(theme.key)
-              setThemeToDelete(theme.label)
-            }}
+            onClick={()=>handleChosenThemes(theme.label, theme.key)}
           >
             {theme.label}
           </Badge>

@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/customHooks/useToast'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { CornerUpLeft, EditIcon, Loader2, Trash2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { Dispatch, FC, SetStateAction, useActionState, useRef, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useActionState, useEffect, useRef, useState } from 'react'
 
-type AddComentaireOuObservationsProps = {
+type AddCommentaireOuObservationsProps = {
   actionFunction: ActionFunction
   commentaireObservationFromDB: string|null|undefined
   commentaireObservationFromLocal: string
@@ -19,9 +20,10 @@ type AddComentaireOuObservationsProps = {
   commentObsIndex: number
   keyAnamnese: keyof AnamneseResults
   label: "remarque"|"observation"|"commentaire"
+  themeTitle: string,
 }
 
-const AddComentaireOuObservations: FC<AddComentaireOuObservationsProps> = ({
+const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
   actionFunction, 
   commentaireObservationFromDB, 
   commentaireObservationFromLocal, 
@@ -30,21 +32,37 @@ const AddComentaireOuObservations: FC<AddComentaireOuObservationsProps> = ({
   commentObsIndex, 
   setCompleteArrayStateLocal, 
   keyAnamnese,
-  label
+  label,
+  themeTitle,
 }) => {
   const {id: patientId} = useParams<{id: string}>()
   const [state, formAction, isPending] = useActionState(actionFunction, {})
   const {updatePatientInfoFromDB} = usePatientInfoStore()
+  const {chosenThemes} = useAnamneseSearchDBStore()
   const [editObs, setEditObs] = useState<boolean>(false) 
 
   const formRef = useRef<HTMLFormElement>(null)
   const setObervationToNullRef = useRef<HTMLFormElement>(null)
+  const focusRef = useRef<HTMLInputElement>(null)
+
 
   const handleChangeLocalState = (value: string)=> {
     let newState = [...completeArrayStateLocal]
     newState[commentObsIndex] = value
     setCompleteArrayStateLocal(newState)
   }
+
+  useEffect(()=> {
+    if(commentaireObservationFromDB === ""||!commentaireObservationFromDB){
+      setEditObs(true)
+    }
+  }, [commentaireObservationFromDB])
+
+  useEffect(()=> {
+    if((chosenThemes[chosenThemes.length-1] === themeTitle) && editObs){
+      focusRef?.current?.focus()
+    }
+  }, [editObs, chosenThemes])
 
   const updateFunction = ()=> {
     updatePatientInfoFromDB(patientId)
@@ -57,7 +75,7 @@ const AddComentaireOuObservations: FC<AddComentaireOuObservationsProps> = ({
       <div className='flex items-center mb-2.5'>
         <Label htmlFor="motriciteGlobaleObservations" className='font-bold text-base whitespace-nowrap mr-2.5 capitalize'>{label}s : </Label>
         <span className={`mr-2.5 ${editObs && "opacity-30"}`}>
-          {!commentaireObservationFromDB || commentaireObservationFromDB===""  ? <i>Aucun{label !== "remarque" && "e"} {label} enregistré{label !== "remarque" && "e"}.
+          {!commentaireObservationFromDB || commentaireObservationFromDB===""  ? <i>Aucun{label !== "commentaire" && "e"} {label} enregistré{label !== "commentaire" && "e"}.
           </i> :commentaireObservationFromDB}
         </span>
         {
@@ -81,22 +99,23 @@ const AddComentaireOuObservations: FC<AddComentaireOuObservationsProps> = ({
       </div>
       {
         editObs &&
-        <div className='flex gap-2'>
-          <Button disabled={isPending} className='bg-blue-500 hover:bg-blue-400' onClick={()=> formRef && formRef.current?.requestSubmit()}>Enregistrer les {label}s</Button>
-          <Input 
-            type='text' 
-            placeholder='Ecrire vos remarques puis enregistrer...' 
-            className='placeholder:italic' 
-            value={commentaireObservationFromLocal} 
-            onChange={(event)=> handleChangeLocalState(event.currentTarget.value)} 
-          />
-        </div>
+        <form ref={formRef} action={formAction}>
+          <div className='flex gap-2'>
+            <Button disabled={isPending} className='bg-blue-500 hover:bg-blue-400' onClick={()=> formRef && formRef.current?.requestSubmit()}>Enregistrer les {label}s</Button>
+            <Input 
+              type='text' 
+              placeholder='Ecrire vos remarques puis enregistrer...' 
+              className='placeholder:italic' 
+              value={commentaireObservationFromLocal} 
+              onChange={(event)=> handleChangeLocalState(event.currentTarget.value)} 
+              ref={focusRef}
+            />
+            <Input type='hidden' name="value" value={JSON.stringify(completeArrayStateLocal)}/>
+            <Input type='hidden' name="key" value={keyAnamnese} />
+            <Input type='hidden' name="patientId" value={patientId}/>
+          </div>
+        </form>
       }
-      <form ref={formRef} action={formAction}>
-        <Input type='hidden' name="value" value={JSON.stringify(completeArrayStateLocal)}/>
-        <Input type='hidden' name="key" value={keyAnamnese} />
-        <Input type='hidden' name="patientId" value={patientId}/>
-      </form>
       <form ref={setObervationToNullRef} action={formAction}>
         <Input type='hidden' name="value" value={JSON.stringify(stateIfCommentObsIsNull)}/>
         <Input type='hidden' name="key" value={keyAnamnese} />
@@ -106,4 +125,4 @@ const AddComentaireOuObservations: FC<AddComentaireOuObservationsProps> = ({
   )
 }
 
-export default AddComentaireOuObservations
+export default AddCommentaireOuObservations

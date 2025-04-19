@@ -1,6 +1,7 @@
 import { AnamneseResults } from "@/@types/Anamnese";
 import { anamneseKeysAndLabels } from "@/datas/anamneseConstantes";
 import { isAnamneseResultsKey } from "./typeGuards";
+import { elementsInArrayAllEpmty } from "./checkIfNullOrEmptyFunctions";
 
 
 export const getAnamneseLabelsWithKey = (key: keyof AnamneseResults): string|null=> {
@@ -15,10 +16,13 @@ export const getChosenThemeArray = (anamneseResults: AnamneseResults|null): stri
   if(anamneseResults){
     for(const key in anamneseResults){
       if(isAnamneseResultsKey(key) && anamneseResults[key] ){
-        const label = getAnamneseLabelsWithKey(key)
-        if(label){
-          selectedThemes.push(label)
-
+        if(Array.isArray(anamneseResults[key]) && elementsInArrayAllEpmty(anamneseResults[key])){
+          selectedThemes = selectedThemes
+        } else {
+          const label = getAnamneseLabelsWithKey(key)
+          if(label){
+            selectedThemes.push(label)
+          }
         }
       } else {
         selectedThemes = selectedThemes

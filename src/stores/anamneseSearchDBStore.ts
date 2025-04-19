@@ -1,4 +1,5 @@
-import { AnamneseResults, ListeAdjectifsDTO, ListeTypeSensorialiteDTO } from '@/@types/Anamnese'
+import { AnamneseResults, anamneseResultsKeys, ListeAdjectifsDTO, ListeTypeSensorialiteDTO } from '@/@types/Anamnese'
+import { fetchChosenThemes } from '@/serverActions/anamneseActions'
 import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
 import { fetchAnamneseByKeysWithCache } from '@/serverActions/fetchingWithCache'
 import { fetchAllAdjectifs, fetchAllTypeSensorialite } from '@/serverActions/listeActions'
@@ -13,8 +14,11 @@ type AnamneseSearchDBState = {
   loadingData: boolean
   resetAnamneseDB: ()=> void
   chosenThemes: string[]
+  initializeChosenThemes: (patientId: string)=> Promise<void>
   setChosenThemes: (value: string[])=> void
-  adjectifs: ListeAdjectifsDTO|null|undefined
+  listeAdjectifsId: string|null|undefined
+  adjectifsComportement: string[]|null|undefined
+  adjectifs: string[]|null|undefined
   getListeAdjectifs : ()=> Promise<void>
   typeSensorialite:ListeTypeSensorialiteDTO | null | undefined
   getTypeSensorialite : ()=> Promise<void>
@@ -48,14 +52,28 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   },
   resetAnamneseDB: () => set({ anamneseInDBByDomaine: null }),
   chosenThemes: [],
+  initializeChosenThemes: async(patientId: string)=> {
+    try{
+      const result = await fetchChosenThemes(patientId)
+      set({ chosenThemes: result.data ?? []})
+
+    } catch (error){
+      console.log("Can't initializeChosenThemes")
+    }
+  },
   setChosenThemes: (value:string[])=> {
     set({ chosenThemes: value })
   },
+  listeAdjectifsId: null,
   adjectifs: null,
+  adjectifsComportement: null,
   getListeAdjectifs : async()=> {
     try {
       const response = await fetchAllAdjectifs()
-      set({ adjectifs: response.data })
+      const {adjectifs, adjectifsComportement, id} = response.data ?? {}
+      set({ adjectifs})
+      set({ adjectifsComportement})
+      set({ listeAdjectifsId: id})
 
     } catch (error) {
       console.log("Can't getAnamneseDBByKeys")

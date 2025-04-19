@@ -7,33 +7,34 @@ import SubmitButton from '@/components/ui/SubmitButton'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { AnamneseResults } from '@/@types/Anamnese'
 import { useToast } from '@/customHooks/useToast'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 type DeleteAnamneseThemeAlertProps = {
-  themeToDelete: string
+  themeToDelete: string|null
+  setThemeToDelete: Dispatch<SetStateAction<string|null>>
   keyToDelete: keyof AnamneseResults|null
   openDialog: boolean
   setOpenDialog: Dispatch<SetStateAction<boolean>>
-  setEditData: Dispatch<SetStateAction<string[]>>
-  editData: string[]
-  setDeleteDialogTheme: Dispatch<SetStateAction<string>>
+  setKeyToDelete: Dispatch<SetStateAction<keyof AnamneseResults|null>>
 }
 
-const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDelete, openDialog, setOpenDialog, setEditData, editData, setDeleteDialogTheme, keyToDelete }) => {
+const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDelete, openDialog, setOpenDialog, keyToDelete, setKeyToDelete, setThemeToDelete }) => {
   const {id: patientId} = useParams<{id: string}>()
+  const {setChosenThemes, chosenThemes} = useAnamneseSearchDBStore()
   const [state, formAction, isPending] = useActionState(setPropertyToNullByKeyAction, {})
   const {updatePatientInfoFromDB} = usePatientInfoStore()
-
 
   const updateFunction = ()=> {
     updatePatientInfoFromDB(patientId)
     setOpenDialog(false)
-    setEditData([...editData, themeToDelete])  //<--- On le rajoute ici car quand on reclique sur le thème il se met en mode Edit.
-    setDeleteDialogTheme("")
+    setKeyToDelete(null)
+    const newThemeArray = chosenThemes.filter(theme => theme !== themeToDelete)
+    setThemeToDelete(null)
+    setChosenThemes(newThemeArray)
   }
 
   useToast({state, updateFunction})
 
-  
   return (
     <AlertDialog open={openDialog}>
       <AlertDialogContent className='bg-white'>

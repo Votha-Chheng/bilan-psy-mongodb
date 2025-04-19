@@ -1,25 +1,28 @@
+import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
-import { upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
-import React, { useActionState, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Continence = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
   const {continence} = anamneseResults ?? {}
-  const [continenceLocal, setContinenceLocal] = useState<string[]>(["", "", "", ""])
-  const [diurneFocus, setDiurneFocus] = useState<boolean>(false) 
-  const [nocturneFocus, setNocturneFocus] = useState<boolean>(false) 
 
-  const formRef = useRef<HTMLFormElement>(null)
+  const [state, setState] = useState<ServiceResponse<any>>({})
+  const [isPending, setIspending] = useState<boolean>(false)
+  const [continenceLocal, setContinenceLocal] = useState<string[]>(["", "", "", ""])   //<---- [diurne, mois, nocturne, mois]
+  const [ageDiurne, setAgeDiurne] = useState<string>("")
+  const [ageNocturne, setAgeNocturne] = useState<string>("")
 
-  const handleChangeElement = (value: string, index: number)=> {
+  const handleChangeElement = async(value: string, index: number)=> {
+    if(value === "") return
+    setIspending(true)
     let newState = [...continenceLocal] 
     newState[index] = value
     if(value==="diurne non acquise"){
@@ -28,52 +31,21 @@ const Continence = () => {
     if(value==="nocturne non acquise"){
       newState[3] = ""
     }
-
-    setContinenceLocal(newState)
-  }
-
-  const handleChangeMois = (value: string, index: number)=> {
-    let newState = [...continenceLocal] 
-    newState[index] = value
+    console.log(newState)
+    const res = await upsertAnamneseByKeyValueAction("continence", JSON.stringify(newState), patientId)
+    res && setState(res)
+    res && setIspending(false)
     setContinenceLocal(newState)
   }
 
   useEffect(()=> {
     if(!continence) return
-    if(continence && continenceLocal[0]===continence[0] && continenceLocal[1] === continence[1] && continenceLocal[2] === continence[2] && continenceLocal[3] === continence[3]) return
     setContinenceLocal(continence)
+    setAgeDiurne(continence[1])
+    setAgeNocturne(continence[3])
 
   }, [continence])
 
-  useEffect(()=> {
-    if(continence && continenceLocal[0]==="" && continenceLocal[1]==="" && continenceLocal[2]==="" && continenceLocal[3]==="") return
-    if(continenceLocal[0]==="") return
-    if(continence && continenceLocal[0]===continence[0]) return
-    formRef.current?.requestSubmit()
-  }, [continenceLocal[0], diurneFocus])
-
-  useEffect(()=> {
-    if(continence && continenceLocal[0]==="" && continenceLocal[1]==="" && continenceLocal[2]==="" && continenceLocal[3]==="") return
-    if(continenceLocal[2]==="") return
-    if(continence && continenceLocal[2]===continence[2]) return
-    formRef.current?.requestSubmit()
-  }, [continenceLocal[2], nocturneFocus])
-
-  useEffect(()=> {
-    if(continence && continenceLocal[0]==="" && continenceLocal[1]==="" && continenceLocal[2]==="" && continenceLocal[3]==="") return
-    if(continenceLocal[1]==="") return
-    if(continence && continenceLocal[1]===continence[1]) return
-    if(diurneFocus) return
-    formRef.current?.requestSubmit()
-  }, [continenceLocal[1], diurneFocus])
-
-  useEffect(()=> {
-    if(continence && continenceLocal[0]==="" && continenceLocal[1]==="" && continenceLocal[2]==="" && continenceLocal[3]==="") return
-    if(continenceLocal[3]==="") return
-    if(continence && continenceLocal[3]===continence[3]) return
-    if(nocturneFocus) return
-    formRef.current?.requestSubmit()
-  }, [continenceLocal[3], nocturneFocus])
 
   const updateFunction = ()=> {
     updatePatientInfoFromDB(patientId)
@@ -103,10 +75,9 @@ const Continence = () => {
             disabled={isPending} 
             className='w-20' 
             type='number' 
-            value={continenceLocal[1]}
-            onBlur={()=> setDiurneFocus(false)} 
-            onFocus={()=> setDiurneFocus(true)} 
-            onChange={(event)=> handleChangeMois(event.currentTarget.value, 1)}
+            value={ageDiurne}
+            onBlur={()=> handleChangeElement(ageDiurne, 1)}
+            onChange={(event)=> setAgeDiurne(event.currentTarget.value)}
           />
           <span className={`whitespace-nowrap ${openSans.className}`}>mois.</span>
         </div>
@@ -129,23 +100,16 @@ const Continence = () => {
           <span className={`whitespace-nowrap ${openSans.className}`}>à l'âge de :</span>
           <Input 
             disabled={isPending} 
-            value={continenceLocal[3]}
+            value={ageNocturne}
             className='w-20' 
-            type='number' 
-            onBlur={()=> setNocturneFocus(false)} 
-            onFocus={()=> setNocturneFocus(true)} 
-            onChange={(event)=> handleChangeMois(event.currentTarget.value, 3)}
+            type='number'
+            onBlur={()=> handleChangeElement(ageNocturne, 3)}
+            onChange={(event)=> setAgeNocturne(event.currentTarget.value)}
           />
           <span className={`whitespace-nowrap ${openSans.className}`}>mois.</span>
         </div>
         }
       </div>
-
-      <form ref={formRef} action={formAction} className='flex items-center gap-2.5'>
-        <input type='hidden' name='key' value="continence" />
-        <input type='hidden' name='value' value={JSON.stringify(continenceLocal)}/>
-        <input type='hidden' name='patientId' value={patientId}/>
-      </form>
     </Card>
   )
 }

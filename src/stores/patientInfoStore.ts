@@ -1,7 +1,7 @@
 
 import { AnamneseResults, BilanMedicauxResults } from '@/@types/Anamnese'
 import { PatientInfosGenerales } from '@/@types/PatientTypes'
-import { fetchBilanMedicalResultByKey } from '@/serverActions/anamneseActions'
+import { fetchBilanMedicalResult, fetchBilanMedicalResultByKey } from '@/serverActions/anamneseActions'
 import { fetchAllPatientsWithCache, fetchPatientByIdWithCache } from '@/serverActions/fetchingWithCache'
 import { create } from 'zustand'
 
@@ -16,7 +16,7 @@ type PatientInfoState = {
   updatePatientInfoFromDB: (id: string) => Promise<void>
   anamneseResults: AnamneseResults|null
   bilansMedicauxResults: BilanMedicauxResults|null
-  updateBilanMedicalByKey : (key: keyof BilanMedicauxResults, anamneseId: string|null|undefined)=> Promise<void>
+  updateBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
 }
 
 export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
@@ -73,9 +73,8 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           maladiesEventuelles: anamnese?.maladiesEventuelles,
           handicap: anamnese?.handicap,
           confereDevPsy: anamnese?.confereDevPsy,
-          autres: anamnese?.autres,
+          autresAntecedents: anamnese?.autresAntecedents,
           accouchement: anamnese?.accouchement,
-          accouchementCommentaire: anamnese?.accouchementCommentaire,
           grossesse: anamnese?.grossesse,
           stationAssise: anamnese?.stationAssise,
           quadrupedie: anamnese?.quadrupedie,
@@ -92,6 +91,16 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           extraScolaire: anamnese?.extraScolaire,
           autresMotricite: anamnese?.autresMotricite,
           sensorialite: anamnese?.sensorialite,
+          classe : anamnese?.classe,
+          apprentissages: anamnese?.apprentissages,
+          outils : anamnese?.outils,
+          ecriture: anamnese?.ecriture,
+          cartableBureau: anamnese?.cartableBureau,
+          relationsPairs: anamnese?.relationsPairs,
+          comportement : anamnese?.comportement,
+          attention : anamnese?.attention,
+          cahiers : anamnese?.cahiers,
+          anterieur: anamnese?.anterieur
         } as AnamneseResults
       })
 
@@ -146,10 +155,9 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           dossierMDPH: anamnese?.dossierMDPH,
           maladiesEventuelles: anamnese?.maladiesEventuelles,
           handicap: anamnese?.handicap,
-          autres: anamnese?.autres,
+          autresAntecedents: anamnese?.autresAntecedents,
           confereDevPsy: anamnese?.confereDevPsy,
           accouchement: anamnese?.accouchement,
-          accouchementCommentaire: anamnese?.accouchementCommentaire,
           grossesse: anamnese?.grossesse,
           stationAssise: anamnese?.stationAssise,
           quadrupedie: anamnese?.quadrupedie,
@@ -166,29 +174,30 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           extraScolaire: anamnese?.extraScolaire,
           autresMotricite: anamnese?.autresMotricite,
           sensorialite: anamnese?.sensorialite,
+          classe : anamnese?.classe,
+          apprentissages: anamnese?.apprentissages,
+          outils : anamnese?.outils,
+          ecriture: anamnese?.ecriture,
+          cartableBureau: anamnese?.cartableBureau,
+          relationsPairs: anamnese?.relationsPairs,
+          comportement : anamnese?.comportement,
+          attention : anamnese?.attention,
+          cahiers : anamnese?.cahiers,
+          anterieur: anamnese?.anterieur
         }
       })
     } catch (error) {
       console.log("Can't fetch PatientById")
     }
   },
-  updateBilanMedicalByKey :async (key: keyof BilanMedicauxResults, anamneseId: string|null|undefined)=> {
+  updateBilanMedicauxResults :async (anamneseId: string|null|undefined)=> {
     try {
-      const response = await fetchBilanMedicalResultByKey(key, anamneseId) 
-      const prevState = get().bilansMedicauxResults
-      console.log(response.data)
-      
-      set({bilansMedicauxResults: {
-        ...prevState,
-        ...response.data
-      } })
-      
-      console.log({
-        ...prevState,
-        ...response.data
-      })
+      if(anamneseId){
+        const response = await fetchBilanMedicalResult(anamneseId) 
+        set({bilansMedicauxResults: response?.data })
+      }      
     } catch (error) {
-      
+      console.log("Can't fetch updateBilanMedicalByKey")
     }
   },
   updateAllPatients: async () => {

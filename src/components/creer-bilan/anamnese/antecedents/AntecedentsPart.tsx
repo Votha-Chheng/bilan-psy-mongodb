@@ -36,7 +36,7 @@ const AntecedentsPart:FC = ({}) => {
 
   return (
     <AnamneseItemLayout >   
-      <div className='flex gap-x-2 font-bold mb-5 items-center'>
+      <div className='flex gap-x-2 font-bold mb-5 items-center min-w-full'>
         <MoveRight/>
         <span>Pas d'antécédents médicaux : </span>
         <Switch checked={neant ? JSON.parse(neant): false} onCheckedChange={(checked: boolean)=> handleChangeNeant(checked)} />

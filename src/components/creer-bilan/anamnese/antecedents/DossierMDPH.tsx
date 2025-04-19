@@ -8,7 +8,6 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2, MoveRight } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
 
 const DossierMDPH = () => {
   const {id: patientId} = useParams<{id: string}>()
@@ -16,33 +15,25 @@ const DossierMDPH = () => {
   const {dossierMDPH} = anamneseResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
+  const [dossierMDPHLocal, setDossierMDPHLocal] = useState<string[]>(["", ""])
   const [addInfo, setAddInfo] = useState<string>("")
 
-  const dossierMDPHArray = dossierMDPH ? JSON.parse(dossierMDPH) : ["", ""]
-
   useEffect(()=> {
+    if(!dossierMDPH) return
+    const dossierMDPHArray: string[] = JSON.parse(dossierMDPH)
+    setDossierMDPHLocal(dossierMDPHArray)
     setAddInfo(dossierMDPHArray[1])
   }, [dossierMDPH])
 
   const updateFunction = ()=> updatePatientInfoFromDB(patientId)
   useToast({state, updateFunction})
 
-  useEffect(()=> {
-    if(!dossierMDPH) return
-    if(dossierMDPHArray[1]===addInfo) return
-    
-    const timer = setTimeout(() => {
-      // Ici, on effectue l'action de sauvegarde
-      handleChangeDossierMDPHAction(dossierMDPHArray[0], addInfo)
-    }, 3000);
 
-    // Nettoyage : si "text" change avant les 5 secondes, on annule le timer
-    return () => clearTimeout(timer);
-  }, [addInfo])
-
-  const handleChangeDossierMDPHAction = async(value: string, addInfo: string): Promise<void>=> {
+  const handleChangeDossierMDPHAction = async(value: string, index: number): Promise<void>=> {
     setIsPending(true)
-    const res = await upsertAnamneseByKeyValueAction<string>("dossierMDPH", JSON.stringify([value, addInfo]), patientId)
+    const newState = [...dossierMDPHLocal]
+    newState[index] = value
+    const res = await upsertAnamneseByKeyValueAction<string>("dossierMDPH", JSON.stringify(newState), patientId)
     if(res){
       setState(res)
       setIsPending(false)
@@ -54,7 +45,7 @@ const DossierMDPH = () => {
       <div className='flex gap-x-2 font-bold mb-3 items-center w-full'>
         <MoveRight/> 
         <span className='whitespace-nowrap'>Dossier MDPH :</span>
-        <Select disabled={isPending} value={dossierMDPHArray[0]} onValueChange={(value)=> handleChangeDossierMDPHAction(value, addInfo)}>
+        <Select disabled={isPending} value={dossierMDPHLocal[0]} onValueChange={(value)=> handleChangeDossierMDPHAction(value, 0)}>
           <SelectTrigger className="w-[180px] mr-5">
             <SelectValue />
           </SelectTrigger>
@@ -72,7 +63,14 @@ const DossierMDPH = () => {
             <p className='whitespace-nowrap mr-2'>
               Information complémentaire :
             </p>
-            <Input type='text' value={addInfo} className='w-full placeholder:italic font-normal' placeholder='Ne rien écrire si aucune info à rajouter (sauvegarde auto)' onChange={(event)=> setAddInfo(event.currentTarget.value)}/>
+            <Input 
+              type='text' 
+              value={addInfo} 
+              className='w-full placeholder:italic font-normal' 
+              placeholder='Ne rien écrire si aucune info à rajouter (cliquez ailleurs pour sauvegarder)' 
+              onChange={(event)=> setAddInfo(event.currentTarget.value)}
+              onBlur={()=> handleChangeDossierMDPHAction(addInfo, 1)}
+            />
           </div>
         }
         {

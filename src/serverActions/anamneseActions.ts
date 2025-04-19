@@ -3,12 +3,14 @@
 import { AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
+import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { KeyAnamneseSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
 import { BilanMedicalSchema } from "@/zodSchemas/bilanMedicalSchema"
 import { Anamnese, BilanMedical, DevPsyConfere } from "@prisma/client"
 import { z } from "zod"
+import { getChosenThemeArray } from "@/utils/sortAnamneseDatas"
 
 export const createAnamneseAction = async(patientId: string): Promise<ServiceResponse<string|null>> => {
   try {
@@ -138,7 +140,6 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
       const newRecord = {...record}
       if ("motriciteGlobale" in newRecord){
         newRecord["motriciteGlobale"] = JSON.parse(record["motriciteGlobale"]) 
-        console.log("newRecord", newRecord)
       }
       if ("motriciteFine" in newRecord){
         newRecord["motriciteFine"] = JSON.parse(record["motriciteFine"]) 
@@ -148,6 +149,24 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
       }
       if ("sensorialite" in newRecord){
         newRecord["sensorialite"] = JSON.parse(record["sensorialite"]) 
+      }
+      if ("apprentissages" in newRecord){
+        newRecord["apprentissages"] = JSON.parse(record["apprentissages"]) 
+      }
+      if ("outils" in newRecord){
+        newRecord["outils"] = JSON.parse(record["outils"]) 
+      }
+      if ("ecriture" in newRecord){
+        newRecord["ecriture"] = JSON.parse(record["ecriture"]) 
+      }
+      if ("relationsPairs" in newRecord){
+        newRecord["relationsPairs"] = JSON.parse(record["relationsPairs"]) 
+      }
+      if ("comportement" in newRecord){
+        newRecord["comportement"] = JSON.parse(record["comportement"]) 
+      }
+      if ("attention" in newRecord){
+        newRecord["attention"] = JSON.parse(record["attention"]) 
       }
       return newRecord
     })
@@ -167,7 +186,7 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
 export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
-
+  console.log(parsedData)
   if(!parsedData.success) return validationError(parsedData)
   const dataFinal = parsedData.data as {key: keyof Anamnese, value: string, patientId: string}
   const {key, value, patientId} = dataFinal
@@ -192,27 +211,7 @@ export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState:
 
     if(!res) return dataBaseError("Impossible de mettre à jour l'anamnèse.")
 
-    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = res
-    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
-    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
-    const parseContinence: string[] = continence ? JSON.parse(continence) : null
-    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
-    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
-    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
-    const parseVelo: string[] = velo ? JSON.parse(velo) : null
-    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
-        
-    const data: AnamneseResults = { 
-      ageMarche:parseAgeMarche, 
-      acquisitionLangage: parseAcquisitionLangage, 
-      continence: parseContinence, 
-      accouchement: parseAccouchement,
-      motriciteGlobale: parseMotriciteGlobale,
-      motriciteFine: parseMotriciteFine,
-      velo: parseVelo,
-      sensorialite: parseSensorialite,
-      ...rest
-    }
+    const data: AnamneseResults = returnParseAnamneseResult(res)
 
     return {
       success: true,
@@ -254,31 +253,11 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Anamne
     })
 
     if(!res) return dataBaseError("Données de l'anamnèse introuvable !")
-    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = res
-    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
-    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
-    const parseContinence: string[] = continence ? JSON.parse(continence) : null
-    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
-    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null
-    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null
-    const parseVelo: string[] = velo ? JSON.parse(velo) : null
-    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null
-        
-    const data: AnamneseResults = { 
-      ageMarche:parseAgeMarche, 
-      acquisitionLangage: parseAcquisitionLangage, 
-      continence: parseContinence, 
-      accouchement: parseAccouchement,
-      motriciteGlobale: parseMotriciteGlobale,
-      motriciteFine: parseMotriciteFine,
-      velo: parseVelo,
-      sensorialite: parseSensorialite,
-      ...rest
-    }
-
+    const data: AnamneseResults = returnParseAnamneseResult(res)
+  
     return {
       success: true,
-      data: data,
+      data,
       message: "Anamnèse modifiée avec succès."
     }
   } catch (error) {
@@ -296,9 +275,9 @@ export const setPropertyToNullByKeyAction = async(prevState: any, formData: Form
   const {key, patientId} = validateData.data as {key: keyof Anamnese, patientId: string}
 
   try {
-    const updatedData = key === "accouchement" ? {[key]: null, accouchementCommentaire: null }:{[key]: null}
+    const updatedData = {[key]: null}
 
-    const updatedRecord = await db.anamnese.update({
+    const updatedRecord: Anamnese = await db.anamnese.update({
       where: {
         patientId 
       },
@@ -307,27 +286,7 @@ export const setPropertyToNullByKeyAction = async(prevState: any, formData: Form
 
     if(!updatedRecord) return dataBaseError("Impossible de mettre à jour l'anamnèse.")
 
-    const {ageMarche, acquisitionLangage, continence, accouchement, motriciteGlobale, motriciteFine, velo, sensorialite, ...rest} = updatedRecord
-    const parseAgeMarche: string[] = ageMarche ? JSON.parse(ageMarche) : null
-    const parseAcquisitionLangage: string[] = acquisitionLangage ? JSON.parse(acquisitionLangage) : null
-    const parseContinence: string[] = continence ? JSON.parse(continence) : null
-    const parseAccouchement: string[] = accouchement ? JSON.parse(accouchement) : null
-    const parseMotriciteGlobale: string[] = motriciteGlobale ? JSON.parse(motriciteGlobale) : null    
-    const parseMotriciteFine: string[] = motriciteFine ? JSON.parse(motriciteFine) : null  
-    const parseVelo: string[] = velo ? JSON.parse(velo) : null  
-    const parseSensorialite: string[] = sensorialite ? JSON.parse(sensorialite) : null  
-
-    const data: AnamneseResults = {
-      ageMarche:parseAgeMarche, 
-      acquisitionLangage: parseAcquisitionLangage, 
-      continence: parseContinence, 
-      accouchement:parseAccouchement, 
-      motriciteGlobale: parseMotriciteGlobale,
-      motriciteFine: parseMotriciteFine,
-      velo: parseVelo,
-      sensorialite: parseSensorialite,
-      ...rest
-    }
+    const data: AnamneseResults = returnParseAnamneseResult(updatedRecord)
 
     return {
       success: true,
@@ -341,7 +300,7 @@ export const setPropertyToNullByKeyAction = async(prevState: any, formData: Form
   }
 }
 
-export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedicalKeys, bilanMedicalId: string): Promise<ServiceResponse<BilanMedicauxResults|null>> => {
+export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedicalKeys, bilanMedicalId: string): Promise<ServiceResponse<BilanMedical|null>> => {
   try {
     const record = await db.bilanMedical.update({
       where: {
@@ -377,14 +336,15 @@ export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], p
 
     const finalAnamneseId = anamneseId || createdAnamneseId
 
-    const dataForUpdate = keyToNull ? {selectedBilans: bilanListes, [keyToNull] :  []} : {selectedBilans: bilanListes}
+    const finalBilanListes = bilanListes.length  === 0 ? null : JSON.stringify(bilanListes)
+    const dataForUpdate = keyToNull ? {selectedBilans: finalBilanListes, [keyToNull] :  null} : {selectedBilans: finalBilanListes}
 
     const res = await db.bilanMedical.upsert({
       where: {
         anamneseId: finalAnamneseId!
       },
       create: {
-        selectedBilans: bilanListes,
+        selectedBilans: JSON.stringify(bilanListes),
         anamnese: {
           connect: {
             id: finalAnamneseId!
@@ -395,6 +355,7 @@ export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], p
     })    
 
     return {
+      data:res,
       success: true,
       message: "Liste des bilans médicaux modifiés"
     }
@@ -418,7 +379,7 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
         id: anamneseId
       }
     },
-    [bilanMedicalKey]: value
+    [bilanMedicalKey]: JSON.stringify(value)
   }
   const dataForUpdate = {
     anamnese: {
@@ -426,7 +387,7 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
         id: anamneseId
       }
     },
-    [bilanMedicalKey]: value
+    [bilanMedicalKey]: JSON.stringify(value)
   }
 
   try {
@@ -456,24 +417,100 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
   }
 }
 
-export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamneseId: string|null|undefined): Promise<ServiceResponse<Record<string, string[]>|null>>=> {
+export const fetchBilanMedicalResult = async(anamneseId: string): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
+  try {
+    const res = await db.bilanMedical.findUnique({
+      where: {
+        anamneseId
+      },
+      select: {
+        id: true,
+        bilanORL: true,
+        bilanOphtalmo: true,
+        bilanOrthophonique: true,
+        bilanOrthoptique: true,
+        bilanNeuropsy: true,
+        bilanNeuropediatre: true,
+        selectedBilans: true,
+      }
+    })
+
+    if(!res) return dataBaseError(`Pas de bilans médicaux à afficher.`) 
+
+    const {bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, bilanNeuropsy, bilanNeuropediatre, selectedBilans} = res
+
+    const data: BilanMedicauxResults = {
+      bilanORL: bilanORL? JSON.parse(bilanORL) : null,
+      bilanOphtalmo: bilanOphtalmo? JSON.parse(bilanOphtalmo) : null,
+      bilanOrthophonique: bilanOrthophonique? JSON.parse(bilanOrthophonique) : null,
+      bilanOrthoptique: bilanOrthoptique? JSON.parse(bilanOrthoptique) : null,
+      bilanNeuropsy: bilanNeuropsy? JSON.parse(bilanNeuropsy) : null,
+      bilanNeuropediatre: bilanNeuropediatre? JSON.parse(bilanNeuropediatre) : null,
+      selectedBilans: selectedBilans? JSON.parse(selectedBilans) : null,
+    }
+    console.log("fetchBilanMedicalResult", data)
+    return {
+      success: true,
+      data
+    }
+
+  } catch (error) {
+    console.log("fetchBilanMedicalResult", error)
+    return serverError(error)
+  }
+}
+
+export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
   try {
     if(!anamneseId) return { success: false, message: "L'anamnese n'a pas été encore créee."}
     const selectOptions = {
-      [key]: true
+      [key]: true,
+      selectedBilans: true
     }
-    const res = await db.bilanMedical.findUnique({
+    const res: Partial<BilanMedical>|null = await db.bilanMedical.findUnique({
       where: {
         anamneseId
       },
       select: selectOptions
     })
+
+    if(!res) return dataBaseError()
+
+    const data: string|null = returnArrayIfJson(res[key] ?? null)
+    const bilansListe: string[]|null = returnArrayIfJson(res.selectedBilans ?? null)
+
     return {
       success: true,
-      data: res
+      data : {[key]: data, selectedBilans: bilansListe ?? undefined}
     }
   } catch (error) {
     console.log("fetchBilanMedicalResultByKey", error)
     return serverError(error)
+  }
+}
+
+export const fetchChosenThemes = async(patientId: string): Promise<ServiceResponse<string[]>>=> {
+  try {
+    const anamnese = await db.anamnese.findUnique({
+      where: {
+        patientId
+      }
+    })
+
+    if(!anamnese) return {
+      success: false,
+      data: []
+    }
+
+    const copy = {...anamnese} as AnamneseResults
+
+    const result = getChosenThemeArray(copy)
+    return {
+      success : true,
+      data: result
+    }
+  } catch (error) {
+    console.log("fetchChosenThemes", error)
+    return serverError(error, "Impossible de recueillir les thèmes choisis.")
   }
 }

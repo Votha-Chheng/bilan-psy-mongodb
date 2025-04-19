@@ -10,14 +10,20 @@ import MotricitePart from './motricite/MotricitePart'
 import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 import ScolaritePart from './scolarite/ScolaritePart'
 import QuoditienPart from './quotidien/QuoditienPart'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AnamneseSection = () => {
-  //const [partieAnamnese, setPartieAnamnese] = useState<number>(0)
-  const {fetchAllPatients} = usePatientInfoStore()
+  const {id: patientId} = useParams<{id: string}>()
+  const {fetchAllPatients, anamneseResults} = usePatientInfoStore()
   const {anamenesePart} = useAnamnesePartStore()
+  const {initializeChosenThemes} = useAnamneseSearchDBStore()
 
   useEffect(()=> {
     fetchAllPatients()
+  }, [])
+
+  useEffect(()=> {
+    initializeChosenThemes(patientId)
   }, [])
   
   return (

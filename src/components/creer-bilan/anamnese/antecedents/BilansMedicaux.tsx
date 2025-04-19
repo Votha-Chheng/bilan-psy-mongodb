@@ -4,7 +4,7 @@ import BilanMedicalCard from './BilanMedicalCard'
 const BilansMedicaux = () => {
 
   return (
-    <div className='mb-5 mx-5 mt-2'>
+    <div className='mb-5 mx-5 mt-2 w-full'>
       {
         listeBilansMedicaux.map((bilan, index)=> (
           <BilanMedicalCard

@@ -13,15 +13,14 @@ model Anamnese {
   handicap                          String?
   autresAntecedents                 String?
   confereDevPsy                     String?
-  accouchement                      String?             //<--- Données JSON de type [semaines, jours +, voies naturelles/césarienne, déclenché ?]
-  accouchementCommentaire           String?             //<--- Données JSON de type [semaines, jours +, voies naturelles/césarienne, déclenché ?]
+  accouchement                      String?             //<--- Données JSON de type [semaines, jours +, voies naturelles/césarienne, déclenché, commentaires]
   grossesse                         String?
   stationAssise                     String?
   quadrupedie                       String?
   ageMarche                         String?
   continence                        String?             //<--- Données JSON de type string[]
   acquisitionLangage                String?             //<--- Données JSON de type string[]
-  sommeil                           String?
+  sommeil                           String?           
   alimentation                      String?
   autresDevPsy                      String?
   velo                              String?           //<--- Données JSON de type string[]
@@ -32,6 +31,27 @@ model Anamnese {
   autresMotricite                   String?
   sensorialite                      String?           //<--- Données JSON de type string[type, commentaires]    
   bilansMedicauxResults             BilanMedical?
+  classe                            String?
+  apprentissages                    String?           //<-- JSON [niveau, remarques]
+  outils                            String?           //<-- JSON [niveau, commentaires]
+  ecriture                          String?           //<-- JSON [niveau, douleurs, observations]
+  cartableBureau                    String?
+  relationsPairs                    String?           //<-- JSON [observations, suite d'adjectifs...]
+  comportement                      String?           //<-- JSON []
+  attention                         String?
+  cahiers                           String?
+  anterieur                         String?
+  decritAuQuotidien                 String?           //<-- JSON [observations, suite d'adjectifs...]
+  autonomie                         String?  
+  ecouteConsignes                   String?
+  agitationMotrice                  String?
+  devoirs                           String?           //<-- JSON [difficultés, observations]
+  gestionEmotions                   String?           //<-- JSON [difficultés, observations]
+  gestionTemps                      String?           //<-- JSON [difficultés, observations]
+  temperament                       String?           //<-- JSON [annotations, liste Temperament...] + model liste tempetament
+  sommeilQuotidien                  String?           //<-- JSON [dort seul, difficultés à s'endormair, observations]
+  alimentationQuotidien             String?           
+  autresQuotidien                   String?           
 }
 
 
@@ -39,13 +59,13 @@ model BilanMedical {
   id                    String              @id @default(cuid()) @map("_id")
   anamnese              Anamnese            @relation(fields: [anamneseId], references: [id], onDelete: Cascade)
   anamneseId            String              @unique 
-  selectedBilans        String[]
-  bilanOphtalmo         String[]            //[date, dossier transmis]
-  bilanOrthophonique    String[]            //[date, dossier transmis]
-  bilanOrthoptique      String[]            //[date, dossier transmis] 
-  bilanNeuropsy         String[]            //[date, dossier transmis] 
-  bilanNeuropediatre    String[]            //[date, dossier transmis] 
-  bilanORL              String[]            //[date, dossier transmis] 
+  selectedBilans        String?
+  bilanOphtalmo         String?            //[date, dossier transmis]
+  bilanOrthophonique    String?            //[date, dossier transmis]
+  bilanOrthoptique      String?            //[date, dossier transmis] 
+  bilanNeuropsy         String?           //[date, dossier transmis] 
+  bilanNeuropediatre    String?           //[date, dossier transmis] 
+  bilanORL              String?            //[date, dossier transmis] 
 }
 
 
@@ -61,5 +81,5 @@ model ListeTypeSensorialite {
 
 model ListeAdjectifs {
   id                    String              @id @default(cuid()) @map("_id")
-  adjectifs             String            //<---- Données JSON de type string[liste] 
+  adjectifsComportement String?            //<---- Données JSON de type string[liste] 
 }

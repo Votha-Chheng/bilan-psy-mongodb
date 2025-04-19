@@ -1,4 +1,4 @@
-import { BilanMedicalKeys, BilanMedicauxResults } from '@/@types/Anamnese'
+import { BilanMedicauxResults } from '@/@types/Anamnese'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,7 @@ import { upsertBilanMedicalByKeyAction, upsertSelectedBilansMedicauxAction } fro
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 type BilanMedicalCardProps = {
   bilanNom: string
@@ -19,83 +19,60 @@ type BilanMedicalCardProps = {
 
 const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => {
   const { id: patientId }  = useParams<{id: string}>()
-  const {anamneseResults, bilansMedicauxResults, updateBilanMedicalByKey} = usePatientInfoStore()
+  const {anamneseResults, bilansMedicauxResults, updateBilanMedicauxResults} = usePatientInfoStore()
+  const {selectedBilans} = bilansMedicauxResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
-  const [dateIsFocused, setDateIsFocused] = useState<boolean>(false)
-
-  const [dossierTransmis, setDossierTransmis] = useState<string>("")
+  const [bilanLocal, setBilanLocal] = useState<string[]>(["", ""])
   const [dateBilanMedical, setDateBilanMedical] = useState<string>("")
-
-  const needToBesaved = useMemo(()=> {
-    if (!bilansMedicauxResults && (dossierTransmis ==="" || dateBilanMedical === "")) return false
-    if (bilansMedicauxResults) {
-      if ((bilansMedicauxResults[keyBilan] && dateBilanMedical === bilansMedicauxResults[keyBilan][0]) && 
-        (bilansMedicauxResults[keyBilan] && dossierTransmis === bilansMedicauxResults[keyBilan][1])
-      ) return false
-    }
-    return true
-  }, [bilansMedicauxResults, dateBilanMedical, dossierTransmis])
-
+  
   useEffect(()=> {
-    if(bilansMedicauxResults && bilansMedicauxResults[keyBilan]){
-      setDateBilanMedical(bilansMedicauxResults[keyBilan][0])
-      setDossierTransmis(bilansMedicauxResults[keyBilan][1])
+    if(bilansMedicauxResults){
+      setBilanLocal(bilansMedicauxResults?.[keyBilan] as string[] ?? ["", ""])
+      setDateBilanMedical(bilansMedicauxResults?.[keyBilan]?.[0] ?? "")
     }
-  }, [bilansMedicauxResults?.[keyBilan]])
-
-  useEffect(()=> {
-    if(dateIsFocused) return
-    if(!needToBesaved) return
-    // Lancer un timer de 5 secondes à chaque changement de "text"
-    const timer = setTimeout(() => {
-      // Ici, on effectue l'action de sauvegarde
-      saveDataAction(keyBilan, [dateBilanMedical, dossierTransmis])
-    }, 3000);
-
-    // Nettoyage : si "dateBilanMedical" ou "dossierTransmis" change avant les 5 secondes, on annule le timer
-    return () => clearTimeout(timer);
-  }, [dateBilanMedical, dossierTransmis, dateIsFocused])
+  }, [bilansMedicauxResults])
 
   //On enregistre dans la BD la liste des bilans utilisées.
-  const selectBilanMedical = async(checked: boolean, bilan: string)=> {
+  const selectBilanMedical = async(checked: boolean, bilanNom: string, key: keyof BilanMedicauxResults)=> {
     setIsPending(true)
-    const bilans = bilansMedicauxResults?.selectedBilans ?? []
-    let newArray = [...bilans]
-    let keyToSetToNull = undefined
+    let copyKey = undefined
+    const copy = selectedBilans ? [...selectedBilans] : []
+    let newState = []
 
     if(checked){
-      newArray.push(bilan)
+      copy.push(bilanNom)
+      newState = [...copy]
     } else {
-      newArray = newArray?.filter((value) => value !== bilan )
-      keyToSetToNull = keyBilan
+      copyKey = key
+      newState = copy.filter(val => val !== bilanNom)
     }
-    
-    const res = await upsertSelectedBilansMedicauxAction(newArray, patientId, anamneseResults?.id ?? undefined, keyToSetToNull)
-    res &&  setState(res)
-    res &&  setIsPending(false)
-    
+    const res = await upsertSelectedBilansMedicauxAction(newState, patientId, anamneseResults?.id, copyKey)
+    res && setState(res)
+    res && setIsPending(false)
   }
 
-  const saveDataAction = async(key: keyof BilanMedicauxResults, value: string[])=> {
+  const saveDataAction = async(key: keyof BilanMedicauxResults, value: string, index: number)=> {
     setIsPending(true)
-    const res = await upsertBilanMedicalByKeyAction<string[]>(key, value, patientId, anamneseResults?.id ?? undefined)
+    const newState = [...bilanLocal]
+    newState[index] = value
+    const res = await upsertBilanMedicalByKeyAction<string[]>(key, newState, patientId, anamneseResults?.id ?? undefined)
     res && setState(res)
     res && setIsPending(false)
   }
 
   const updateFunction = ()=> {
-    updateBilanMedicalByKey(keyBilan, anamneseResults?.id)
+    updateBilanMedicauxResults(anamneseResults?.id)
   }
   useToast({state, updateFunction})
 
   return (
     <div 
-      className={`relative flex items-center gap-2.5 border p-1.5 rounded-md mb-1 ${openSans.className} ${bilansMedicauxResults?.selectedBilans?.includes(bilanNom) 
+      className={`relative flex items-center gap-2.5 border p-1.5 rounded-md mb-1 w-full ${openSans.className} ${bilansMedicauxResults?.selectedBilans?.includes(bilanNom) 
         ? "border-green-700"
         : "border-transparent text-muted-foreground"}`}
     >
-      <Checkbox id={bilanNom} checked={bilansMedicauxResults?.selectedBilans?.includes(bilanNom)} onCheckedChange={(checked: boolean)=> selectBilanMedical(checked, bilanNom)} /> 
+      <Checkbox id={bilanNom} checked={bilansMedicauxResults?.selectedBilans?.includes(bilanNom)} onCheckedChange={(checked: boolean)=> selectBilanMedical(checked, bilanNom, keyBilan)} /> 
       <Label className={`text-base cursor-pointer `} htmlFor={bilanNom}>{bilanNom}</Label>
       {
         bilansMedicauxResults?.selectedBilans?.includes(bilanNom) &&
@@ -103,18 +80,15 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
           <span>effectué le </span>
           <Input 
             type='date' 
-            value={dateBilanMedical ?? ""} 
+            value={dateBilanMedical} 
             disabled={isPending} 
             className='w-36 cursor-pointer' 
-            onBlur={()=> setDateIsFocused(false)}
-            onFocus={()=> setDateIsFocused(true)}
-            onChange={(event)=> {
-              setDateBilanMedical(event.currentTarget.value)
-            } }
+            onBlur={()=> saveDataAction(keyBilan, dateBilanMedical, 0)}
+            onChange={(event)=> setDateBilanMedical(event.currentTarget.value)}
           />
           |
           <span>Dossier transmis :</span>
-          <Select value={dossierTransmis} onValueChange={(value)=> setDossierTransmis(value)} disabled={isPending}>
+          <Select value={bilanLocal[1]} onValueChange={(value)=> saveDataAction(keyBilan, value, 1)} disabled={isPending}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
@@ -124,7 +98,7 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
             </SelectContent>
           </Select>
           {
-            dossierTransmis === "oui" && <span className='italic'>(cf. compte-rendu)</span>
+            bilanLocal[1] === "oui" && <span className='italic'>(cf. compte-rendu)</span>
           }
         </>
       }

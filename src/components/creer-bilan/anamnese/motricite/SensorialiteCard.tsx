@@ -3,41 +3,31 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { openSans } from '@/fonts/openSans'
-import { upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { Database} from 'lucide-react'
+import { Database, Loader2} from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddElementToListForm from '@/components/forms/anamnese/AddElementToListForm'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { upsertListeSensorialiteAction } from '@/serverActions/listeActions'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
-import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
+import { ServiceResponse } from '@/@types/ServiceResponse'
+import { AnamneseResults } from '@/@types/Anamnese'
 
-const SensorialiteCard = () => {
+const SensorialiteCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
   const {sensorialite} = anamneseResults ?? {}
   const {getTypeSensorialite, typeSensorialite : liste} = useAnamneseSearchDBStore()
   const {typesSensorialite} = liste ?? {}
-  const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
 
+  const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
+  const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
+  const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [sensorialiteLocale, setSensorialiteLocale] = useState<string[]>(["", ""]) //<---- [type de sensorialité, commentaires]
 
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const needsToBeSaved: boolean = useMemo(()=> {
-    if(!sensorialite){
-      return sensorialiteLocale[0] !== ""  
-    }
-    if(sensorialite){
-      if(sensorialiteLocale[0] === "") return false
-      if(sensorialiteLocale[0] !== sensorialite[0]) return true
-    }
-    return false
-  }, [sensorialite, sensorialiteLocale[0]])
 
   useEffect(()=> {
     getTypeSensorialite()
@@ -48,23 +38,19 @@ const SensorialiteCard = () => {
     setSensorialiteLocale(sensorialite)
   }, [sensorialite])
 
-  useEffect(()=> {
-    if(needsToBeSaved){
-      formRef.current?.requestSubmit()
-    }
-  }, [needsToBeSaved])
-
-  const handleChangeSensorialite = (value: string, index: number)=> {
+  const handleChangeSensorialite = async(value: string, index: number)=> {
     const newState = [...sensorialiteLocale]
     newState[index] = value
-    setSensorialiteLocale(newState)
+    const res = await upsertAnamneseByKeyValueAction("sensorialite", JSON.stringify(newState), patientId)
+    res && setStateSelect(res)
+    res && setIsPendingSelect(false)
   }
 
   const updateFunction = ()=> {
     updatePatientInfoFromDB(patientId)
   }
 
-  useToast({state, updateFunction})
+  useToast({state: stateSelect, updateFunction})
 
   return (
     <Card className='mb-5 gap-y-2'>
@@ -78,7 +64,7 @@ const SensorialiteCard = () => {
       <div className='flex gap-2.5 items-center'>
         <div className='ml-7.5'>&bull; <span className='underline font-bold underline-offset-2'>Sensorialité</span> : </div>
         <p className='font-bold'>de type :</p>
-        <Select disabled={isPending} value={sensorialiteLocale[0]} onValueChange={(value: string)=> handleChangeSensorialite(value, 0)}>
+        <Select disabled={isPendingSelect} value={sensorialiteLocale[0]} onValueChange={(value: string)=> handleChangeSensorialite(value, 0)}>
           <SelectTrigger className={`w-64 tracking-wide font-normal ${openSans.className}`} >
             <SelectValue />
           </SelectTrigger>
@@ -90,6 +76,7 @@ const SensorialiteCard = () => {
             }
           </SelectContent>
         </Select>
+        {isPendingSelect ? <Loader2 className='animate-spin'/> : <p className='w-6'></p>}
         |
         <AddElementToListForm
           listeElements={typesSensorialite}
@@ -99,11 +86,6 @@ const SensorialiteCard = () => {
           listeId={liste?.id}
         />
       </div>
-      <form ref={formRef} action={formAction}>
-        <Input type='hidden' name="value" value={JSON.stringify(sensorialiteLocale)}/>
-        <Input type='hidden' name="key" value="sensorialite" />
-        <Input type='hidden' name="patientId" value={patientId}/>
-      </form>
       <AddComentaireOuObservations
         actionFunction = {upsertAnamneseBySingleKeyValueWithFormDataAction}
         commentaireObservationFromDB={sensorialite?.[1]}
@@ -114,6 +96,7 @@ const SensorialiteCard = () => {
         stateIfCommentObsIsNull={[sensorialiteLocale[0], ""]}
         commentObsIndex={1}
         label='observation'
+        themeTitle='Sensorialité'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème "Sensorialité"
