@@ -4,12 +4,12 @@ import { useMenuItemStore } from '@/stores/menuItemStore'
 import React, { JSX, useEffect } from 'react'
 import EnTete from './enTete/EnTete'
 import AnamneseSection from './anamnese/AnamneseSection'
-import BilanTestSection from './bilanSections/BilanTestSection'
-import ConclusionSection from './bilanSections/ConclusionSection'
-import AmenagementsSection from './bilanSections/AmenagementsSection'
+import BilanTestSection from './bilanTests/BilanTestSection'
+import ConclusionSection from './conclusion/ConclusionSection'
 import { arimo } from '@/fonts/arimo'
 import { useParams } from 'next/navigation'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
+import AmenagementsSection from './amenagements/AmenagementsSection'
 
 const CompleteBilanBody = () => {
   const {id} = useParams<{id: string}>()

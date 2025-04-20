@@ -1,8 +1,18 @@
 import { AnamneseDTO } from "@/@types/Anamnese"
-import { Anamnese } from "@prisma/client"
+import { BilanDTO } from "@/@types/BilanTests"
+import { Anamnese, Bilan } from "@prisma/client"
 
 export const returnArrayIfJson = <T>(json: string|null): T|null=> {
   return json ? JSON.parse(json) as T : null
+}
+
+export const returnParsedBilanResults = (bilan: Bilan): BilanDTO => {
+  const {tests, ...rest} = bilan ?? {}
+
+  return {
+    tests: returnArrayIfJson(tests),
+    ...rest
+  }
 }
 
 export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {

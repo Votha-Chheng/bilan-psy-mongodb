@@ -73,7 +73,7 @@ const SommeilCard = () => {
         keyAnamnese='sommeilQuotidien'
         setCompleteArrayStateLocal={setSommeilLocal}
         stateIfCommentObsIsNull={[sommeilLocal[0], sommeilLocal[1], ""]}
-        commentObsIndex={0}
+        commentObsIndex={2}
         label='observation'
         themeTitle='Sommeil'
       />

@@ -14,9 +14,9 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AnamneseSection = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {fetchAllPatients, anamneseResults} = usePatientInfoStore()
-  const {anamenesePart} = useAnamnesePartStore()
+  const {fetchAllPatients} = usePatientInfoStore()
   const {initializeChosenThemes} = useAnamneseSearchDBStore()
+  const {anamenesePart} = useAnamnesePartStore()
 
   useEffect(()=> {
     fetchAllPatients()
@@ -25,16 +25,16 @@ const AnamneseSection = () => {
   useEffect(()=> {
     initializeChosenThemes(patientId)
   }, [])
-  
+
   return (
     <article>
       <Card className='uppercase text-lg font-bold tracking-wider bg-gray-300 text-center py-2 mb-5'>
         Anamnèse
       </Card>
       <div className='overflow-hidden'>
-        <div className='transition-transform duration-100 w-full flex' style={{transform: `translateX(${anamenesePart * -100}%)`}} >
+        <div className='transition-transform duration-200 w-full flex-nowrap flex' style={{transform: `translateX(${anamenesePart * -100}%)`}} >
           <TexteBrutAnamnese />
-          <FamillePart />
+          <FamillePart  />
           <AntecedentsPart/>
           <DeveloppementPsyPart/>
           <MotricitePart/>

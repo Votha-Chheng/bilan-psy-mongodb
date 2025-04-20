@@ -13,10 +13,11 @@ import Continence from './Continence'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import CardWrapper from '../CardWrapper'
+import AnamneseTitleItem from '../AnamneseTitleItem'
 
 const DevPsyBody = () => {
   const {anamneseResults} = usePatientInfoStore()
-  const {grossesse, stationAssise, quadrupedie, sommeil, alimentation, autresDevPsy} = anamneseResults ?? {}
+  const {grossesse, stationAssise, quadrupedie, alimentation, autresDevPsy} = anamneseResults ?? {}
   const {chosenThemes} = useAnamneseSearchDBStore()
 
   const [editData, setEditData] = useState<string[]>([])
@@ -27,7 +28,7 @@ const DevPsyBody = () => {
   const devPsyListeThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Développement psychomoteur" && theme.theme)
   
   return (
-    <div>
+    <div className='min-w-full'>
       <div className='flex gap-x-2 font-bold mb-5'>
         <MoveRight/> Choisir les thèmes qui vous semblent pertinents pour décrire les antécédents médicaux du patient.
       </div>
@@ -82,14 +83,6 @@ const DevPsyBody = () => {
 
       <CardWrapper themeLabel="Continence">
         <Continence/>
-      </CardWrapper>
-      
-      <CardWrapper themeLabel="Sommeil">
-        <AnamneseThemeCard
-          keyLabel='sommeil'
-          label="Sommeil"
-          data={sommeil}
-        />
       </CardWrapper>
 
       <CardWrapper themeLabel="Alimentation">

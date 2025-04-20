@@ -1,23 +1,17 @@
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import RecueilProposForm from '@/components/forms/RecueilProposForm'
-import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
-import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import useAutoSave from '@/customHooks/useAutoSave'
 import { useToast } from '@/customHooks/useToast'
 import { saveTextBrutAnamneseAction } from '@/serverActions/anamneseActions'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { useTextBrutAnamneseStore } from '@/stores/textBrutAnamneseStore'
 import { useParams } from 'next/navigation'
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
-import { set } from 'zod'
+import React, { FC, useEffect, useMemo, useState } from 'react'
+import AnamneseTitleItem from '../AnamneseTitleItem'
 
-type TexteBrutAnamneseProps = {
-  
-}
 
-const TexteBrutAnamnese: FC<TexteBrutAnamneseProps> = ({ }) => {
+const TexteBrutAnamnese: FC = () => {
   const {id} = useParams<{id: string}>()
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -52,13 +46,15 @@ const TexteBrutAnamnese: FC<TexteBrutAnamneseProps> = ({ }) => {
   useAutoSave({preventAutoSave, delay:3, autosaveFunction, dependenciesArray: [text]})
 
   return (
-    <AnamneseItemLayout >
+    <article className="min-w-full max-w-full px-5">
+      <AnamneseTitleItem/>
+      <Separator className='my-5' />
       <RecueilProposForm />
       <h3 className='font-bold italic my-5'>
         Prenez des notes brutes de ce que vous dit le patient pour pouvoir l'organiser plus tard dans les différentes parties de l'anamnèse. Le texte est enregistré automatiquement 10 secondes après la dernière frappe de touche.
       </h3>
       <Textarea value={text} className='placeholder:italic min-h-96 max-h-[500px]' placeholder="Tapez votre brouillon d'anamnèse ici..." onChange={(event)=> setText(event.currentTarget.value)} />
-    </AnamneseItemLayout>
+    </article>
   )
 }
 

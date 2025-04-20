@@ -1,7 +1,7 @@
 import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
 import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
-import { MoveRight } from 'lucide-react'
-import React, {useState } from 'react'
+import { Eye, MoveRight, SkipBack, SkipForward } from 'lucide-react'
+import React, {Dispatch, FC, SetStateAction, useState } from 'react'
 import ClasseCard from './ClasseCard'
 import ApprentissagesCard from './ApprentissagesCard'
 import OutilsScolairesCard from './OutilsScolairesCard'
@@ -15,19 +15,25 @@ import RelationsPairsCard from './RelationsPairsCard'
 import ComportementCard from './ComportementCard'
 import AttentionCard from './AttentionCard'
 import { AnamneseResults } from '@/@types/Anamnese'
+import NoteBrutesDialog from '@/components/sharedUI/alertsAndDialogs/NoteBrutesDialog'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import AnamneseTitleItem from '../AnamneseTitleItem'
 
-const ScolaritePart = () => {
+const ScolaritePart: FC = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const {anamneseResults} = usePatientInfoStore()
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
   const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
-  
+  const [seeNotesBrutes, setSeeNotesBrutes] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>("")
   const {cahiers, anterieur} = anamneseResults ?? {}
 
   const scolariteThemes = anamneseKeysAndLabels.filter(value=> value.domaine === "Scolarité")
 
   return (
-    <AnamneseItemLayout>
+    <article className="min-w-full max-w-full px-5">
+     <AnamneseTitleItem/>
       <div className='flex gap-x-2 font-bold mb-5'>
         <MoveRight/> Choisir les thèmes qui vous semblent pertinents pour décrire le quotidien du patient.
       </div>
@@ -91,7 +97,7 @@ const ScolaritePart = () => {
         />
       </CardWrapper>
 
-    </AnamneseItemLayout>
+    </article>
   )
 }
 

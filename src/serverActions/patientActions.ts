@@ -9,8 +9,11 @@ import { CreatePatientSchema } from "@/zodSchemas/patientSchemas";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createMotifConsultationAction, motifConsultationExistsAction } from "./motifActions";
-import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions";
+import { returnArrayIfJson, returnParseAnamneseResult, returnParsedBilanResults } from "@/utils/arrayFunctions";
 import { BilanMedicauxResults } from "@/@types/Anamnese";
+import { bilanSelectOptions } from "@/datas/prismaSelectOptions";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 
 export const createPatientAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
   const rawData = Object.fromEntries(formData)
@@ -181,7 +184,24 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
             alimentationQuotidien: true, 
             autresQuotidien: true
           }
-        }
+        },
+        // bilan: {
+        //   select: {
+        //     id: true,
+        //     tests: true,
+        //     patientId: true,
+        //     bhk: true,
+        //     mabc2: true,
+        //     figuresreya: true,
+        //     flechesnepsy2: true,
+        //     visuomotricenepsy2: true,
+        //     praxiesgestuelles: true,
+        //     imitationpositionsnepsy2: true,
+        //     lateralitetonus: true,
+        //     connaissancedroitegauche: true,
+        //     epreuvecubesnepsy2: true,
+        //   }
+        // }
       }
     })
 
@@ -203,7 +223,7 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
 
     const data: PatientInfoFromDB = {
       ...patientInfoRest, 
-      anamnese: {...returnParseAnamneseResult(anamneseNested), bilansMedicauxResults : {...bilansParsed, ...rest}}
+      anamnese: {...returnParseAnamneseResult(anamneseNested), bilansMedicauxResults : {...bilansParsed, ...rest}},
     }
 
     return {

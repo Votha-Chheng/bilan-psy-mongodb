@@ -15,6 +15,7 @@ export type PatientInfosGenerales = {
 }
 
 import { AnamneseDTO } from "./Anamnese"
+import { BilanDTO } from "./BilanTests"
 
 export type PatientInfoFromDB = {
   id?: string
@@ -33,6 +34,6 @@ export type PatientInfoFromDB = {
   anamnese? : AnamneseDTO|null,
   // amenagements?: AmenagementsPlanDTO[]
   // conclusion?: Conclusion|null
-  // bilan?: BilanDTO|null
+  bilan?: BilanDTO|null
   // dateBilan?: DateBilan|null
 }

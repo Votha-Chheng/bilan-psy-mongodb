@@ -1,5 +1,4 @@
-import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
-import { Loader2, MoveRight } from 'lucide-react'
+import { Eye, Loader2, MoveRight, SkipBack, SkipForward } from 'lucide-react'
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
 import BilansMedicaux from './BilansMedicaux'
@@ -11,11 +10,13 @@ import { ServiceResponse } from '@/@types/ServiceResponse'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useToast } from '@/customHooks/useToast'
 import { Separator } from '@/components/ui/separator'
+import AnamneseTitleItem from '../AnamneseTitleItem'
 
-const AntecedentsPart:FC = ({}) => {
+const AntecedentsPart:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
   const {neant} = anamneseResults ?? {}
+
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -35,7 +36,8 @@ const AntecedentsPart:FC = ({}) => {
   useToast({state, updateFunction})
 
   return (
-    <AnamneseItemLayout >   
+    <article className="min-w-full max-w-full px-5" >  
+      <AnamneseTitleItem/>
       <div className='flex gap-x-2 font-bold mb-5 items-center min-w-full'>
         <MoveRight/>
         <span>Pas d'antécédents médicaux : </span>
@@ -57,7 +59,7 @@ const AntecedentsPart:FC = ({}) => {
           <Separator className='my-7.5' />
         </article>
       }
-    </AnamneseItemLayout>
+    </article>
   )
 }
 

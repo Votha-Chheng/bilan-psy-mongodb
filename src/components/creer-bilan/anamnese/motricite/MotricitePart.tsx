@@ -2,16 +2,16 @@ import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
 //import ChooseThemes from '@/components/sharedUI/ChooseThemes'
 import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import React, { FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import AnamneseThemeCard from '../AnamneseThemeCard'
-import { MoveRight } from 'lucide-react'
+import { Eye, MoveRight, SkipBack, SkipForward } from 'lucide-react'
 import MotriciteGlobaleFineCard from './MotricitéGlobaleFineCard'
 import SensorialiteCard from './SensorialiteCard'
 import VeloCard from './VeloCard'
-import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
+import AnamneseTitleItem from '../AnamneseTitleItem'
 
 const MotricitePart: FC = () => {
   const motriciteThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Motricité")
@@ -24,7 +24,8 @@ const MotricitePart: FC = () => {
   const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
   
   return (
-    <AnamneseItemLayout > 
+    <article className="min-w-full px-5"> 
+      <AnamneseTitleItem/>
       <div className='flex gap-x-2 font-bold mb-5'>
         <MoveRight/> Choisir les thèmes qui vous semblent pertinents pour décrire la motricité du patient.
       </div>
@@ -83,7 +84,7 @@ const MotricitePart: FC = () => {
           data={autresMotricite}
         />
       </CardWrapper>
-    </AnamneseItemLayout>
+    </article>
   )
 }
 

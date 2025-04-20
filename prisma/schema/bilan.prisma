@@ -1,0 +1,132 @@
+model Bilan {
+  id                          String           @id @default(cuid()) @map("_id")
+  patient                     Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId                   String           @unique
+  tests                       String?          //<----- array [liste des tests utilisés]
+  mabc2                       mabc2?  
+  bhk                         bhk?  
+  visuomotricenepsy2          visuomotricenepsy2? 
+  praxiesgestuelles           praxiesgestuelles?
+  imitationpositionsnepsy2    imitationpositionsnepsy2?
+  lateralitetonus             lateralitetonus?
+  connaissancedroitegauche    connaissancedroitegauche?
+  flechesnepsy2               flechesnepsy2?
+  figuresreya                 figuresreya?
+  epreuvecubesnepsy2          epreuvecubesnepsy2?
+}
+
+model bhk {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  qualiteEcriture                 String?
+  vitesseEcriture                 String?
+  lecture                         String?         //<----- array
+  tenueOutilScripteur             String?         //<----- array
+  memorisation                    String?
+  comportement                    String?         //<----- array
+  ecriture                        String?         //<----- array
+  ressenti                        String?
+  autres                          String?         //<----- array
+}
+
+model mabc2 {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  dexteriteManuelle               String?
+  viserAttraper                   String?
+  equilibre                       String?
+  total                           String?
+  competencesMotrices             String?
+  precisionUnimanuelle            String?         //<----- array
+  coordinationsBimanuelles        String?         //<----- array
+  precisionVisuoMotrice           String?         //<----- array
+  coordinationsGlobalesRattrapes  String?         //<----- array
+  coordinationsGlobalesLancers    String?         //<----- array
+  motriciteGlobaleUnipodal        String?         //<----- array
+  motriciteGlobaleDynamique       String?         //<----- array
+  motriciteGlobaleSauts           String?         //<----- array
+  observationsComplementaires     String?         //<----- array
+}
+
+model visuomotricenepsy2{
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  precisionVisuoMoteur            String?
+  vitesse                         String?         //<----- array
+  tenueCrayon                     String?         //<----- array
+  comportement                    String?         //<----- array
+  tonus                           String?         //<----- array
+}
+
+model praxiesgestuelles{
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  precisionDecoupage              String?         //<----- array
+  tenueDecoupage                  String?
+  gestionTonusDecoupage           String?
+  hyperHypoDecoupage              String?
+  precisionCompas                 String?         //<----- array
+  tenueCompas                     String?
+  gestionTonusCompas              String?
+  hyperHypoCompas                 String?
+  precisionEquerre                String?         //<----- array
+  tenueEquerre                    String?
+  gestionTonusEquerre             String?
+  hyperHypoEquerre                String?
+} 
+
+model imitationpositionsnepsy2{
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  imitationGestesMains            String?
+  observationsDiverses            String?         //<----- array
+}
+
+model lateralitetonus {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  lateraliteUsuelle               String?
+  tonusAction                     String?         //<----- array
+}
+
+model connaissancedroitegauche {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  connaissanceDroiteGauche        String?         //<----- array
+}
+
+model flechesnepsy2 {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  score                           String?
+  observations                    String?         //<----- array
+}
+
+model figuresreya {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  copieModeleDS                   String?
+  copieModeleDureePercentile      String?
+  memoireDS                       String?
+  memoirePercentile               String?
+  planificationModele             String?
+  planificationMemoire            String?
+  observations                    String?         //<----- array
+}
+
+model epreuvecubesnepsy2 {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade )
+  bilanId                         String          @unique
+  scoreNS                         String?
+  observations                    String?         //<----- array
+}

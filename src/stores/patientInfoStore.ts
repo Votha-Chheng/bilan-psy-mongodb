@@ -103,11 +103,14 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           decritAuQuotidien: anamnese?.decritAuQuotidien,
           autonomie: anamnese?.autonomie,
           ecouteConsignes: anamnese?.ecouteConsignes,
+          agitationMotrice: anamnese?.agitationMotrice,
           devoirs: anamnese?.devoirs,
           gestionEmotions: anamnese?.gestionEmotions,
           gestionTemps: anamnese?.gestionTemps,
-          estionTemps: anamnese?.gestionTemps,
-          temperament: anamnese?.temperament
+          temperament: anamnese?.temperament,
+          sommeilQuotidien: anamnese?.sommeilQuotidien,
+          alimentationQuotidien: anamnese?.alimentationQuotidien,
+          autresQuotidien: anamnese?.autresQuotidien
         } as AnamneseResults
       })
 
@@ -193,10 +196,14 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           decritAuQuotidien: anamnese?.decritAuQuotidien,
           autonomie: anamnese?.autonomie,
           ecouteConsignes: anamnese?.ecouteConsignes,
+          agitationMotrice: anamnese?.agitationMotrice,
           devoirs: anamnese?.devoirs,
           gestionEmotions: anamnese?.gestionEmotions,
           gestionTemps: anamnese?.gestionTemps,
-          temperament: anamnese?.temperament
+          temperament: anamnese?.temperament,
+          sommeilQuotidien: anamnese?.sommeilQuotidien,
+          alimentationQuotidien: anamnese?.alimentationQuotidien,
+          autresQuotidien: anamnese?.autresQuotidien
         }
       })
     } catch (error) {
