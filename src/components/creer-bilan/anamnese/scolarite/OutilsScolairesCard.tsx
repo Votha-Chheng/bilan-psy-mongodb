@@ -34,6 +34,7 @@ const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
     const newState = [...outilsLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction("outils", JSON.stringify(newState), patientId)
+    res.success && setOutilsLocal(newState)
     res && setStateSelect(res)
     res && setIsPendingSelect(false)
   }

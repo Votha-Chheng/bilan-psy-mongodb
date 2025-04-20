@@ -40,6 +40,18 @@ export const anamneseResultsKeys = [
   "attention" ,
   "cahiers" ,
   "anterieur",
+  "sommeilQuotidien",
+  "decritAuQuotidien",
+  "autonomie", 
+  "ecouteConsignes",
+  "agitationMotrice", 
+  "devoirs", 
+  "gestionEmotions", 
+  "gestionTemps",
+  "temperament", 
+  "alimentationQuotidien", 
+  "autresQuotidien",
+  
 ] as const
 
 export type BilanMedicalKeys = "bilanORL"|"bilanOphtalmo"|"bilanOrthophonique"| "bilanOrthoptique" | "bilanNeuropsy" | "bilanNeuropediatre"|"selectedBilans"
@@ -65,7 +77,6 @@ export type AnamneseDTO = {
   grossesse?: string|null
   stationAssise?: string|null
   quadrupedie?: string|null
-  sommeil?: string|null
   alimentation?: string|null
   autresDevPsy?: string|null
   ageMarche?: string[]|null                                 //<-- JSON tranformé en string[] côté serveur
@@ -88,6 +99,17 @@ export type AnamneseDTO = {
   attention ?: string[]|null                      //<---JSON [attentif, observations]
   cahiers ?: string|null
   anterieur?: string|null
+  sommeilQuotidien?: string[]|null             //<---- [dort seul, difficultés à s'endormair, observations]
+  decritAuQuotidien?: string[]|null             //<---- [commentaires, suite de descriptions...]
+  autonomie?: string[]|null             //<---- [commentaires, suite de descriptions...]
+  ecouteConsignes?: string|null
+  agitationMotrice?: string|null
+  devoirs ?: string|null
+  gestionEmotions?: string[]|null         //<--------- [difficultés, observations]
+  gestionTemps?: string[]|null         //<--------- [difficultés, observations] 
+  temperament?: string[]|null         //<--------- [temperament, observations] 
+  alimentationQuotidien?: string|null  
+  autresQuotidien?: string|null 
 }
 
 export type AnamneseResults = {
@@ -108,7 +130,6 @@ export type AnamneseResults = {
   grossesse?: string|null
   stationAssise?: string|null
   quadrupedie?: string|null
-  sommeil?: string|null
   alimentation?: string|null
   autresDevPsy?: string|null
   ageMarche?: string[]|null                           //<-- JSON tranformé en string[] côté serveur
@@ -131,6 +152,17 @@ export type AnamneseResults = {
   attention ?: string[]|null                      //<---JSON [attentif, observations]
   cahiers ?: string|null
   anterieur?: string|null
+  sommeilQuotidien?: string[]|null             //<---- [dort seul, difficultés à s'endormair, observations]
+  decritAuQuotidien?: string[]|null             //<---- [commentaires, suite de descriptions...]
+  autonomie?:string[]|null             //<---- [commentaires, suite de descriptions...]
+  ecouteConsignes?: string|null
+  agitationMotrice?: string|null
+  devoirs ?: string|null
+  gestionEmotions?: string[]|null         //<--------- [difficultés, observations] 
+  gestionTemps?: string[]|null         //<--------- [difficultés, observations] 
+  temperament?: string[]|null         //<--------- [temperament, observations] 
+  alimentationQuotidien?: string|null 
+  autresQuotidien?: string|null 
 }
 
 export type BilanMedicauxResults = {
@@ -168,3 +200,14 @@ export type ListeAdjectifsDTO = {
   id: string
   adjectifsComportement: string[]|null
 }
+
+export type AutonomieDescriptionDTO = {
+  id: string
+  descriptionsListe: string[]|null
+}
+
+export type TemperamentDescriptionDTO = {
+  id: string
+  temperamentListe: string[]|null
+}
+

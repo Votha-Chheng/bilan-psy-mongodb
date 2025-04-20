@@ -1,6 +1,5 @@
 import { AnamneseResultsDomaineKeyLabel } from "@/@types/Anamnese"
 
-
 export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
   {
     domaine: "Saisir des notes brutes pour l'anamnèse",
@@ -218,11 +217,70 @@ export const anamneseKeysAndLabels: AnamneseResultsDomaineKeyLabel[] = [
     label: "Scolarité antérieure",
     theme: true
   },
-
   {
     domaine: "Quotidien",
-    key: "sommeil",
+    key: "decritAuQuotidien",
+    label: "Caractère au quotidien",
+    theme: true
+  },
+  {
+    domaine: "Quotidien",
+    key: "autonomie",
+    label: "Autonomie",
+    theme: true
+  },
+  {
+    domaine: "Quotidien",
+    key: "ecouteConsignes",
+    label: "Écoute des consignes",
+    theme: true
+  },
+  {
+    domaine: "Quotidien",
+    key: "agitationMotrice",
+    label: "Agitation motrice",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "devoirs",
+    label: "Devoirs",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "gestionEmotions",
+    label: "Gestion des émotions",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "gestionTemps",
+    label: "Gestion du temps",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "temperament",
+    label: "Tempérament et personnalité",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "sommeilQuotidien",
     label: "Sommeil",
     theme: true
   },
+  {
+    domaine: "Quotidien",
+    key: "alimentationQuotidien",
+    label: "Alimentation au quotidien",
+    theme: true
+  }, 
+  {
+    domaine: "Quotidien",
+    key: "autresQuotidien",
+    label: "Autres (quotidien)",
+    theme: true
+  }, 
 ]

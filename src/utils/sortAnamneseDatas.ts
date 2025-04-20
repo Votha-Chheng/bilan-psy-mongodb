@@ -12,7 +12,6 @@ export const getAnamneseLabelsWithKey = (key: keyof AnamneseResults): string|nul
 
 export const getChosenThemeArray = (anamneseResults: AnamneseResults|null): string[]=> {
   let selectedThemes: string[] = []
-
   if(anamneseResults){
     for(const key in anamneseResults){
       if(isAnamneseResultsKey(key) && anamneseResults[key] ){

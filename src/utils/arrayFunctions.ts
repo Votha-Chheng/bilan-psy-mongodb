@@ -22,6 +22,12 @@ export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {
     relationsPairs,
     comportement,
     attention,
+    decritAuQuotidien,
+    sommeilQuotidien,
+    autonomie,
+    gestionEmotions,
+    gestionTemps,
+    temperament,
     ...rest
   } = anamnese ?? {}
 
@@ -41,6 +47,12 @@ export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {
     relationsPairs: returnArrayIfJson(relationsPairs),
     comportement: returnArrayIfJson(comportement),
     attention: returnArrayIfJson(attention),
+    decritAuQuotidien: returnArrayIfJson(decritAuQuotidien),
+    sommeilQuotidien: returnArrayIfJson(sommeilQuotidien),
+    autonomie: returnArrayIfJson(autonomie),
+    gestionEmotions: returnArrayIfJson(gestionEmotions),
+    gestionTemps: returnArrayIfJson(gestionTemps),
+    temperament: returnArrayIfJson(temperament),
     ...rest
   }
 }

@@ -2,8 +2,8 @@ import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertListeAdjectifsComportementAction } from '@/serverActions/listeActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { Loader2, Trash2 } from 'lucide-react'
-import { useActionState, useState } from 'react'
+import { Trash2 } from 'lucide-react'
+import { useActionState } from 'react'
 
 const DeletAdjectifsComportementForm = () => {
   const [state, formAction, isPending] = useActionState(upsertListeAdjectifsComportementAction, {})
@@ -29,8 +29,8 @@ const DeletAdjectifsComportementForm = () => {
         adjectifsComportement && adjectifsComportement.length>0
         ?
         adjectifsComportement.map((adj, index)=> (
-          <div className='p-2.5 flex gap-3 border justify-between items-center border-slate-400 rounded-md' key={index}>
-            <p className={`${openSans.className} font-bold`}>{adj}</p>
+          <div className='p-2.5 flex gap-3 border justify-between items-center border-slate-400 rounded-xl' key={index}>
+            <p className={`${openSans.className} font-bold text-sm`}>{adj}</p>
             <form action={formAction}>
               <input 
                 type="hidden" 
@@ -38,8 +38,8 @@ const DeletAdjectifsComportementForm = () => {
                 value={returnJSONValue(adjectifsComportement, adj)} 
               />
               <input type='hidden' name='listeId' value={listeAdjectifsId ?? undefined} />
-              <button type='submit' disabled={isPending}>
-                <Trash2 size={20} className='text-red-700 hover:text-red-500 cursor-pointer' id={adj} />
+              <button type='submit' className='flex items-center' disabled={isPending}>
+                <Trash2 size={17.5} className='text-red-700 hover:text-red-500 cursor-pointer' id={adj} />
               </button>
             </form>
           </div>

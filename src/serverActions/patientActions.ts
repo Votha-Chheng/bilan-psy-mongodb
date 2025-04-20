@@ -150,7 +150,6 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
             ageMarche: true,
             acquisitionLangage: true,
             continence : true,
-            sommeil: true,
             alimentation: true,
             autresDevPsy: true,
             velo: true,

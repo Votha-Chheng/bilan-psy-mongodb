@@ -1,6 +1,6 @@
 
 import AddAdjectifComportementForm from '@/components/forms/anamnese/AddAdjectifComportementForm'
-import DeletAdjectifsComportementForm from '@/components/forms/anamnese/DeletAdjectifsComportementForm'
+import DeletAdjectifsComportementForm from '@/components/creer-bilan/anamnese/DeletAdjectifsComportementForm'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'

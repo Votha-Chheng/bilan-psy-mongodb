@@ -18,17 +18,14 @@ import { ServiceResponse } from '@/@types/ServiceResponse'
 
 const ComportementCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [openManagementAdjDialog, setOpenManagementAdjDialog] = useState<boolean>(false) 
   const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
   const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   const {comportement} = anamneseResults ?? {}
-
-  const formRef = useRef<HTMLFormElement>(null)
   
   const [stateCheck, setStateCheck] = useState<ServiceResponse<any>>({})
-  const [isPendingCheck, setIsPendingStateCheck] = useState<boolean>(false)
+  const [isPendingCheck, setIsPendingCheck] = useState<boolean>(false)
   const [comportementLocal, setComportementLocal] = useState<string[]>(["", ""])    //<----- [observations, liste d'adjectifs mais séparés par des ,]
 
   const adjectifs = comportementLocal[1].split(", ")
@@ -45,7 +42,7 @@ const ComportementCard: FC = () => {
 
 
   const handleChangeListeAdj = async(checked: boolean, adjectif: string)=> {
-    setIsPendingStateCheck(true)
+    setIsPendingCheck(true)
     let newState = []
     let adjList = comportementLocal[1]  //<---- de type "ajdectis, adjectif..."
     let newAdjList = ""
@@ -69,14 +66,13 @@ const ComportementCard: FC = () => {
     setComportementLocal(newState)
     const res = await upsertAnamneseByKeyValueAction<string>("comportement", JSON.stringify(newState), patientId)
     res && setStateCheck(res)
-    res && setIsPendingStateCheck(false)
+    res && setIsPendingCheck(false)
 
   }
 
   const updateFunction = ()=>{
     updatePatientInfoFromDB(patientId)
   }
-  useToast({state, updateFunction})
   useToast({state:stateCheck, updateFunction})
 
   return (
@@ -92,7 +88,7 @@ const ComportementCard: FC = () => {
       <div className='px-5 flex items-start gap-2.5 w-full'>
         <div className='whitespace-nowrap ml-2'>&bull;  <span className='font-bold underline underline-offset-2'>Comportement </span> : </div> 
         <p className={`${comportementLocal[1]==="" && "opacity-30"} flex gap-x-2`}>
-          {isPending ? <Loader2 className='animate-spin'/> : comportementLocal[1]!=="" ? "L'enfant est décrit comme " + comportementLocal[1]: "Pas d'adjectifs sélectionnés..."}
+          {isPendingCheck ? <Loader2 className='animate-spin'/> : comportementLocal[1]!=="" ? "L'enfant est décrit comme " + comportementLocal[1]: "Pas d'adjectifs sélectionnés..."}
         </p>
       </div>
       <Separator className='my-2'/>
@@ -125,19 +121,16 @@ const ComportementCard: FC = () => {
       <Separator className='mt-2.5'/>
       <AddComentaireOuObservations
         actionFunction = {upsertAnamneseBySingleKeyValueWithFormDataAction}
-        commentaireObservationFromDB={comportement?.[1]}
-        commentaireObservationFromLocal={comportementLocal[1]}
+        commentaireObservationFromDB={comportement?.[0]}
+        commentaireObservationFromLocal={comportementLocal[0]}
         completeArrayStateLocal={comportementLocal}
         keyAnamnese='comportement'
         setCompleteArrayStateLocal={setComportementLocal}
-        stateIfCommentObsIsNull={[comportementLocal[0], ""]}
+        stateIfCommentObsIsNull={["", comportementLocal[1]]}
         commentObsIndex={0}
         label='observation'
         themeTitle='Comportement'
       />
-      <form action={formAction} ref={formRef} >
-        <HiddenAnamneseForm value={JSON.stringify(comportementLocal)} keyAnamnese="comportement" />
-      </form>
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème "Comportement"
       </Button>

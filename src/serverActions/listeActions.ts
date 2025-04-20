@@ -1,12 +1,12 @@
 "use server"
 
-import { ListeAdjectifsDTO, ListeTypeSensorialiteDTO } from "@/@types/Anamnese"
+import { AutonomieDescriptionDTO, ListeAdjectifsDTO, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { ListeAdjectifs, ListeTypeSensorialite } from "@prisma/client"
+import { AutonomieDescription, ListeAdjectifs, ListeTypeSensorialite, TemperamentDescription } from "@prisma/client"
 import { z } from "zod"
 
 //formData = {listeId, typesSensorialite}
@@ -137,6 +137,247 @@ export const fetchAllTypeSensorialite = async(): Promise<ServiceResponse<ListeTy
   }
 }
 
+export const upsertAutonomieDescriptionAction = async(descriptionAutonomie: string, listeId?: string): Promise<ServiceResponse<AutonomieDescriptionDTO|null>> =>{
+  const parsedData = validateWithZodSchema(
+    z.string().min(1, "Il manque un adjectif à rajouter."), 
+    descriptionAutonomie
+  )
+  if(!parsedData.success) return validationError(parsedData)
+  
+  let existingDescriptions: string[]|null = null
+  let finalDescriptionArray: string[]|null = null
+  try {
+    if(listeId){
+      const res = await db.autonomieDescription.findUnique({
+        where: {
+          id: listeId
+        }
+      })
+      if(!res) return dataBaseError()
+      existingDescriptions = res.descriptionsListe ? JSON.parse(res.descriptionsListe) : null
+    }
+
+    if(!existingDescriptions){
+      finalDescriptionArray = [descriptionAutonomie]
+    } else {
+      finalDescriptionArray = [...existingDescriptions, descriptionAutonomie]
+    }
+
+    const result = await db.autonomieDescription.upsert({
+      where :{
+        id: listeId ?? ""
+      },
+      create : {
+        descriptionsListe:finalDescriptionArray.length>0 ? JSON.stringify(finalDescriptionArray) : null
+      },
+      update: {
+        descriptionsListe:finalDescriptionArray.length>0 ? JSON.stringify(finalDescriptionArray) : null
+      }
+    })
+
+    const data: AutonomieDescriptionDTO = {...result, descriptionsListe: result?.descriptionsListe ? JSON.parse(result.descriptionsListe):null}
+
+    return {
+      success: true,
+      data,
+      message: "Desciption ajouté à la liste !"
+    }
+
+  } catch (error) {
+    console.log("Error in upsertAutonomieDescriptionAction", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
+
+export const upsertTemperamentAction = async(temperamentToAdd: string, listeId: string|null|undefined): Promise<ServiceResponse<TemperamentDescriptionDTO|null>> =>{
+  const parsedData = validateWithZodSchema(
+    z.string().min(1, "Il manque un adjectif à rajouter."), 
+    temperamentToAdd
+  )
+  if(!parsedData.success) return validationError(parsedData)
+  
+  let existingTemperaments: string[]|null = null
+  let finalTemperamentsArray: string[]|null = null
+
+  try {
+    if(listeId){
+      const res = await db.temperamentDescription.findUnique({
+        where: {
+          id: listeId
+        }
+      })
+      if(!res) return dataBaseError()
+        existingTemperaments = res.temperamentListe ? JSON.parse(res.temperamentListe) : null
+    }
+
+    if(!existingTemperaments){
+      finalTemperamentsArray = [temperamentToAdd]
+    } else {
+      finalTemperamentsArray = [...existingTemperaments, temperamentToAdd]
+    }
+
+    const result = await db.temperamentDescription.upsert({
+      where :{
+        id: listeId ?? ""
+      },
+      create : {
+        temperamentListe:finalTemperamentsArray.length>0 ? JSON.stringify(finalTemperamentsArray) : null
+      },
+      update: {
+        temperamentListe:finalTemperamentsArray.length>0 ? JSON.stringify(finalTemperamentsArray) : null
+      }
+    })
+
+    const data: TemperamentDescriptionDTO = {...result, temperamentListe: result?.temperamentListe ? JSON.parse(result.temperamentListe):null}
+
+    return {
+      success: true,
+      data,
+      message: "Desciption ajouté à la liste !"
+    }
+
+  } catch (error) {
+    console.log("Error in upsertAutonomieDescriptionAction", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
+
+export const deleteDescriptionAction = async(listeId: string|undefined, descriptionToDelete: string): Promise<ServiceResponse<null>> => {
+  if(!listeId) return dataBaseError("La liste n'existe pas !")
+  const parsedData = validateWithZodSchema(
+    z.string().min(1, "Il manque un adjectif à rajouter."), 
+    descriptionToDelete
+  )
+
+  if(!parsedData.success) return validationError(parsedData)
+
+  let arrayDescriptions: string[]|null = null
+
+  try {
+    const res = await db.autonomieDescription.findUnique({
+      where: {
+        id: listeId
+      }
+    })
+    if(!res) return dataBaseError()
+    
+    const temp: string[]|null = res?.descriptionsListe ? JSON.parse(res.descriptionsListe) : null
+
+    if(!temp) return dataBaseError()
+    if(temp && temp.length !== 0) {
+      arrayDescriptions = temp.filter(val => val !== descriptionToDelete)
+    }
+
+    const final = (!arrayDescriptions || arrayDescriptions.length===0) ? null : JSON.stringify(arrayDescriptions)
+
+    await db.autonomieDescription.update({
+      where: {
+        id: listeId
+      },
+      data: {
+        descriptionsListe: final
+      }
+    })
+
+    return {
+      success: true,
+      message: "Description supprimée de la liste !"
+    }
+
+
+  } catch (error) {
+    console.log("Error in deleteDescriptionAction", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
+
+export const deleteTemperamentAction = async(listeId: string|undefined|null, temperamentToDelete: string): Promise<ServiceResponse<null>> => {
+  if(!listeId) return dataBaseError("La liste n'existe pas !")
+
+  const parsedData = validateWithZodSchema(
+    z.string().min(1, "Il manque un adjectif à rajouter."), 
+    temperamentToDelete
+  )
+
+  if(!parsedData.success) return validationError(parsedData)
+
+  let arrayTemperaments: string[]|null = null
+
+  try {
+    const res = await db.temperamentDescription.findUnique({
+      where: {
+        id: listeId
+      }
+    })
+    if(!res) return dataBaseError()
+    
+    const temp: string[]|null = res?.temperamentListe ? JSON.parse(res.temperamentListe) : null
+
+    if(!temp) return dataBaseError()
+    if(temp && temp.length !== 0) {
+      arrayTemperaments = temp.filter(val => val !== temperamentToDelete)
+    }
+
+    const final = (!arrayTemperaments || arrayTemperaments.length===0) ? null : JSON.stringify(arrayTemperaments)
+
+    await db.temperamentDescription.update({
+      where: {
+        id: listeId
+      },
+      data: {
+        temperamentListe: final
+      }
+    })
+
+    return {
+      success: true,
+      message: "Description supprimée de la liste !"
+    }
+
+  } catch (error) {
+    console.log("Error in deleteTemperamentAction", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
+
+export const fetchAutonomieDescriptions = async(): Promise<ServiceResponse<AutonomieDescriptionDTO|null>>=> {
+  try {
+
+    const res = await db.autonomieDescription.findMany()
+    if(!res) return dataBaseError()
+    const rawData = res[0] as AutonomieDescription
+
+    const data: AutonomieDescriptionDTO = {id: rawData.id, descriptionsListe: rawData?.descriptionsListe ? JSON.parse(rawData.descriptionsListe):null}
+
+    return {
+      success: true,
+      data
+    }
+  } catch (error) {
+    console.log("Error in fetchAutonomieDescriptions", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
+
+export const fetchAllTemperaments = async(): Promise<ServiceResponse<TemperamentDescriptionDTO|null>>=> {
+  try {
+    const res = await db.temperamentDescription.findMany()
+
+    if(!res) return dataBaseError()
+    if(res && res.length===0 ) return dataBaseError()
+    const rawData = res[0] as TemperamentDescription
+
+    const data: TemperamentDescriptionDTO = {id: rawData.id, temperamentListe: rawData?.temperamentListe ? JSON.parse(rawData.temperamentListe):null}
+
+    return {
+      success: true,
+      data
+    }
+  } catch (error) {
+    console.log("Error in fetchAutonomieDescriptions", error)
+    return serverError(error, "Erreur lors de la récupération de la liste.")
+  }
+}
 export const fetchAllAdjectifs = async(): Promise<ServiceResponse<ListeAdjectifsDTO|null>>=> {
   try {
     const res = await db.listeAdjectifs.findMany()

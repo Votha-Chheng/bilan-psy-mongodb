@@ -1,7 +1,7 @@
 
 import { AnamneseResults, BilanMedicauxResults } from '@/@types/Anamnese'
 import { PatientInfosGenerales } from '@/@types/PatientTypes'
-import { fetchBilanMedicalResult, fetchBilanMedicalResultByKey } from '@/serverActions/anamneseActions'
+import { fetchBilanMedicalResult } from '@/serverActions/anamneseActions'
 import { fetchAllPatientsWithCache, fetchPatientByIdWithCache } from '@/serverActions/fetchingWithCache'
 import { create } from 'zustand'
 
@@ -81,7 +81,6 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           ageMarche: anamnese?.ageMarche,
           acquisitionLangage: anamnese?.acquisitionLangage,
           continence : anamnese?.continence,
-          sommeil: anamnese?.sommeil,
           alimentation: anamnese?.alimentation,
           autresDevPsy: anamnese?.autresDevPsy,
           velo: anamnese?.velo,
@@ -100,7 +99,15 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           comportement : anamnese?.comportement,
           attention : anamnese?.attention,
           cahiers : anamnese?.cahiers,
-          anterieur: anamnese?.anterieur
+          anterieur: anamnese?.anterieur,
+          decritAuQuotidien: anamnese?.decritAuQuotidien,
+          autonomie: anamnese?.autonomie,
+          ecouteConsignes: anamnese?.ecouteConsignes,
+          devoirs: anamnese?.devoirs,
+          gestionEmotions: anamnese?.gestionEmotions,
+          gestionTemps: anamnese?.gestionTemps,
+          estionTemps: anamnese?.gestionTemps,
+          temperament: anamnese?.temperament
         } as AnamneseResults
       })
 
@@ -164,7 +171,6 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           ageMarche: anamnese?.ageMarche,
           acquisitionLangage: anamnese?.acquisitionLangage,
           continence : anamnese?.continence,
-          sommeil: anamnese?.sommeil,
           alimentation: anamnese?.alimentation,
           autresDevPsy: anamnese?.autresDevPsy,
           velo: anamnese?.velo,
@@ -183,7 +189,14 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
           comportement : anamnese?.comportement,
           attention : anamnese?.attention,
           cahiers : anamnese?.cahiers,
-          anterieur: anamnese?.anterieur
+          anterieur: anamnese?.anterieur,
+          decritAuQuotidien: anamnese?.decritAuQuotidien,
+          autonomie: anamnese?.autonomie,
+          ecouteConsignes: anamnese?.ecouteConsignes,
+          devoirs: anamnese?.devoirs,
+          gestionEmotions: anamnese?.gestionEmotions,
+          gestionTemps: anamnese?.gestionTemps,
+          temperament: anamnese?.temperament
         }
       })
     } catch (error) {

@@ -168,6 +168,21 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
       if ("attention" in newRecord){
         newRecord["attention"] = JSON.parse(record["attention"]) 
       }
+      if ("decritAuQuotidien" in newRecord){
+        newRecord["decritAuQuotidien"] = JSON.parse(record["decritAuQuotidien"]) 
+      }
+      if ("autonomie" in newRecord){
+        newRecord["autonomie"] = JSON.parse(record["autonomie"]) 
+      }
+      if ("ecouteConsignes" in newRecord){
+        newRecord["ecouteConsignes"] = JSON.parse(record["ecouteConsignes"]) 
+      }
+      if ("gestionEmotions" in newRecord){
+        newRecord["gestionEmotions"] = JSON.parse(record["gestionEmotions"]) 
+      }
+      if ("gestionTemps" in newRecord){
+        newRecord["gestionTemps"] = JSON.parse(record["gestionTemps"]) 
+      }
       return newRecord
     })
 

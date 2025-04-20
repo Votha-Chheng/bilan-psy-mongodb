@@ -4,16 +4,11 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { MoveRight } from 'lucide-react'
 import React, { FC, useState } from 'react'
 import AnamneseThemeCard from '../AnamneseThemeCard'
-import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
 
-type FamillePartProps = {
-  
-}
-
-const FamillePart: FC<FamillePartProps> = ({}) => {
+const FamillePart: FC = () => {
   const familleThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Famille")
 
   const {anamneseResults} = usePatientInfoStore()

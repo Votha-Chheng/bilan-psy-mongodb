@@ -19,8 +19,7 @@ model Anamnese {
   quadrupedie                       String?
   ageMarche                         String?
   continence                        String?             //<--- Données JSON de type string[]
-  acquisitionLangage                String?             //<--- Données JSON de type string[]
-  sommeil                           String?           
+  acquisitionLangage                String?             //<--- Données JSON de type string[]         
   alimentation                      String?
   autresDevPsy                      String?
   velo                              String?           //<--- Données JSON de type string[]
@@ -82,4 +81,14 @@ model ListeTypeSensorialite {
 model ListeAdjectifs {
   id                    String              @id @default(cuid()) @map("_id")
   adjectifsComportement String?            //<---- Données JSON de type string[liste] 
+}
+
+model AutonomieDescription {
+  id                    String              @id @default(cuid()) @map("_id")
+  descriptionsListe     String?            //<---- Données JSON de type string[liste] 
+}
+
+model TemperamentDescription {
+  id                    String              @id @default(cuid()) @map("_id")
+  temperamentListe      String?            //<---- Données JSON de type string[liste] 
 }
