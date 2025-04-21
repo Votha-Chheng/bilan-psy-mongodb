@@ -1,11 +1,28 @@
 import { bilanMedicalKeys, listeBilansMedicaux } from '@/@types/Anamnese'
 import BilanMedicalCard from './BilanMedicalCard'
+import { useEffect } from 'react'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { Loader2 } from 'lucide-react'
 
 const BilansMedicaux = () => {
+  const {anamneseResults, updateBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
+  const {id} = anamneseResults ?? {}
+
+  useEffect(()=> {
+    if(!id) return
+    updateBilanMedicauxResults(id)
+  }, [])
 
   return (
-    <div className='mb-5 mx-5 mt-2 w-full'>
+    <div className='mb-5 mx-5 mt-2 w-full min-h-96'>
       {
+        loadingBilansMedicaux
+        ?
+        <div className='w-full flex flex-col items-center justify-center'>
+          <p>Chargement des données...</p>
+          <Loader2 className='animate-spin' />
+        </div>
+        :
         listeBilansMedicaux.map((bilan, index)=> (
           <BilanMedicalCard
             key={index}
@@ -14,6 +31,7 @@ const BilansMedicaux = () => {
           />
         ))
       }
+
     </div>
   )
 }

@@ -11,36 +11,48 @@ import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 import ScolaritePart from './scolarite/ScolaritePart'
 import QuoditienPart from './quotidien/QuoditienPart'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { useMenuItemStore } from '@/stores/menuItemStore'
+import { Loader2 } from 'lucide-react'
 
 const AnamneseSection = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {fetchAllPatients} = usePatientInfoStore()
-  const {initializeChosenThemes} = useAnamneseSearchDBStore()
+  const {initializeChosenThemes, initializeAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
   const {anamenesePart} = useAnamnesePartStore()
 
-  useEffect(()=> {
-    fetchAllPatients()
-  }, [])
 
   useEffect(()=> {
     initializeChosenThemes(patientId)
   }, [])
+
+  useEffect(()=> {
+    initializeAnamneseResultsByPatientId(patientId)
+  }, [])
+
 
   return (
     <article>
       <Card className='uppercase text-lg font-bold tracking-wider bg-gray-300 text-center py-2 mb-5'>
         Anamnèse
       </Card>
-      <div className='overflow-hidden'>
-        <div className='transition-transform duration-200 w-full flex-nowrap flex' style={{transform: `translateX(${anamenesePart * -100}%)`}} >
-          <TexteBrutAnamnese />
-          <FamillePart  />
-          <AntecedentsPart/>
-          <DeveloppementPsyPart/>
-          <MotricitePart/>
-          <ScolaritePart/>
-          <QuoditienPart/>
-        </div>
+      <div className='overflow-hidden w-full'>
+        {
+          loadingAnamneseResults
+          ?
+          <div className='flex flex-col w-full items-center justify-center'>
+            <p>Chargement des données...</p>
+            <Loader2 className='animate-spin' />
+          </div>
+          :
+          <div className='transition-transform duration-200 w-full flex-nowrap flex' style={{transform: `translateX(${anamenesePart * -100}%)`}} >
+            <TexteBrutAnamnese />
+            <FamillePart  />
+            <AntecedentsPart/>
+            <DeveloppementPsyPart/>
+            <MotricitePart/>
+            <ScolaritePart/>
+            <QuoditienPart/>
+          </div>
+        }
       </div>
     </article>
   )

@@ -37,7 +37,7 @@ const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
 }) => {
   const {id: patientId} = useParams<{id: string}>()
   const [state, formAction, isPending] = useActionState(actionFunction, {})
-  const {updatePatientInfoFromDB} = usePatientInfoStore()
+  const {getAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
   const {chosenThemes} = useAnamneseSearchDBStore()
   const [editObs, setEditObs] = useState<boolean>(false) 
 
@@ -55,17 +55,19 @@ const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
   useEffect(()=> {
     if(commentaireObservationFromDB === ""||!commentaireObservationFromDB){
       setEditObs(true)
+    } else {
+      setEditObs(false)
     }
   }, [commentaireObservationFromDB])
 
   useEffect(()=> {
-    if((chosenThemes[chosenThemes.length-1] === themeTitle) && editObs){
+    if((chosenThemes[chosenThemes.length-1] === themeTitle) && editObs && !loadingAnamneseResults && !commentaireObservationFromDB){
       focusRef?.current?.focus()
     }
-  }, [editObs, chosenThemes])
+  }, [editObs, chosenThemes, commentaireObservationFromDB])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
     setEditObs(false)
   }
   useToast({state, updateFunction})

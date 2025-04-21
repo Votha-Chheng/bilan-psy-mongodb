@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import AgeMarche from './AgeMarche'
-import ChooseThemes from '@/components/sharedUI/ChooseThemes'
 import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { AnamneseResults } from '@/@types/Anamnese'
 import { MoveRight } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
@@ -13,14 +11,11 @@ import Continence from './Continence'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import CardWrapper from '../CardWrapper'
-import AnamneseTitleItem from '../AnamneseTitleItem'
 
 const DevPsyBody = () => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {grossesse, stationAssise, quadrupedie, alimentation, autresDevPsy} = anamneseResults ?? {}
-  const {chosenThemes} = useAnamneseSearchDBStore()
-
-  const [editData, setEditData] = useState<string[]>([])
+  
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
   const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
@@ -45,7 +40,6 @@ const DevPsyBody = () => {
         />
       </div> 
       <Separator className='my-5'/>
-
       <CardWrapper themeLabel="Grossesse">
         <AnamneseThemeCard
           keyLabel='grossesse'

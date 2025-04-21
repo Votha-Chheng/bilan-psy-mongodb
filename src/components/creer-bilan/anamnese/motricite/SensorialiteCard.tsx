@@ -18,7 +18,7 @@ import { AnamneseResults } from '@/@types/Anamnese'
 
 const SensorialiteCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {sensorialite} = anamneseResults ?? {}
   const {getTypeSensorialite, typeSensorialite : liste} = useAnamneseSearchDBStore()
   const {typesSensorialite} = liste ?? {}
@@ -27,7 +27,6 @@ const SensorialiteCard:FC = () => {
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [sensorialiteLocale, setSensorialiteLocale] = useState<string[]>(["", ""]) //<---- [type de sensorialité, commentaires]
-
 
   useEffect(()=> {
     getTypeSensorialite()
@@ -44,10 +43,11 @@ const SensorialiteCard:FC = () => {
     const res = await upsertAnamneseByKeyValueAction("sensorialite", JSON.stringify(newState), patientId)
     res && setStateSelect(res)
     res && setIsPendingSelect(false)
+    res.success && setSensorialiteLocale(newState)
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state: stateSelect, updateFunction})

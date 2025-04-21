@@ -15,9 +15,14 @@ const CompleteBilanBody = () => {
   const {id} = useParams<{id: string}>()
   const {fetchSinglePatientById} = usePatientInfoStore()
   const {menuItem} = useMenuItemStore()
+  const {fetchAllPatients, allPatients} = usePatientInfoStore()
   
   useEffect(()=> {
     fetchSinglePatientById(id)
+  }, [])
+
+  useEffect(()=> {
+    fetchAllPatients()
   }, [])
 
   const returnComponent = (menuItem: string|null): JSX.Element=> {

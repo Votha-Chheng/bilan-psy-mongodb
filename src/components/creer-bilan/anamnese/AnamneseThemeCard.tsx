@@ -4,6 +4,7 @@ import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBD
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { CornerUpLeft, Database, EditIcon } from 'lucide-react'
 import React, { FC, useEffect, useState } from 'react'
@@ -15,7 +16,7 @@ type AnamneseThemeCardProps = {
 }
 
 const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data }) => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const [edit, setEdit] = useState<boolean>(false)
 
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false)
@@ -23,6 +24,8 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data })
   useEffect(()=> {
     if(!data){
       setEdit(true)
+    } else {
+      setEdit(false)
     }
   }, [data])
 

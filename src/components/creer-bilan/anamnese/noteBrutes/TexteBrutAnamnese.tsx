@@ -9,11 +9,15 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import AnamneseTitleItem from '../AnamneseTitleItem'
+import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 
 const TexteBrutAnamnese: FC = () => {
   const {id} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  //const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, updateBilanMedicauxResults} = useAnamneseSearchDBStore()
+  const {notesBrutes} = anamneseResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const [text, setText] = useState<string>("")
@@ -21,21 +25,21 @@ const TexteBrutAnamnese: FC = () => {
   const savetext = async(text: string, id: string)=> {
     const res = await saveTextBrutAnamneseAction(text, id)
     res && setState(res)
-    res && updatePatientInfoFromDB(id)
+    res && updateBilanMedicauxResults(id)
   }
 
   const preventAutoSave: boolean = useMemo(()=> {
-    return (text.trim() === "") || (text === anamneseResults?.notesBrutes)
-  }, [text, anamneseResults?.notesBrutes])
+    return (text.trim() === "") || (text === notesBrutes)
+  }, [text, notesBrutes])
 
   useEffect(()=> {
     if(anamneseResults?.notesBrutes ){
-      setText(anamneseResults?.notesBrutes)
+      setText(notesBrutes ?? "")
     }
-  }, [anamneseResults?.notesBrutes])
+  }, [notesBrutes])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(id)
+    updateBilanMedicauxResults(id)
   }
 
   const autosaveFunction = ()=> {

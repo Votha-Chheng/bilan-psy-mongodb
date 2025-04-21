@@ -1,11 +1,10 @@
 import ManageTemperamentDialog from '@/components/sharedUI/alertsAndDialogs/ManageTemperamentDialog'
 import React, { useEffect, useState } from 'react'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import SelectAndCommentsCard from '../../SelectAndCommentsCard'
 
 const TemperamentCard = () => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {temperament} = anamneseResults ?? {}
   const {temperamentsDescription, getListeTemperament} = useAnamneseSearchDBStore()
   const {temperamentListe} = temperamentsDescription ?? {}

@@ -13,9 +13,10 @@ import TemperamentCard from './TemperamentCard'
 import SommeilCard from './SommeilCard'
 import DecritAuQuotidienCard from './DecritAuQuotidienCard'
 import AnamneseTitleItem from '../AnamneseTitleItem'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const QuoditienPart = () => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {ecouteConsignes, agitationMotrice, gestionTemps, gestionEmotions, alimentationQuotidien, autresQuotidien} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)

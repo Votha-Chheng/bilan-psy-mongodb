@@ -13,16 +13,16 @@ import React, { FC, Ref, useActionState, useEffect, useRef, useState } from 'rea
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const RelationsPairsCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
+ 
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {relationsPairs} = anamneseResults ?? {}
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
-  const formRef = useRef<HTMLFormElement>(null)
   
   const [relationsPairsLocal, setRelationsPairsLocal] = useState<string[]>(["", ""])    //<----- [sociabilité, observations]
 
@@ -42,9 +42,8 @@ const RelationsPairsCard: FC = () => {
   }
 
   const updateFunction = ()=>{
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
-  useToast({state, updateFunction})
   useToast({state: stateSelect, updateFunction})
 
   return (
@@ -81,9 +80,6 @@ const RelationsPairsCard: FC = () => {
         label='observation'
         themeTitle='Relations avec les pairs'
       />
-      <form action={formAction} ref={formRef} >
-        <HiddenAnamneseForm value={JSON.stringify(relationsPairsLocal)} keyAnamnese="relationsPairs" />
-      </form>
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème "Relations avec les pairs"
       </Button>

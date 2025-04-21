@@ -1,20 +1,18 @@
-import AddAdjectifComportementForm from '@/components/forms/anamnese/AddAdjectifComportementForm'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Loader2 } from 'lucide-react'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AcquisitionLangage = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {acquisitionLangage } = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -27,6 +25,7 @@ const AcquisitionLangage = () => {
     let newState = [...acquisitionLangageLocal] 
     newState[index] = newValue
     const res = await upsertAnamneseByKeyValueAction("acquisitionLangage", JSON.stringify(newState), patientId)
+    res.success && setAcquisitionLangageLocal(newState)
     res && setState(res)
     res && setIspending(false)
   }
@@ -39,7 +38,7 @@ const AcquisitionLangage = () => {
 
   
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

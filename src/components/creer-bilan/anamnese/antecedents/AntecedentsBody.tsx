@@ -5,12 +5,12 @@ import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
 import AnamneseThemeCard from '../AnamneseThemeCard'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AntecedentsBody = () => {
   const antecedentsThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Antécédents médicaux personnels et suivis médicaux" && theme.theme)
   
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {maladiesEventuelles, handicap, accompagnementSuivi, autresAntecedents} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)

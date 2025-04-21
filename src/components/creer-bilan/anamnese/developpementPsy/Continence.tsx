@@ -5,13 +5,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Continence = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {continence} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -31,11 +32,10 @@ const Continence = () => {
     if(value==="nocturne non acquise"){
       newState[3] = ""
     }
-    console.log(newState)
     const res = await upsertAnamneseByKeyValueAction("continence", JSON.stringify(newState), patientId)
     res && setState(res)
     res && setIspending(false)
-    setContinenceLocal(newState)
+    res.success && setContinenceLocal(newState)
   }
 
   useEffect(()=> {
@@ -48,7 +48,7 @@ const Continence = () => {
 
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

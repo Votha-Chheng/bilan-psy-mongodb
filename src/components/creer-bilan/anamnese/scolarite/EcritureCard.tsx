@@ -12,20 +12,18 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useToast } from '@/customHooks/useToast'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const EcritureCard: FC = ({}) => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction,] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ecriture} = anamneseResults ?? {}
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelectFirst, setIsPendingSelectFirst] = useState<boolean>(false)
   const [isPendingSelectSecond, setIsPendingSelectSecond] = useState<boolean>(false)
   const [ecritureLocal, setEcritureLocal] = useState<string[]>(["", "", ""])    //<---- [niveau, douleurs, observations]
-
-  const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(()=> {
     if(!ecriture) return
@@ -37,7 +35,7 @@ const EcritureCard: FC = ({}) => {
     const newState = [...ecritureLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("ecriture", JSON.stringify(newState), patientId)
-    res && setStateSelect(res)
+    res.success && setStateSelect(res)
     if(res){
       setIsPendingSelectFirst(false)
       setIsPendingSelectSecond(false)
@@ -45,9 +43,8 @@ const EcritureCard: FC = ({}) => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
-  useToast({state, updateFunction})
   useToast({state: stateSelect, updateFunction})
 
   return (
@@ -96,9 +93,6 @@ const EcritureCard: FC = ({}) => {
         label='observation'
         themeTitle='Écriture'
       />
-      <form ref={formRef} action={formAction}>
-        <HiddenAnamneseForm keyAnamnese='ecriture' value={JSON.stringify(ecritureLocal)} />
-      </form>
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les commentaires dans la base de données pour le thème "Écriture"
       </Button>

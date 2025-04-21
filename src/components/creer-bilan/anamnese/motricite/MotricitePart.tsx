@@ -1,10 +1,7 @@
-import AnamneseItemLayout from '@/components/layouts/AnamneseItemLayout'
-//import ChooseThemes from '@/components/sharedUI/ChooseThemes'
 import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import AnamneseThemeCard from '../AnamneseThemeCard'
-import { Eye, MoveRight, SkipBack, SkipForward } from 'lucide-react'
+import { MoveRight} from 'lucide-react'
 import MotriciteGlobaleFineCard from './MotricitéGlobaleFineCard'
 import SensorialiteCard from './SensorialiteCard'
 import VeloCard from './VeloCard'
@@ -12,11 +9,12 @@ import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
 import AnamneseTitleItem from '../AnamneseTitleItem'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const MotricitePart: FC = () => {
   const motriciteThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Motricité")
 
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {motriciteFine, motriciteGlobale, praxiesGestuelles, extraScolaire, autresMotricite} = anamneseResults ?? {}
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)

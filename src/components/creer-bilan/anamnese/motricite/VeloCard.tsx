@@ -13,10 +13,11 @@ import React, { FC, useActionState, useEffect, useMemo, useRef, useState } from 
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const VeloCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {updatePatientInfoFromDB, anamneseResults} = usePatientInfoStore()
+  const {getAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
   const {velo} = anamneseResults ?? {}
   
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -38,7 +39,7 @@ const VeloCard:FC = () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
   

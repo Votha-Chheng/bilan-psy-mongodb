@@ -3,7 +3,7 @@ import { cache } from 'react';
 import { fetchPatientById, fetchPatientsList } from './patientActions';
 import { fetchAllEcoles } from './ecoleActions';
 import { fetchAllMotifsConsultation } from './motifActions';
-import { fetchAnamneseByKeys } from './anamneseActions';
+import { fetchAnamneseByKeys, fetchAnamneseResultsByPatientId } from './anamneseActions';
 
 export const fetchPatientByIdWithCache = cache(fetchPatientById);
 
@@ -15,4 +15,4 @@ export const fetchAllMotifsConsultationWithCache = cache(fetchAllMotifsConsultat
 
 export const fetchAnamneseByKeysWithCache = cache(fetchAnamneseByKeys)
 
-
+export const fetchAnamneseResultsByPatientIdWithCache = cache(fetchAnamneseResultsByPatientId)

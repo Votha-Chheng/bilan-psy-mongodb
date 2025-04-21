@@ -6,17 +6,14 @@ import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { createDevPsyConfereAction } from '@/serverActions/devPsyConfereActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Plus } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Confere = () => {
     const {id: patientId} = useParams<{id: string}>()
-    const {devPsyConfereListe, getDevPsyConfereList} = useAnamneseSearchDBStore()
-    const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+    const {devPsyConfereListe, getDevPsyConfereList, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
     const {confereDevPsy} = anamneseResults ?? {}
-  
   
     const [state, setState] = useState<ServiceResponse<any>>({})
     const [isPending, setIsPending] = useState<boolean>(false)
@@ -33,7 +30,7 @@ const Confere = () => {
     }
   
     const updateFunction = ()=> {
-      updatePatientInfoFromDB(patientId)
+      getAnamneseResultsByPatientId(patientId)
     }
   
     useToast({state, updateFunction})

@@ -13,12 +13,12 @@ import { ServiceResponse } from '@/@types/ServiceResponse'
 import ManageAdjectifsComportementDialog from '@/components/sharedUI/alertsAndDialogs/ManageAdjectifsComportementDialog'
 import { Button } from '@/components/ui/button'
 import { List } from 'lucide-react'
+import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 
 const AgeMarche = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {adjectifsComportement, getListeAdjectifs, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ageMarche} = anamneseResults ?? {}
-  const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
 
@@ -31,6 +31,7 @@ const AgeMarche = () => {
     let newState = [...ageMarcheLocal] 
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("ageMarche", JSON.stringify(newState), patientId)
+    res.success && setAgeMarcheLocal(newState)
     res && setState(res)
     res && setIspending(false)
   }
@@ -47,7 +48,7 @@ const AgeMarche = () => {
   }, [ageMarche])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
     getListeAdjectifs()
   }
   useToast({state, updateFunction})

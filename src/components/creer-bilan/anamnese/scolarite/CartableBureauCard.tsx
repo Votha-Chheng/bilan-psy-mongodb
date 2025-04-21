@@ -14,13 +14,13 @@ import React, { FC, Ref, useActionState, useEffect, useMemo, useRef, useState } 
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 
 const CartableBureauCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {cartableBureau} = anamneseResults ?? {}
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -28,7 +28,6 @@ const CartableBureauCard:FC = () => {
   const [isDifficult, setIsDifficult] = useState<boolean>(false)
   const [cartableBureauLocal, setCartableBureauLocal] = useState<string[]>(["", ""])    //<---- [type de difficulté, commentaires]
 
-  const setDifficulteEmptyyRef = useRef<HTMLFormElement>(null)
   
   useEffect(()=> {
     if(!cartableBureau) return
@@ -59,9 +58,8 @@ const CartableBureauCard:FC = () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
-  useToast({state, updateFunction})
   useToast({state: stateSelect, updateFunction})
 
   return (
@@ -113,9 +111,6 @@ const CartableBureauCard:FC = () => {
         label='observation'
         themeTitle='Organisation du cartable et du bureau'
       />
-      <form ref={setDifficulteEmptyyRef} action={formAction}>
-        <HiddenAnamneseForm keyAnamnese='cartableBureau' value={JSON.stringify(["", cartableBureauLocal[1]])} />
-      </form>
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les commentaires dans la base de données pour le thème "Organisation du cartable et du bureau"
       </Button>

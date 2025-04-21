@@ -1,12 +1,8 @@
 import { AnamneseResults, AnamneseResultsDomaineKeyLabel } from "@/@types/Anamnese"
 import { useAnamneseSearchDBStore } from "@/stores/anamneseSearchDBStore"
-import { usePatientInfoStore } from "@/stores/patientInfoStore"
-import { Dispatch, FC, SetStateAction, useActionState, useEffect, useState } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import { Badge } from "../ui/badge"
 import DeleteAnamneseThemeAlert from "./alertsAndDialogs/DeleteAnamneseThemeAlert"
-import { setPropertyToNullByKeyAction } from "@/serverActions/anamneseActions"
-import { useParams } from "next/navigation"
-import { useToast } from "@/customHooks/useToast"
 
 type ChooseThemesAltProps = {
   listeThemes: AnamneseResultsDomaineKeyLabel[]
@@ -19,7 +15,7 @@ type ChooseThemesAltProps = {
 }
 
 const ChooseThemesAlt: FC<ChooseThemesAltProps> = ({setOpenDialog, listeThemes, setKeyToDelete, setThemeToDelete, themeToDelete, openDialog, keyToDelete}) => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const {chosenThemes, setChosenThemes} = useAnamneseSearchDBStore()
 
   const handleChosenThemes = (theme: string, keyTheme: keyof AnamneseResults|null) => {
@@ -65,7 +61,3 @@ const ChooseThemesAlt: FC<ChooseThemesAltProps> = ({setOpenDialog, listeThemes, 
 }
 
 export default ChooseThemesAlt
-
-function setOpenDialog(arg0: boolean) {
-  throw new Error("Function not implemented.")
-}

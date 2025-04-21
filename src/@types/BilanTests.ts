@@ -1,5 +1,6 @@
 export type BilanDTO = {
   id?: string|null,
+  patientId?: string|null
   tests?: string[]|null
   bhk?: BHKResultsDTO|null
   mabc2?: MABC2ResultsDTO|null
@@ -10,11 +11,11 @@ export type BilanDTO = {
   connaissancedroitegauche?: ConnaissancesDroiteGaucheResultsDTO|null
   flechesnepsy2?: FlechesNEPSY2ResultsDTO|null
   figuresreya?: FiguresReyAResultsDTO|null
+  figuresreyb?: FiguresReyBResultsDTO|null
   epreuvecubesnepsy2?: EpreuveCubesNEPSY2ResultsDTO|null
 }
 
 export type BHKResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   qualiteEcriture?: string|null
@@ -29,7 +30,6 @@ export type BHKResultsDTO = {
 }
 
 export type MABC2ResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   dexteriteManuelle?: string|null
@@ -60,7 +60,6 @@ export type VisuomotriceNEPSY2ResultsDTO = {
 }
 
 export type PraxiesGestuellesResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   precisionDecoupage?: string[]|null
@@ -79,7 +78,6 @@ export type PraxiesGestuellesResultsDTO = {
 }
 
 export type ImitationPositionsNEPSY2ResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   imitationGestesMains?: string|null
@@ -87,7 +85,6 @@ export type ImitationPositionsNEPSY2ResultsDTO = {
 }
 
 export type LateraliteTonusResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   lateraliteUsuelle?: string|null
@@ -95,14 +92,12 @@ export type LateraliteTonusResultsDTO = {
 }
 
 export type ConnaissancesDroiteGaucheResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   connaissanceDroiteGauche?: string[]|null
 }
 
 export type FlechesNEPSY2ResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   score?: string|null
@@ -110,7 +105,6 @@ export type FlechesNEPSY2ResultsDTO = {
 }
 
 export type FiguresReyAResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   copieModeleDS?: string|null
@@ -122,8 +116,19 @@ export type FiguresReyAResultsDTO = {
   observations?: string[]|null
 }
 
+export type FiguresReyBResultsDTO = {
+  id?: string|null
+  bilanId ?: string|null
+  copieModeleDS?: string|null
+  copieModeleDureeDS?: string|null
+  copiePlanification?: string|null
+  memoireModeleDS?: string|null
+  memoireModeleDureeDS?: string|null
+  memoirePlanification?: string|null
+  observations?: string[]|null 
+}
+
 export type EpreuveCubesNEPSY2ResultsDTO = {
-  patientId?: string|null
   id?: string|null
   bilanId?: string|null
   scoreNS?: string|null

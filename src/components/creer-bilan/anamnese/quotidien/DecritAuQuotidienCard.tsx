@@ -8,16 +8,15 @@ import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { Checkbox } from '@radix-ui/react-checkbox'
 import { List, Loader2, Trash2Icon } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const DecritAuQuotidienCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {decritAuQuotidien} = anamneseResults ?? {}
-  const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
+  const {adjectifsComportement} = useAnamneseSearchDBStore()
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [isPendingDelete, setIsPendingDelete] = useState<boolean>(false)
@@ -53,7 +52,7 @@ const DecritAuQuotidienCard = () => {
   }
 
   const updateFunction =()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

@@ -3,16 +3,16 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const SommeilCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {sommeilQuotidien} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -35,7 +35,7 @@ const SommeilCard = () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

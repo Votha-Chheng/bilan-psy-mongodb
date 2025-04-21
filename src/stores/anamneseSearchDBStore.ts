@@ -1,20 +1,27 @@
-import { AnamneseResults, anamneseResultsKeys, AutonomieDescriptionDTO, ListeAdjectifsDTO, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
-import { fetchChosenThemes } from '@/serverActions/anamneseActions'
+import { AnamneseResults, anamneseResultsKeys, AutonomieDescriptionDTO, BilanMedicauxResults, ListeAdjectifsDTO, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
+import { fetchAnamneseResultsByPatientId, fetchBilanMedicalResult, fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serverActions/anamneseActions'
 import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
-import { fetchAnamneseByKeysWithCache } from '@/serverActions/fetchingWithCache'
+import { fetchAnamneseByKeysWithCache, fetchAnamneseResultsByPatientIdWithCache } from '@/serverActions/fetchingWithCache'
 import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite, fetchAutonomieDescriptions } from '@/serverActions/listeActions'
-
+import { Anamnese } from '@prisma/client'
 import { create } from 'zustand'
 
 type AnamneseSearchDBState = {
+  loadingAnamneseResults: boolean
+  loadingBilansMedicaux: boolean
+  bilanMedicauxResults : BilanMedicauxResults|null
+  updateBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
+  anamneseResults: AnamneseResults|null
+  initializeAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
+  getAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
   temperamentsDescription: TemperamentDescriptionDTO|null|undefined
   getListeTemperament: ()=> Promise<void>
-  anamneseInDBByDomaine: AnamneseResults[]|null
+  anamneseInDBByDomaine: (Omit<AnamneseResults, "bilanMedicauxResults">)[]|null
   devPsyConfereListe: string[]
   autonomieDescription: AutonomieDescriptionDTO|null
   getAutonomieDescriptionsListe: ()=> void
   getDevPsyConfereList: ()=> Promise<void>
-  getAnamneseDBByKeys : (keys: (keyof AnamneseResults)[])=> Promise<void>
+  getAnamneseDBByKeys : (keys: (keyof Partial<Anamnese>)[])=> Promise<void>
   loadingData: boolean
   resetAnamneseDB: ()=> void
   chosenThemes: string[]
@@ -28,6 +35,40 @@ type AnamneseSearchDBState = {
 }
 
 export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => ({
+  loadingAnamneseResults: false,
+  loadingBilansMedicaux: false,
+  bilanMedicauxResults : null,
+  getAnamneseResultsByPatientId: async(patientId: string)=> {
+    try {
+      const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
+      set({anamneseResults: result.data})
+    } catch (error) {
+      console.log("Can't getAnamneseResultsByPatientId")
+    }
+  },
+  updateBilanMedicauxResults : async(anamneseId: string|null|undefined)=> {
+    set({loadingBilansMedicaux: true})
+    try {
+      const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)
+      set({bilanMedicauxResults: result.data})
+    } catch (error) {
+      console.log("Can't updateBilanMedicauxResults")
+    } finally {
+      set({loadingBilansMedicaux: false})
+    }
+  },
+  anamneseResults: null,
+  initializeAnamneseResultsByPatientId: async(patientId: string)=> {
+    set({loadingAnamneseResults: true})
+    try {
+      const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
+      set({anamneseResults: result.data})
+    } catch (error) {
+      console.log("Can't getAnamneseResultsByPatientId")
+    } finally {
+      set({loadingAnamneseResults: false})
+    }
+  },
   temperamentsDescription: null,
   getListeTemperament: async()=> {
     try {
@@ -60,7 +101,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       console.log("Can't getDevPsyConfereList")
     }
   },
-  getAnamneseDBByKeys: async(keys: (keyof AnamneseResults)[])=> {
+  getAnamneseDBByKeys: async(keys: (keyof Exclude<AnamneseResults, "bilanMedicauxResults">)[])=> {
     set({loadingData: true})
     try {
       const response = await fetchAnamneseByKeysWithCache(keys)

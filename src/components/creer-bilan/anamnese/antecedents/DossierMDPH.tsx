@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2, MoveRight } from 'lucide-react'
 import { useParams } from 'next/navigation'
@@ -11,7 +12,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 const DossierMDPH = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {updatePatientInfoFromDB, anamneseResults} = usePatientInfoStore()
+  const {getAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
   const {dossierMDPH} = anamneseResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -25,7 +26,7 @@ const DossierMDPH = () => {
     setAddInfo(dossierMDPHArray[1])
   }, [dossierMDPH])
 
-  const updateFunction = ()=> updatePatientInfoFromDB(patientId)
+  const updateFunction = ()=> getAnamneseResultsByPatientId(patientId)
   useToast({state, updateFunction})
 
 
@@ -34,6 +35,7 @@ const DossierMDPH = () => {
     const newState = [...dossierMDPHLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction<string>("dossierMDPH", JSON.stringify(newState), patientId)
+    res.success && setDossierMDPHLocal(newState)
     if(res){
       setState(res)
       setIsPending(false)

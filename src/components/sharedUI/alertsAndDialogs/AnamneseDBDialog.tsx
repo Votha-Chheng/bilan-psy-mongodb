@@ -6,12 +6,13 @@ import { PatientInfosGenerales } from '@/@types/PatientTypes'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Card, CardTitle } from '@/components/ui/card'
 import { Loader } from 'lucide-react'
+import { Anamnese } from '@prisma/client'
 
 type AnamneseDBDialogProps = {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   dialogTitle: string
-  searchKeys: (keyof AnamneseResults)[]
+  searchKeys: (keyof Partial<Anamnese>)[]
   indexDataToRetrieve?: number
 }
 
@@ -21,7 +22,7 @@ const AnamneseDBDialog: FC<AnamneseDBDialogProps> = ({ open, setOpen, dialogTitl
 
   useEffect(()=> {
     if(open){
-      getAnamneseDBByKeys(searchKeys as unknown as (keyof AnamneseResults)[])
+      getAnamneseDBByKeys(searchKeys)
     }
 
     return () => {
@@ -54,7 +55,7 @@ const AnamneseDBDialog: FC<AnamneseDBDialogProps> = ({ open, setOpen, dialogTitl
             ?
             <p className='w-fit mx-auto italic'>Aucun résultat trouvé.</p>
             :
-            anamneseInDBByDomaine.map((anamnese: AnamneseResults, index: number)=>(
+            anamneseInDBByDomaine.map((anamnese: Exclude<AnamneseResults, "BilanMedicauxResults ">, index: number)=>(
               typeof(indexDataToRetrieve) !== "number"
               ?
               <Card key={index} className='min-w-1/2 max-w-1/2 py-2 px-4'>
@@ -64,6 +65,8 @@ const AnamneseDBDialog: FC<AnamneseDBDialogProps> = ({ open, setOpen, dialogTitl
                 </CardTitle>
               </Card>
               :
+              (anamnese[searchKeys[0]]?.[indexDataToRetrieve] !== null && anamnese[searchKeys[0]]?.[indexDataToRetrieve] !=="")
+              &&
               <Card key={index} className='min-w-1/2 max-w-1/2 py-2 px-4'>
                 <CardTitle className='text-sm flex flex-col'>
                   <div><span className='font-normal underline underline-offset-2'>Patient</span> : {returnPatientName(anamnese.patientId, allPatients)}</div>

@@ -6,11 +6,11 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import {  Database, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 type MotriciteGlobaleFineCardProps = {
   globaleFineState: string[]|null|undefined
@@ -20,7 +20,7 @@ type MotriciteGlobaleFineCardProps = {
 
 const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFineState, keyLabel, title}) => {
   const {id: patientId} = useParams<{id: string}>()
-  const {updatePatientInfoFromDB} = usePatientInfoStore()
+  const {getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -43,7 +43,7 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

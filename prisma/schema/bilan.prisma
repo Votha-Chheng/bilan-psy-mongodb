@@ -12,6 +12,7 @@ model Bilan {
   connaissancedroitegauche    connaissancedroitegauche?
   flechesnepsy2               flechesnepsy2?
   figuresreya                 figuresreya?
+  figuresreyb                 figuresreyb?
   epreuvecubesnepsy2          epreuvecubesnepsy2?
 }
 
@@ -120,6 +121,18 @@ model figuresreya {
   memoirePercentile               String?
   planificationModele             String?
   planificationMemoire            String?
+  observations                    String?         //<----- array
+}
+model figuresreyb {
+  id                              String          @id @default(cuid()) @map("_id")
+  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilanId                         String          @unique
+  copieModeleDS                   String?
+  copieModeleDureeDS              String?
+  copiePlanification              String?
+  memoireModeleDS                 String?
+  memoireModeleDureeDS            String?
+  memoirePlanification            String?
   observations                    String?         //<----- array
 }
 

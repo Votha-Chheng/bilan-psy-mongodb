@@ -1,4 +1,4 @@
-import { Eye, Loader2, MoveRight, SkipBack, SkipForward } from 'lucide-react'
+import { Eye, Loader2, MoveRight } from 'lucide-react'
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
 import BilansMedicaux from './BilansMedicaux'
@@ -11,10 +11,11 @@ import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useToast } from '@/customHooks/useToast'
 import { Separator } from '@/components/ui/separator'
 import AnamneseTitleItem from '../AnamneseTitleItem'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AntecedentsPart:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, updateBilanMedicauxResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {neant} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -30,7 +31,7 @@ const AntecedentsPart:FC = () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

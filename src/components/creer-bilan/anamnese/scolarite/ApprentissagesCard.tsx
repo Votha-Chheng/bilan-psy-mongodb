@@ -2,7 +2,6 @@ import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBD
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import React, { FC, Ref, RefObject, useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
@@ -11,6 +10,7 @@ import { Database, Loader2 } from 'lucide-react'
 import { useToast } from '@/customHooks/useToast'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const ApprentissagesCard:FC= () => {
   const {id: patientId} = useParams<{id: string}>()
@@ -19,7 +19,7 @@ const ApprentissagesCard:FC= () => {
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {apprentissages} = anamneseResults ?? {}
 
   useEffect(()=> {
@@ -38,7 +38,7 @@ const ApprentissagesCard:FC= () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state:stateSelect, updateFunction})

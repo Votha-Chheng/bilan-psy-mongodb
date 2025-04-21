@@ -15,9 +15,8 @@ import { useToast } from '@/customHooks/useToast'
 
 const AutonomieCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId, autonomieDescription, getAutonomieDescriptionsListe} = useAnamneseSearchDBStore()
   const {autonomie} = anamneseResults ?? {}
-  const {getAutonomieDescriptionsListe, autonomieDescription} = useAnamneseSearchDBStore()
   const {descriptionsListe} = autonomieDescription ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -46,7 +45,7 @@ const AutonomieCard = () => {
   }
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

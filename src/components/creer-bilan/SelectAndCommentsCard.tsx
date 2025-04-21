@@ -13,6 +13,7 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import { useToast } from '@/customHooks/useToast'
 import ManageListeButton from '../sharedUI/buttons/ManageListeButton'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 type SelectAndCommentsCardProps = {
   stateFromDB: string[]|null|undefined
@@ -27,7 +28,7 @@ type SelectAndCommentsCardProps = {
 
 const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, listeSelectItems, keyAnamnese, themeLabel, buttonAddElementToList=false, setOpenManagementDialog, labelButton, selectWidth="w-96"}) => {
    const {id: patientId} = useParams<{id: string}>()
-  const {updatePatientInfoFromDB} = usePatientInfoStore()
+  const {getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -49,7 +50,7 @@ const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, lis
     res && setIsPending(false)
   }
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertBilanMedicalByKeyAction, upsertSelectedBilansMedicauxAction } from '@/serverActions/anamneseActions'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
@@ -19,19 +20,19 @@ type BilanMedicalCardProps = {
 
 const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => {
   const { id: patientId }  = useParams<{id: string}>()
-  const {anamneseResults, bilansMedicauxResults, updateBilanMedicauxResults} = usePatientInfoStore()
-  const {selectedBilans} = bilansMedicauxResults ?? {}
+  const {anamneseResults, bilanMedicauxResults, updateBilanMedicauxResults, loadingAnamneseResults} = useAnamneseSearchDBStore()
+  const {selectedBilans} = bilanMedicauxResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [bilanLocal, setBilanLocal] = useState<string[]>(["", ""])
   const [dateBilanMedical, setDateBilanMedical] = useState<string>("")
   
   useEffect(()=> {
-    if(bilansMedicauxResults){
-      setBilanLocal(bilansMedicauxResults?.[keyBilan] as string[] ?? ["", ""])
-      setDateBilanMedical(bilansMedicauxResults?.[keyBilan]?.[0] ?? "")
+    if(bilanMedicauxResults){
+      setBilanLocal(bilanMedicauxResults?.[keyBilan] as string[] ?? ["", ""])
+      setDateBilanMedical(bilanMedicauxResults?.[keyBilan]?.[0] ?? "")
     }
-  }, [bilansMedicauxResults])
+  }, [bilanMedicauxResults])
 
   //On enregistre dans la BD la liste des bilans utilisées.
   const selectBilanMedical = async(checked: boolean, bilanNom: string, key: keyof BilanMedicauxResults)=> {
@@ -48,6 +49,7 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
       newState = copy.filter(val => val !== bilanNom)
     }
     const res = await upsertSelectedBilansMedicauxAction(newState, patientId, anamneseResults?.id, copyKey)
+    res.success && setBilanLocal(newState)
     res && setState(res)
     res && setIsPending(false)
   }
@@ -57,6 +59,7 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
     const newState = [...bilanLocal]
     newState[index] = value
     const res = await upsertBilanMedicalByKeyAction<string[]>(key, newState, patientId, anamneseResults?.id ?? undefined)
+    res.success && setBilanLocal(newState)
     res && setState(res)
     res && setIsPending(false)
   }
@@ -68,14 +71,14 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
 
   return (
     <div 
-      className={`relative flex items-center gap-2.5 border p-1.5 rounded-md mb-1 w-full ${openSans.className} ${bilansMedicauxResults?.selectedBilans?.includes(bilanNom) 
+      className={`relative flex items-center gap-2.5 border p-1.5 rounded-md mb-1 w-full ${openSans.className} ${bilanMedicauxResults?.selectedBilans?.includes(bilanNom) 
         ? "border-green-700"
         : "border-transparent text-muted-foreground"}`}
     >
-      <Checkbox id={bilanNom} checked={bilansMedicauxResults?.selectedBilans?.includes(bilanNom)} onCheckedChange={(checked: boolean)=> selectBilanMedical(checked, bilanNom, keyBilan)} /> 
+      <Checkbox id={bilanNom} checked={bilanMedicauxResults?.selectedBilans?.includes(bilanNom)} onCheckedChange={(checked: boolean)=> selectBilanMedical(checked, bilanNom, keyBilan)} /> 
       <Label className={`text-base cursor-pointer `} htmlFor={bilanNom}>{bilanNom}</Label>
       {
-        bilansMedicauxResults?.selectedBilans?.includes(bilanNom) &&
+        bilanMedicauxResults?.selectedBilans?.includes(bilanNom) &&
         <>
           <span>effectué le </span>
           <Input 

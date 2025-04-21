@@ -21,7 +21,7 @@ type OutilsScolairesCardProps = {
 const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const { chosenThemes } = useAnamneseSearchDBStore()
   const {outils} = anamneseResults ?? {}
   
@@ -46,7 +46,7 @@ const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
   }, [outils, chosenThemes])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

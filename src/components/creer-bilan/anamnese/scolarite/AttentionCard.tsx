@@ -10,11 +10,12 @@ import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormD
 import { Database, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 
 const AttentionCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {attention} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -24,9 +25,11 @@ const AttentionCard: FC = () => {
 
   const handleChangeState = async(value: string)=> {
     setIsPending(true)
-    const res = await upsertAnamneseByKeyValueAction("attention", JSON.stringify([value, attentionLocal[1]]), patientId)
+    const prevComment = attentionLocal[1]
+    const res = await upsertAnamneseByKeyValueAction("attention", JSON.stringify([value, prevComment]), patientId)
     res && setState(res)
     res && setIsPending(false)
+    res.success && setAttentionLocal([value, prevComment])
   }
 
   useEffect(()=> {
@@ -35,7 +38,7 @@ const AttentionCard: FC = () => {
   }, [attention])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

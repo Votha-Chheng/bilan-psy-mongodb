@@ -9,11 +9,6 @@ import { CreatePatientSchema } from "@/zodSchemas/patientSchemas";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createMotifConsultationAction, motifConsultationExistsAction } from "./motifActions";
-import { returnArrayIfJson, returnParseAnamneseResult, returnParsedBilanResults } from "@/utils/arrayFunctions";
-import { BilanMedicauxResults } from "@/@types/Anamnese";
-import { bilanSelectOptions } from "@/datas/prismaSelectOptions";
-import { DefaultArgs } from "@prisma/client/runtime/library";
-import { Prisma } from "@prisma/client";
 
 export const createPatientAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
   const rawData = Object.fromEntries(formData)
@@ -98,7 +93,7 @@ export const fetchPatientsList = async (): Promise<ServiceResponse<PatientInfosG
   }
 }
 
-export const fetchPatientById = async (id: string): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
+export const fetchPatientById = async (id: string): Promise<ServiceResponse<PatientInfosGenerales|null>> => {
   console.log("fetchPatientById is triggered");
   
   try {
@@ -118,116 +113,12 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
         createdAt: true,
         updated: true,
         ecole: true,
-        dateBilan: true,
-        anamnese: {
-          select: {
-            id: true,
-            patientId: true,
-            proposPapaOuMaman: true,
-            notesBrutes: true,
-            fratrie: true,
-            compositionFamiliale: true,
-            neant: true,
-            dossierMDPH: true,
-            maladiesEventuelles : true,
-            accompagnementSuivi: true,
-            autresAntecedents : true,
-            handicap: true,
-            bilansMedicauxResults: {
-              select: {
-                id: true,
-                bilanORL: true,
-                bilanOphtalmo: true,
-                bilanOrthophonique: true,
-                bilanOrthoptique: true, 
-                bilanNeuropsy: true, 
-                bilanNeuropediatre: true,
-                selectedBilans: true
-              }
-            },
-            confereDevPsy: true,
-            accouchement: true,
-            grossesse: true,
-            stationAssise: true,
-            quadrupedie: true,
-            ageMarche: true,
-            acquisitionLangage: true,
-            continence : true,
-            alimentation: true,
-            autresDevPsy: true,
-            velo: true,
-            motriciteGlobale: true,
-            motriciteFine: true,
-            praxiesGestuelles: true,
-            extraScolaire: true,
-            sensorialite: true,
-            autresMotricite: true,
-            classe: true,
-            apprentissages: true,
-            outils: true,
-            ecriture: true,
-            cartableBureau: true,
-            relationsPairs: true,
-            comportement: true,
-            attention: true,
-            cahiers: true,
-            anterieur: true,
-            decritAuQuotidien: true, 
-            autonomie: true, 
-            ecouteConsignes: true,
-            agitationMotrice: true, 
-            devoirs: true, 
-            gestionEmotions: true, 
-            gestionTemps: true,
-            temperament: true, 
-            sommeilQuotidien: true, 
-            alimentationQuotidien: true, 
-            autresQuotidien: true
-          }
-        },
-        // bilan: {
-        //   select: {
-        //     id: true,
-        //     tests: true,
-        //     patientId: true,
-        //     bhk: true,
-        //     mabc2: true,
-        //     figuresreya: true,
-        //     flechesnepsy2: true,
-        //     visuomotricenepsy2: true,
-        //     praxiesgestuelles: true,
-        //     imitationpositionsnepsy2: true,
-        //     lateralitetonus: true,
-        //     connaissancedroitegauche: true,
-        //     epreuvecubesnepsy2: true,
-        //   }
-        // }
+        dateBilan: true
       }
     })
 
-    if(!res) return dataBaseError(`Aucun patient ne correspond à l'id n° ${id}`) 
-
-    const {anamnese: { ...anamneseNested }, ...patientInfoRest} = res
-    const {bilansMedicauxResults} = anamneseNested
-    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans, ...rest} = bilansMedicauxResults ?? {}
-
-    const bilansParsed: BilanMedicauxResults = {
-      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
-      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
-      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
-      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
-      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
-      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
-      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
-    }
-
-    const data: PatientInfoFromDB = {
-      ...patientInfoRest, 
-      anamnese: {...returnParseAnamneseResult(anamneseNested), bilansMedicauxResults : {...bilansParsed, ...rest}},
-    }
-
     return {
-      data,
+      data: res,
       success: true,
     }
 

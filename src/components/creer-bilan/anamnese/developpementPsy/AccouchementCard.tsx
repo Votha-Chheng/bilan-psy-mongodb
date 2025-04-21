@@ -3,7 +3,6 @@ import { Card } from '@/components/ui/card'
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, Plus } from 'lucide-react'
@@ -12,11 +11,12 @@ import { Switch } from '@/components/ui/switch'
 import { openSans } from '@/fonts/openSans'
 import { useParams } from 'next/navigation'
 import { useToast } from '@/customHooks/useToast'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 
 const AccouchementCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {accouchement} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -32,6 +32,7 @@ const AccouchementCard: FC = () => {
     const newState = [...accouchementLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("accouchement", JSON.stringify(newState), patientId)
+    res.success && setAccouchementLocal(newState)
     res && setState(res)
     res && setIspending(false)
   }
@@ -43,6 +44,7 @@ const AccouchementCard: FC = () => {
     ? newState[3] = "L'accouchement a été déclenché."
     : newState[3] = ""
     const res = await upsertAnamneseByKeyValueAction("accouchement", JSON.stringify(newState), patientId)
+    res.success && setAccouchementLocal(newState)
     res && setState(res)
     res && setIspending(false)
   }
@@ -55,7 +57,7 @@ const AccouchementCard: FC = () => {
   }, [accouchement])
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

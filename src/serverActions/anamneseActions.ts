@@ -1,6 +1,6 @@
 'use server'
 
-import { AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
+import { AnamneseDTO, AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions"
@@ -30,6 +30,70 @@ export const createAnamneseAction = async(patientId: string): Promise<ServiceRes
   } catch (error) {
     console.log("createAnamneseAction", error)
     return serverError(error)
+  }
+}
+
+export const fetchBilanMedicauxResultsByAnamneseId = async(anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults|null>> => {
+  console.log("fetchBilanMedicauxResultsByAnamneseId")
+
+  try {
+    if(!anamneseId) return {success: false, data: null}
+    const res = await db.bilanMedical.findUnique({
+      where: {
+        anamneseId
+      }
+    })
+    if(!res) return dataBaseError()
+    const bilansMedicauxResults = res as unknown as BilanMedical
+    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans, ...rest} = bilansMedicauxResults ?? {}
+
+    const bilansParsed: BilanMedicauxResults = {
+      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
+      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
+      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
+      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
+      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
+      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
+      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
+    }
+
+    const data: BilanMedicauxResults = {
+      ...bilansParsed,
+      ...rest
+    }
+
+    return {
+      success: true,
+      data
+    }
+
+  } catch (error) {
+    console.log("Error in fetchAnamneseResultsByPatientId", error)
+    return serverError(error, "Erreur lors de l'accès à la base de données.")
+  }
+}
+
+export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise<ServiceResponse<AnamneseResults|null>> => {
+  console.log("fetchAnamneseResultsByPatientId")
+
+  try {
+    const res = await db.anamnese.findUnique({
+      where: {
+        patientId
+      }
+    })
+    if(!res) return dataBaseError()
+    const copy = res as unknown as Anamnese
+    const data: AnamneseResults = returnParseAnamneseResult(copy)
+    
+    return {
+      success: true,
+      data
+    }
+    
+  } catch (error) {
+    console.log("Error in fetchAnamneseResultsByPatientId", error)
+    return serverError(error, "Erreur lors de l'accès à la base de données.")
   }
 }
 
