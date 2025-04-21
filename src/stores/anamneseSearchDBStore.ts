@@ -10,6 +10,7 @@ type AnamneseSearchDBState = {
   loadingAnamneseResults: boolean
   loadingBilansMedicaux: boolean
   bilanMedicauxResults : BilanMedicauxResults|null
+  initializeBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
   updateBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
   anamneseResults: AnamneseResults|null
   initializeAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
@@ -46,7 +47,15 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       console.log("Can't getAnamneseResultsByPatientId")
     }
   },
-  updateBilanMedicauxResults : async(anamneseId: string|null|undefined)=> {
+  updateBilanMedicauxResults: async(anamneseId: string|null|undefined)=> {
+    try {
+      const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)
+      set({bilanMedicauxResults: result.data})
+    } catch (error) {
+      console.log("Can't updateBilanMedicauxResults")
+    }
+  },
+  initializeBilanMedicauxResults : async(anamneseId: string|null|undefined)=> {
     set({loadingBilansMedicaux: true})
     try {
       const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)

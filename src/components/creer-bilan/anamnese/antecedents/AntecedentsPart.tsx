@@ -15,7 +15,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AntecedentsPart:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, updateBilanMedicauxResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {neant} = anamneseResults ?? {}
 
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -52,7 +52,9 @@ const AntecedentsPart:FC = () => {
             <MoveRight/>Bilans médicaux effectués :
           </div>
           <BilansMedicaux/>
+          <Separator className='my-5' />
           <DossierMDPHForm/>
+          <Separator className='my-5' />
           <div className='flex gap-x-2 font-bold mb-5'>
             <MoveRight/> Choisir les thèmes qui vous semblent pertinents pour décrire les antécédents médicaux du patient.
           </div>

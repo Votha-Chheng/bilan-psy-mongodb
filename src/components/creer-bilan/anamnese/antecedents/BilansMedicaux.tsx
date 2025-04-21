@@ -5,16 +5,16 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2 } from 'lucide-react'
 
 const BilansMedicaux = () => {
-  const {anamneseResults, updateBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateBilanMedicauxResults, initializeBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
   const {id} = anamneseResults ?? {}
 
   useEffect(()=> {
     if(!id) return
-    updateBilanMedicauxResults(id)
-  }, [])
+    initializeBilanMedicauxResults(id)
+  }, [id])
 
   return (
-    <div className='mb-5 mx-5 mt-2 w-full min-h-96'>
+    <div className='mx-5 mt-2 w-full min-h-64'>
       {
         loadingBilansMedicaux
         ?
@@ -31,7 +31,6 @@ const BilansMedicaux = () => {
           />
         ))
       }
-
     </div>
   )
 }

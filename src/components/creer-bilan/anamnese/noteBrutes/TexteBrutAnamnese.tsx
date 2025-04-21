@@ -5,18 +5,15 @@ import { Textarea } from '@/components/ui/textarea'
 import useAutoSave from '@/customHooks/useAutoSave'
 import { useToast } from '@/customHooks/useToast'
 import { saveTextBrutAnamneseAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import AnamneseTitleItem from '../AnamneseTitleItem'
-import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 
 const TexteBrutAnamnese: FC = () => {
   const {id} = useParams<{id: string}>()
-  //const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
-  const {anamneseResults, updateBilanMedicauxResults} = useAnamneseSearchDBStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {notesBrutes} = anamneseResults ?? {}
   const [state, setState] = useState<ServiceResponse<any>>({})
 
@@ -25,7 +22,6 @@ const TexteBrutAnamnese: FC = () => {
   const savetext = async(text: string, id: string)=> {
     const res = await saveTextBrutAnamneseAction(text, id)
     res && setState(res)
-    res && updateBilanMedicauxResults(id)
   }
 
   const preventAutoSave: boolean = useMemo(()=> {
@@ -39,7 +35,7 @@ const TexteBrutAnamnese: FC = () => {
   }, [notesBrutes])
 
   const updateFunction = ()=> {
-    updateBilanMedicauxResults(id)
+    getAnamneseResultsByPatientId(id)
   }
 
   const autosaveFunction = ()=> {
