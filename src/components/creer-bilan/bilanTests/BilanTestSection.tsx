@@ -1,12 +1,21 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiSpreadsheet } from "react-icons/bi"
 import ListeTestsUtilises from './ListeTestsUtilises'
 import ManageTestsBilanDialog from '@/components/sharedUI/alertsAndDialogs/ManageTestsBilanDialog'
+import { useBilanTestsStore } from '@/stores/bilanTestsStore'
+import { useParams } from 'next/navigation'
+import BilanBody from '@/components/creer-bilan/bilanTests/BilanBody'
 
 const BilanTestSection = () => {
+  const {id: patientId} = useParams<{id: string}>()
+  const {getBilanByPatientId} = useBilanTestsStore()
   const [openListeTestsDialog, setOpenListeTestsDialog] = useState<boolean>(false)
+
+  useEffect(()=> {
+    getBilanByPatientId(patientId)
+  }, [patientId])
 
   return (
     <article className='w-full'>
@@ -25,6 +34,7 @@ const BilanTestSection = () => {
         </div>
         <ListeTestsUtilises/>
       </div>
+      <BilanBody/>
     </article>
   )
 }

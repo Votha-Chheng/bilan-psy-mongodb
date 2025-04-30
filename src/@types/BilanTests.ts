@@ -7,7 +7,8 @@ export type BilanDTO = {
   visuomotricenepsy2?: VisuomotriceNEPSY2ResultsDTO|null
   praxiesgestuelles?: PraxiesGestuellesResultsDTO|null
   imitationpositionsnepsy2?: ImitationPositionsNEPSY2ResultsDTO|null
-  lateralitetonus?: LateraliteTonusResultsDTO|null
+  lateralite?: string|null
+  tonus?: string|null
   connaissancedroitegauche?: ConnaissancesDroiteGaucheResultsDTO|null
   flechesnepsy2?: FlechesNEPSY2ResultsDTO|null
   figuresreya?: FiguresReyAResultsDTO|null
@@ -15,18 +16,27 @@ export type BilanDTO = {
   epreuvecubesnepsy2?: EpreuveCubesNEPSY2ResultsDTO|null
 }
 
+export type TestBilan = {
+  nom : string,
+  domaine: string,
+  description?: string
+  keyTest: keyof BilanDTO
+}
+
 export type BHKResultsDTO = {
   id?: string|null
   bilanId?: string|null
   qualiteEcriture?: string|null
   vitesseEcriture?: string|null
-  lecture?: string[]|null
-  tenueOutilScripteur ?: string[]|null
+  lecture?: string|null
+  tenueOutilScripteur?: string[]|null
+  fonctionnalite ?: string|null
+  posturePoignet ?: string|null
   memorisation ?: string|null
-  comportement ?: string[]|null
-  ecriture?: string[]|null
+  comportement ?: string|null
+  ecriture?: string|null
   ressenti ?: string|null
-  autres ?: string[]|null
+  autres ?: string|null
 }
 
 export type MABC2ResultsDTO = {
@@ -37,15 +47,15 @@ export type MABC2ResultsDTO = {
   equilibre?: string|null
   total?: string|null
   competencesMotrices?: string|null
-  precisionUnimanuelle?: string[]|null
-  coordinationsBimanuelles?: string[]|null
-  precisionVisuoMotrice?: string[]|null
-  coordinationsGlobalesRattrapes?: string[]|null
-  coordinationsGlobalesLancers?: string[]|null
-  motriciteGlobaleUnipodal?: string[]|null
-  motriciteGlobaleDynamique?: string[]|null
-  motriciteGlobaleSauts?: string[]|null
-  observationsComplementaires?: string[]|null
+  precisionUnimanuelle?: string|null
+  coordinationsBimanuelles?: string|null
+  precisionVisuoMotrice?: string|null
+  coordinationsGlobalesRattrapes?: string|null
+  coordinationsGlobalesLancers?: string|null
+  motriciteGlobaleUnipodal?: string|null
+  motriciteGlobaleDynamique?: string|null
+  motriciteGlobaleSauts?: string|null
+  observationsComplementaires?: string|null
 }
 
 export type VisuomotriceNEPSY2ResultsDTO = {
@@ -53,24 +63,24 @@ export type VisuomotriceNEPSY2ResultsDTO = {
   id?: string|null
   bilanId?: string|null
   precisionVisuoMoteur?: string|null,
-  vitesse?: string[]|null
-  tenueCrayon?: string[]|null
-  comportement?: string[]|null
-  tonus?: string[]|null
+  vitesse?: string|null
+  tenueCrayon?: string|null
+  comportement?: string|null
+  tonus?: string|null
 }
 
 export type PraxiesGestuellesResultsDTO = {
   id?: string|null
   bilanId?: string|null
-  precisionDecoupage?: string[]|null
+  precisionDecoupage?: string|null
   tenueDecoupage?: string|null
   gestionTonusDecoupage?: string|null
   hyperHypoDecoupage?: string|null
-  precisionCompas?: string[]|null
+  precisionCompas?: string|null
   tenueCompas?: string|null
   gestionTonusCompas?: string|null
   hyperHypoCompas?: string|null
-  precisionEquerre ?: string[]|null
+  precisionEquerre ?: string|null
   tenueEquerre?: string|null
   gestionTonusEquerre?: string|null
   hyperHypoEquerre?: string|null
@@ -81,27 +91,22 @@ export type ImitationPositionsNEPSY2ResultsDTO = {
   id?: string|null
   bilanId?: string|null
   imitationGestesMains?: string|null
-  observationsDiverses?: string[]|null
-}
-
-export type LateraliteTonusResultsDTO = {
-  id?: string|null
-  bilanId?: string|null
-  lateraliteUsuelle?: string|null
-  tonusAction?: string[]|null
+  observationsDiverses?: string|null
 }
 
 export type ConnaissancesDroiteGaucheResultsDTO = {
   id?: string|null
   bilanId?: string|null
-  connaissanceDroiteGauche?: string[]|null
+  surSoi?: string|null
+  surAutruiACote?: string|null
+  surAutruiReversibilite?: string|null
 }
 
 export type FlechesNEPSY2ResultsDTO = {
   id?: string|null
   bilanId?: string|null
   score?: string|null
-  observations?: string[]|null
+  observations?: string|null
 }
 
 export type FiguresReyAResultsDTO = {
@@ -113,7 +118,7 @@ export type FiguresReyAResultsDTO = {
   memoirePercentile?: string|null
   planificationMemoire?: string|null
   planificationModele?: string|null
-  observations?: string[]|null
+  observations?: string|null
 }
 
 export type FiguresReyBResultsDTO = {
@@ -125,12 +130,12 @@ export type FiguresReyBResultsDTO = {
   memoireModeleDS?: string|null
   memoireModeleDureeDS?: string|null
   memoirePlanification?: string|null
-  observations?: string[]|null 
+  observationsFigureB?: string|null 
 }
 
 export type EpreuveCubesNEPSY2ResultsDTO = {
   id?: string|null
   bilanId?: string|null
   scoreNS?: string|null
-  observations?: string[]|null
+  observations?: string|null
 }

@@ -1,14 +1,15 @@
 model Bilan {
-  id                          String           @id @default(cuid()) @map("_id")
-  patient                     Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  patientId                   String           @unique
-  tests                       String?          //<----- array [liste des tests utilisés]
+  id                          String                        @id @default(cuid()) @map("_id")
+  patient                     Patient                       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId                   String                        @unique
+  tests                       String?                        //<----- array [liste des tests utilisés]
   mabc2                       mabc2?  
   bhk                         bhk?  
   visuomotricenepsy2          visuomotricenepsy2? 
   praxiesgestuelles           praxiesgestuelles?
   imitationpositionsnepsy2    imitationpositionsnepsy2?
-  lateralitetonus             lateralitetonus?
+  lateralite                  String?
+  tonus                       String?
   connaissancedroitegauche    connaissancedroitegauche?
   flechesnepsy2               flechesnepsy2?
   figuresreya                 figuresreya?
@@ -24,6 +25,8 @@ model bhk {
   vitesseEcriture                 String?
   lecture                         String?         //<----- array
   tenueOutilScripteur             String?         //<----- array
+  fonctionnalite                  String?
+  posturePoignet                  String?
   memorisation                    String?
   comportement                    String?         //<----- array
   ecriture                        String?         //<----- array
@@ -88,19 +91,14 @@ model imitationpositionsnepsy2{
   observationsDiverses            String?         //<----- array
 }
 
-model lateralitetonus {
-  id                              String          @id @default(cuid()) @map("_id")
-  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
-  bilanId                         String          @unique
-  lateraliteUsuelle               String?
-  tonusAction                     String?         //<----- array
-}
-
 model connaissancedroitegauche {
   id                              String          @id @default(cuid()) @map("_id")
-  bilan                           Bilan           @relation(fields: [bilanId], references: [id], onDelete: Cascade)
+  bilan                          Bilan          @relation(fields: [bilanId], references: [id], onDelete: Cascade)
   bilanId                         String          @unique
-  connaissanceDroiteGauche        String?         //<----- array
+  surSoi                          String?
+  surAutruiACote                  String?
+  surAutruiReversibilite          String?
+ 
 }
 
 model flechesnepsy2 {
@@ -133,7 +131,7 @@ model figuresreyb {
   memoireModeleDS                 String?
   memoireModeleDureeDS            String?
   memoirePlanification            String?
-  observations                    String?         //<----- array
+  observationsFigureB                    String?         //<----- array
 }
 
 model epreuvecubesnepsy2 {

@@ -7,7 +7,7 @@ export const validateWithZodSchema = (schema: ZodSchema, data: any): ServiceResp
   if (!result.success) {
     const fields: Record<string, string> = {};
     for (const key of Object.keys(data)) {
-      fields[key] = data[key].toString();
+      fields[key] = data[key]?.toString() ?? undefined;
     }
 
     return {

@@ -1,0 +1,7 @@
+model ObservationTest {
+  id                                String                   @id @default(cuid()) @map("_id")
+  testNameAndThemeId                String                   @unique   //<-------- Identifiant unique composé du nomDuTest et du thème enécrit normalement
+  testName                          String                   //<-------- Nom du test
+  theme                             String                   //<-------- Thème du test
+  listeObservations                 String?                 //<------ Array in JSON
+}

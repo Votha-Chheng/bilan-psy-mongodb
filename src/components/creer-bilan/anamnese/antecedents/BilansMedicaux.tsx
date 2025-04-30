@@ -5,7 +5,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2 } from 'lucide-react'
 
 const BilansMedicaux = () => {
-  const {anamneseResults, updateBilanMedicauxResults, initializeBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
+  const {anamneseResults, initializeBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
   const {id} = anamneseResults ?? {}
 
   useEffect(()=> {
