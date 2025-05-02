@@ -1,3 +1,4 @@
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import React, { FC } from 'react'
 
@@ -6,7 +7,7 @@ type NotesBrutesProps = {
 }
 
 const NotesBrutes: FC<NotesBrutesProps> = ({search}) => {
-  const {anamneseResults} = usePatientInfoStore()
+  const {anamneseResults} = useAnamneseSearchDBStore()
   const notesBrutes = anamneseResults?.notesBrutes
 
   const convertToHtml = (text: string|null|undefined) => {

@@ -19,7 +19,7 @@ model Patient {
   updated             DateTime            @updatedAt()
   dateBilan           String?
   bilan               Bilan?
-  // conclusion          Conclusion?
+  conclusion          Conclusion?
   anamnese            Anamnese?   
   // amenagements        AmenagementsPlan[]
 }

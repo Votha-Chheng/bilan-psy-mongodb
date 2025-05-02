@@ -1,0 +1,18 @@
+model Conclusion {
+  id                                String              @id @default(cuid()) @map("_id")
+  patient                           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade) 
+  patientId                         String              @unique
+  conclusionCommentaires            String?
+  profilPsy                         String?             //<----- Array in JSON format
+  projetPsy                         String?             //<----- Array in JSON format
+}
+
+model ProfilPsyItem {
+  id                                String              @id @default(cuid()) @map("_id")
+  recommandation                    String
+}
+
+model ProjetPsyItem {
+  id                                String              @id @default(cuid()) @map("_id")
+  proposition                       String
+}
