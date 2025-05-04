@@ -80,11 +80,90 @@ export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise
     const res = await db.anamnese.findUnique({
       where: {
         patientId
-      }
+      },
+      select: {
+        id: true,
+        notesBrutes: true,
+        patientId: true,
+        proposPapaOuMaman: true,
+        fratrie: true,
+        compositionFamiliale: true,
+        neant: true,
+        dossierMDPH: true,
+        maladiesEventuelles: true,
+        accompagnementSuivi: true,
+        autresAntecedents: true,
+        handicap: true,
+        confereDevPsy: true,
+        accouchement: true,                       //<-- JSON tranformé en string[] côté serveur
+        grossesse: true,
+        stationAssise: true,
+        quadrupedie: true,
+        alimentation: true,
+        autresDevPsy: true,
+        ageMarche: true,                           //<-- JSON tranformé en string[] côté serveur
+        acquisitionLangage: true,                  //<-- JSON tranformé en string[] côté serveur
+        continence : true,                        //<-- JSON tranformé en string[] côté serveur
+        velo: true,                              //<-- JSON tranformé en string[] côté serveur
+        motriciteGlobale: true,                      //<-- JSON tranformé en string[] côté serveur
+        motriciteFine: true,               //<-- JSON tranformé en string[] côté serveur
+        praxiesGestuelles: true,
+        sensorialite: true,                  //<--- JSON de type string[type, commentaires] transformé coté serveur   
+        extraScolaire: true,
+        autresMotricite: true,
+        classe : true,
+        apprentissages: true, 
+        outils : true,                       //<--- JSON de type string[type, commentaires] transformé coté serveur  
+        ecriture: true,                        //<--- JSON de type [niveau, douleurs, observations] transformé coté serveur 
+        cartableBureau: true,
+        relationsPairs: true,                  //<--- JSON de type [sociable ou pas, observations] transformé coté serveur 
+        comportement : true,                   //<---JSON [observations, suite d'adjectifs...]
+        attention : true,                      //<---JSON [attentif, observations]
+        cahiers : true,
+        anterieur: true,
+        sommeilQuotidien: true,             //<---- [dort seul, difficultés à s'endormair, observations]
+        decritAuQuotidien: true,             //<---- [commentaires, suite de descriptions...]
+        autonomie:true,             //<---- [commentaires, suite de descriptions...]
+        ecouteConsignes: true,
+        agitationMotrice: true,
+        devoirs : true,
+        gestionEmotions: true,         //<--------- [difficultés, observations] 
+        gestionTemps: true,         //<--------- [difficultés, observations] 
+        temperament: true,       //<--------- [temperament, observations] 
+        alimentationQuotidien: true, 
+        autresQuotidien: true,
+        bilansMedicauxResults: {
+          select: {
+            id: true,
+            anamneseId: true,
+            bilanORL: true,
+            bilanOphtalmo: true,
+            bilanOrthophonique: true,
+            bilanOrthoptique: true, 
+            bilanNeuropsy: true, 
+            bilanNeuropediatre: true,
+            selectedBilans: true
+          }
+
+        }
+      },
     })
+    
     if(!res) return dataBaseError()
-    const copy = res as unknown as Anamnese
-    const data: AnamneseResults = returnParseAnamneseResult(copy)
+    const {bilansMedicauxResults, ...rest} = res
+    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans} = bilansMedicauxResults ?? {}
+
+    const bilansParsed: BilanMedicauxResults = {
+      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
+      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
+      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
+      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
+      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
+      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
+      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
+    }
+    const copy = rest as unknown as Anamnese
+    const data: AnamneseResults = { ...returnParseAnamneseResult(copy), bilanMedicauxResults: bilansParsed}
     
     return {
       success: true,
@@ -496,49 +575,6 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
   }
 }
 
-export const fetchBilanMedicalResult = async(anamneseId: string): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
-  try {
-    const res = await db.bilanMedical.findUnique({
-      where: {
-        anamneseId
-      },
-      select: {
-        id: true,
-        bilanORL: true,
-        bilanOphtalmo: true,
-        bilanOrthophonique: true,
-        bilanOrthoptique: true,
-        bilanNeuropsy: true,
-        bilanNeuropediatre: true,
-        selectedBilans: true,
-      }
-    })
-
-    if(!res) return dataBaseError(`Pas de bilans médicaux à afficher.`) 
-
-    const {bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, bilanNeuropsy, bilanNeuropediatre, selectedBilans} = res
-
-    const data: BilanMedicauxResults = {
-      bilanORL: bilanORL? JSON.parse(bilanORL) : null,
-      bilanOphtalmo: bilanOphtalmo? JSON.parse(bilanOphtalmo) : null,
-      bilanOrthophonique: bilanOrthophonique? JSON.parse(bilanOrthophonique) : null,
-      bilanOrthoptique: bilanOrthoptique? JSON.parse(bilanOrthoptique) : null,
-      bilanNeuropsy: bilanNeuropsy? JSON.parse(bilanNeuropsy) : null,
-      bilanNeuropediatre: bilanNeuropediatre? JSON.parse(bilanNeuropediatre) : null,
-      selectedBilans: selectedBilans? JSON.parse(selectedBilans) : null,
-    }
-    console.log("fetchBilanMedicalResult", data)
-    return {
-      success: true,
-      data
-    }
-
-  } catch (error) {
-    console.log("fetchBilanMedicalResult", error)
-    return serverError(error)
-  }
-}
-
 export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
   try {
     if(!anamneseId) return { success: false, message: "L'anamnese n'a pas été encore créee."}
@@ -569,6 +605,7 @@ export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamn
 }
 
 export const fetchChosenThemes = async(patientId: string): Promise<ServiceResponse<string[]>>=> {
+  console.log("fetchChosenThemes is triggered")
   try {
     const anamnese = await db.anamnese.findUnique({
       where: {

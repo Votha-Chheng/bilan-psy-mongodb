@@ -5,13 +5,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2 } from 'lucide-react'
 
 const BilansMedicaux = () => {
-  const {anamneseResults, initializeBilanMedicauxResults, loadingBilansMedicaux} = useAnamneseSearchDBStore()
-  const {id} = anamneseResults ?? {}
-
-  useEffect(()=> {
-    if(!id) return
-    initializeBilanMedicauxResults(id)
-  }, [id])
+  const {loadingBilansMedicaux} = useAnamneseSearchDBStore()
 
   return (
     <div className='mx-5 mt-2 w-full min-h-64'>

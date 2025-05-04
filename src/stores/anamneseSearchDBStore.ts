@@ -1,5 +1,5 @@
-import { AnamneseResults, anamneseResultsKeys, AutonomieDescriptionDTO, BilanMedicauxResults, ListeAdjectifsDTO, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
-import { fetchAnamneseResultsByPatientId, fetchBilanMedicalResult, fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serverActions/anamneseActions'
+import { AnamneseResults, AutonomieDescriptionDTO, BilanMedicauxResults, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
+import { fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serverActions/anamneseActions'
 import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
 import { fetchAnamneseByKeysWithCache, fetchAnamneseResultsByPatientIdWithCache } from '@/serverActions/fetchingWithCache'
 import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite, fetchAutonomieDescriptions } from '@/serverActions/listeActions'
@@ -10,7 +10,6 @@ type AnamneseSearchDBState = {
   loadingAnamneseResults: boolean
   loadingBilansMedicaux: boolean
   bilanMedicauxResults : BilanMedicauxResults|null
-  initializeBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
   updateBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
   anamneseResults: AnamneseResults|null
   initializeAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
@@ -55,23 +54,14 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       console.log("Can't updateBilanMedicauxResults")
     }
   },
-  initializeBilanMedicauxResults : async(anamneseId: string|null|undefined)=> {
-    set({loadingBilansMedicaux: true})
-    try {
-      const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)
-      set({bilanMedicauxResults: result.data})
-    } catch (error) {
-      console.log("Can't updateBilanMedicauxResults")
-    } finally {
-      set({loadingBilansMedicaux: false})
-    }
-  },
   anamneseResults: null,
   initializeAnamneseResultsByPatientId: async(patientId: string)=> {
     set({loadingAnamneseResults: true})
     try {
       const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
       set({anamneseResults: result.data})
+      console.log(result.data?.bilanMedicauxResults)
+      set({bilanMedicauxResults: result.data?.bilanMedicauxResults})
     } catch (error) {
       console.log("Can't getAnamneseResultsByPatientId")
     } finally {

@@ -1,0 +1,16 @@
+model AmenagementItem {
+  id                                String              @id @default(cuid()) @map("_id") 
+  amenagement                       String
+  category                          String
+  amenagements                      Amenagements[]      @relation(fields: [amenagementsIds], references: [id])
+  amenagementsIds                   String[]                 
+}
+
+model Amenagements {
+  id                                String              @id @default(cuid()) @map("_id")
+  patient                           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade) 
+  patientId                         String              @unique
+  amenagementItems                  AmenagementItem[]   @relation(fields: [amenagementItemsIds], references: [id])
+  amenagementItemsIds               String[]            
+
+}

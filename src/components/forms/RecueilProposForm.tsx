@@ -1,34 +1,25 @@
-import React, { useActionState, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Card } from '../ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { upsertProposPapaOuMamanAction } from '@/serverActions/anamneseActions'
-import { toast } from 'sonner'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { useParams } from 'next/navigation'
+import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { useToast } from '@/customHooks/useToast'
 
 const RecueilProposForm = () => {
   const {id} = useParams<{id: string}>()
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  useEffect(()=> {
-    if(state.success === true){
-      toast.success(state.message)
-      updatePatientInfoFromDB(id)
-    }
-    if(state.success === false){
-      toast.error(state.message)
-    }
-    
-  }, [state])
+  useToast({state, updateFunction: ()=> getAnamneseResultsByPatientId(id)})
 
   const handleValueChange = async (value: string) => {
     setIsPending(true)
     const response = await upsertProposPapaOuMamanAction(id, value)
-    setState(response)
+    response && setState(response)
     response && setIsPending(false)
   }
 
