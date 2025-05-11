@@ -1,7 +1,6 @@
 import { ConnaissancesDroiteGaucheResultsDTO } from "@/@types/BilanTests";
 import { Paragraph, Table, TextRun } from "docx";
-import { TestTitle } from "../../ui/TestTitle";
-import { allTests, testByNames } from "@/datas/listeTests";
+import { testByNames } from "@/datas/listeTests";
 import { defaultTextStyle } from "@/@types/DocxTypes";
 import { generateRawTextRun } from "../../ui/ParagraphFunctions";
 

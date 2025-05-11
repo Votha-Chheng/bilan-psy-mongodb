@@ -8,21 +8,14 @@ import { authClient } from '@/utils/auth-client'
 import { LoaderCircle } from 'lucide-react'
 import TextInput from '../inputs/TextInput'
 import SubmitButton from '../ui/SubmitButton'
+import { Button } from '../ui/button'
+import Link from 'next/link'
 
 
 const SignInForm: FC = () => {
   const [state, formAction, isPending] = useActionState(signInAction, {})
-  const router = useRouter()
   const {data: session, isPending: isLoading } = authClient.useSession();
 
-  
-  useEffect(()=> {
-    if(session?.session && !isLoading && !isPending){
-      router.replace("/dashboard")
-    }
-  }, [router, isLoading, isPending, session, state])
-
-  
   if(isLoading || isPending) {
     return (
       <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
@@ -31,6 +24,19 @@ const SignInForm: FC = () => {
       </div>
     )
   }
+
+  if(state.success || session?.user) {
+    return (
+    <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
+      <Link href={`/dashboard`}>
+        <Button>
+          Cliquez pour accéder à votre tableau de bord
+        </Button>
+      </Link>
+    </div>
+    )
+  }
+
   return (
     <Card className='w-96 mx-auto p-5'>
       <CardTitle className='text-center'>Se connecter</CardTitle>
