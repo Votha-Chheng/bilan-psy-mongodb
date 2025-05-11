@@ -17,9 +17,10 @@ type SimpleInputFormProps={
   keyAnamnese: keyof AnamneseResults
   edit: boolean
   themeTitle: string
+  updateFunctionFromStore: ()=> void
 }
 
-const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({name, defaultValue="", setEdit, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese, edit, themeTitle}) => {
+const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({name, defaultValue="", setEdit, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese, edit, themeTitle, updateFunctionFromStore}) => {
   const {id} = useParams<{id: string}>()
   const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {chosenThemes} = useAnamneseSearchDBStore()
@@ -34,7 +35,7 @@ const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({name, defaultValue="
 
 
   const updateFunction = ()=> {
-    updatePatientInfoFromDB(id)
+    updateFunctionFromStore()
     setEdit(false)
   }
 

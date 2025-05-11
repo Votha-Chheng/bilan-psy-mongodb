@@ -84,7 +84,7 @@ const BHK = () => {
   return (
     <Card className={`py-2 px-3.5 my-5 w-full gap-y-1`}>
       <p className='italic text-sm mb-3'>
-        &#8227; <span className='font-bold'>{bhkTest?.nom?? ""}</span> : {bhkTest?.description ?? ` : ${bhkTest?.description}.`}
+        &#8227; <span className='font-bold'>Test {bhkTest?.nom?? ""}</span> : {bhkTest?.description ?? ` : ${bhkTest?.description}.`}
       </p>
       <BHKTable/>
       <h5 className='font-bold text-sm ml-2.5'>Observations :</h5>

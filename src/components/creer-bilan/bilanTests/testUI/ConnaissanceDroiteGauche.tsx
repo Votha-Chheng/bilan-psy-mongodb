@@ -32,7 +32,7 @@ const ConnaissanceDroiteGauche = () => {
   return (
     <Card className={`py-2 px-3.5 my-5 w-full`}>
       <p className='italic text-sm'>
-        &#8227; <span className='font-bold'>Test {connaissancesDroiteGaucheTest?.nom?? ""}</span> : {connaissancesDroiteGaucheTest?.description ?? ` : ${connaissancesDroiteGaucheTest?.description}.`}
+        &#8227; <span className='font-bold'>{connaissancesDroiteGaucheTest?.nom?? ""}</span> : {connaissancesDroiteGaucheTest?.description ?? ` : ${connaissancesDroiteGaucheTest?.description}.`}
       </p>
       <article className='flex items-center'>
         <p className='text-sm flex items-center gap-x-2 mb-5 ml-5 border-r border-black pr-5'>

@@ -95,8 +95,8 @@ const OutilScripteurCard = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={"mobilté des doigts adaptée"}>mobilté des doigts adaptée</SelectItem>
-            <SelectItem value={"pas ou peu de mobilté des doigts"}>pas ou peu de mobilté des doigts</SelectItem>
+            <SelectItem value={"mobilité des doigts adaptée"}>mobilité des doigts adaptée</SelectItem>
+            <SelectItem value={"pas ou peu de mobilité des doigts"}>pas ou peu de mobilité des doigts</SelectItem>
           </SelectContent>
         </Select>
         {isPending==="fonctionnalite" && <Loader2 className='animate-spin'/>} 

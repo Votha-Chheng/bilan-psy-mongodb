@@ -3,6 +3,7 @@ import { BilanDTO, TestBilan } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
 import { Anamnese, Bilan } from "@prisma/client"
+import { Paragraph } from "docx"
 
 export const returnArrayIfJson = <T>(json: string|null): T|null=> {
   return json ? JSON.parse(json) as T : null

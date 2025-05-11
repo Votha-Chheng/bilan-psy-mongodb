@@ -11,9 +11,11 @@ import Continence from './Continence'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import ChooseThemesAlt from '@/components/sharedUI/ChoseThemesAlt'
 import CardWrapper from '../CardWrapper'
+import { useParams } from 'next/navigation'
 
 const DevPsyBody = () => {
-  const {anamneseResults} = useAnamneseSearchDBStore()
+  const {id: patientId} = useParams<{id: string}>()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {grossesse, stationAssise, quadrupedie, alimentation, autresDevPsy} = anamneseResults ?? {}
   
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
@@ -45,6 +47,7 @@ const DevPsyBody = () => {
           keyLabel='grossesse'
           label={"Grossesse"}
           data={grossesse}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -57,6 +60,7 @@ const DevPsyBody = () => {
           keyLabel='stationAssise'
           label={"Age de la station assise"}
           data={stationAssise}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
       <CardWrapper themeLabel="Quadrupédie">
@@ -64,6 +68,7 @@ const DevPsyBody = () => {
           keyLabel='quadrupedie'
           label={"Quadrupédie"}
           data={quadrupedie}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -84,6 +89,7 @@ const DevPsyBody = () => {
           keyLabel='alimentation'
           label={"Alimentation"}
           data={alimentation}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -92,6 +98,7 @@ const DevPsyBody = () => {
           keyLabel='autresDevPsy'
           label="Autres (développement psychomoteur)"
           data={autresDevPsy}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 

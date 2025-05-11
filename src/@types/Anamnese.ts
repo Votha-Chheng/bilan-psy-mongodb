@@ -106,7 +106,7 @@ export type AnamneseDTO = {
   gestionTemps?: string[]|null         //<--------- [difficultés, observations] 
   temperament?: string[]|null         //<--------- [temperament, observations] 
   alimentationQuotidien?: string|null  
-  autresQuotidien?: string|null 
+  autresQuotidien?: string|null,
 }
 
 export type AnamneseResults = {

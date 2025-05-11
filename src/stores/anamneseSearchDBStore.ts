@@ -21,7 +21,7 @@ type AnamneseSearchDBState = {
   autonomieDescription: AutonomieDescriptionDTO|null
   getAutonomieDescriptionsListe: ()=> void
   getDevPsyConfereList: ()=> Promise<void>
-  getAnamneseDBByKeys : (keys: (keyof Partial<Anamnese>)[])=> Promise<void>
+  getAnamneseDBByKeys : (keys: (keyof AnamneseResults)[])=> Promise<void>
   loadingData: boolean
   resetAnamneseDB: ()=> void
   chosenThemes: string[]
@@ -56,6 +56,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   },
   anamneseResults: null,
   initializeAnamneseResultsByPatientId: async(patientId: string)=> {
+    console.log("trigger initializeAnamneseResultsByPatientId")
     set({loadingAnamneseResults: true})
     try {
       const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)

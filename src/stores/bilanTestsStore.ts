@@ -129,7 +129,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
   updateFiguresReyb: async(bilanId: string|null|undefined) =>{
     try {
       const response = await fetchFigureReyBResults(bilanId)
-      set({figuresreya: response.data})
+      set({figuresreyb: response.data})
     } catch (error) {
       console.log("Can't updateFiguresReyb")
     }

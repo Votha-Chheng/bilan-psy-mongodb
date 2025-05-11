@@ -11,7 +11,7 @@ const SchemaCorporelBilan = () => {
     <DomainWrapper display={tests ? (tests?.includes("Imitation de positions de la Nepsy 2") || tests?.includes("Praxies gestuelles")) : false} >
       <div className='flex flex-col w-full'>
         <Card className='uppercase text-lg font-bold tracking-wider bg-gray-300 text-center py-2 mb-5'>
-          motricité
+          Schéma corporel et praxies
         </Card>
         <DomainWrapper display={tests?.includes("Imitation de positions de la Nepsy 2") ?? false}>
           <ImitationPosisitionNepsy2/>

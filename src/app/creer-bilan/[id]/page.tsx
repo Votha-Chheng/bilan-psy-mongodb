@@ -1,4 +1,5 @@
 import CompleteBilanBody from '@/components/creer-bilan/CompleteBilanBody'
+import ConvertToDocxButton from '@/components/creer-bilan/ConvertToDocxButton'
 import MenuCompleteBilan from '@/components/creer-bilan/MenuCompleteBilan'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -16,9 +17,7 @@ const CompleteBilanPage = async() => {
           </Link>
         </Button>
         <h2 className='uppercase font-bold tracking-wider text-xl'>Complétez le bilan psychomoteur</h2>
-        <Button className='bg-blue-400'>
-          Générer en format .docx
-        </Button>
+        <ConvertToDocxButton/>
       </header>
       <Separator/>
       <MenuCompleteBilan/>

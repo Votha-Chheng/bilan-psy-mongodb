@@ -22,3 +22,26 @@ export const normalToCamelCase = (sentence: string): string=> {
   return camelCased.join('');
 }
 
+export const convertToHtml = (text: string|null|undefined) => {
+  if(!text) return ""
+  const html = text.replace(/\n/g, '<br />')
+  return html
+}
+
+export const getWeekDayFR = (date: Date): string=> {
+  const dateString = date.toDateString()
+
+  const weekDay = dateString.split(" ")[0]
+
+  switch(weekDay){
+    case "Mon": return "lundi"
+    case "Tue": return "mardi"
+    case "Wed": return "mercredi"
+    case "Thu": return "jeudi"
+    case "Fri": return "vendredi"
+    case "Sat": return "samedi"
+    case "Sun": return "dimanche"
+    default : return ""
+  }
+}
+

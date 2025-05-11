@@ -131,7 +131,7 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
       <article className='w-2/3'>
         <div className='flex gap-x-7 gap-y-1 mb-2.5 pr-2 flex-wrap'>
           {
-            test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey B)" &&
+            ((test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey B)") || (test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey A)")) &&
             planificationFigureREY.map((plan, index)=> (
               <div 
                 key={index} 
@@ -204,7 +204,7 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
             </div>
             ))
             :
-            test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey B)" 
+            test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey B)" || test === "Epreuve visuoconstructive en deux dimensions (Figure de Rey A)"
             ? null 
             : <p className='text-red-700 italic text-sm font-bold'>Aucune observation pré-enregistrée !</p>
           }

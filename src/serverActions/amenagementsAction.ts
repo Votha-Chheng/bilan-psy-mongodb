@@ -36,8 +36,8 @@ export const fetchManyAmenagementItems = async(itemsIds: string[]):Promise<Servi
       data: res
     }
   } catch (error) {
-    console.log("Error in fetchAmenagementsCategoriesList", error)
-    return serverError(error, "Impossible de retrouver la liste de catégories des aménagements.")
+    console.log("Error in fetchManyAmenagementItems", error)
+    return serverError(error, "Impossible de retrouver la liste des aménagements.")
   }
 }
 

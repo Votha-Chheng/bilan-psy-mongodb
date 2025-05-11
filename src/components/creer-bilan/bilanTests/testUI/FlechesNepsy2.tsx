@@ -48,7 +48,7 @@ const FlechesNepsy2 = () => {
   return (
     <Card className={`py-2 px-3.5 my-5 w-full gap-y-0`}>
       <p className='italic text-sm mb-5'>
-        &#8227; <span className='font-bold'>Test {flechesNepsy2Test?.nom?? ""}</span> : {flechesNepsy2Test?.description ?? ` : ${flechesNepsy2Test?.description}.`}
+        &#8227; <span className='font-bold'>{flechesNepsy2Test?.nom?? ""}</span> : {flechesNepsy2Test?.description ?? ` : ${flechesNepsy2Test?.description}.`}
       </p>
       <FlechesNepsy2Table/>
       <ThemeObservationGenerics

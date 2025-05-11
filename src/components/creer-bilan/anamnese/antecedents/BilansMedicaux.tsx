@@ -1,6 +1,5 @@
 import { bilanMedicalKeys, listeBilansMedicaux } from '@/@types/Anamnese'
 import BilanMedicalCard from './BilanMedicalCard'
-import { useEffect } from 'react'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2 } from 'lucide-react'
 

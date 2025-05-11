@@ -12,13 +12,19 @@ type AnamneseDBDialogProps = {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   dialogTitle: string
-  searchKeys: (keyof Partial<Anamnese>)[]
+  searchKeys: (keyof AnamneseResults)[]
   indexDataToRetrieve?: number
 }
 
 const AnamneseDBDialog: FC<AnamneseDBDialogProps> = ({ open, setOpen, dialogTitle, searchKeys, indexDataToRetrieve }) => {
   const {getAnamneseDBByKeys, resetAnamneseDB, anamneseInDBByDomaine, loadingData} = useAnamneseSearchDBStore()
-  const {allPatients} = usePatientInfoStore()
+  const {allPatients, fetchAllPatients} = usePatientInfoStore()
+
+  useEffect(()=> {
+    if(open){
+      fetchAllPatients()
+    }
+  }, [open])
 
   useEffect(()=> {
     if(open){
@@ -55,17 +61,17 @@ const AnamneseDBDialog: FC<AnamneseDBDialogProps> = ({ open, setOpen, dialogTitl
             ?
             <p className='w-fit mx-auto italic'>Aucun résultat trouvé.</p>
             :
-            anamneseInDBByDomaine.map((anamnese: Exclude<AnamneseResults, "BilanMedicauxResults ">, index: number)=>(
+            anamneseInDBByDomaine.map((anamnese: AnamneseResults, index: number)=>(
               typeof(indexDataToRetrieve) !== "number"
               ?
               <Card key={index} className='min-w-1/2 max-w-1/2 py-2 px-4'>
                 <CardTitle className='text-sm flex flex-col'>
                   <div><span className='font-normal underline underline-offset-2'>Patient</span> : {returnPatientName(anamnese.patientId, allPatients)}</div>
-                  <span className='font-bold'>{anamnese[searchKeys[0]] }</span>
+                  <span className='font-bold'>{anamnese[searchKeys[0]] as string }</span>
                 </CardTitle>
               </Card>
               :
-              (anamnese[searchKeys[0]]?.[indexDataToRetrieve] !== null && anamnese[searchKeys[0]]?.[indexDataToRetrieve] !=="")
+              (searchKeys[0] !== "bilanMedicauxResults" && anamnese[searchKeys[0]]?.[indexDataToRetrieve] !== null && anamnese[searchKeys[0]]?.[indexDataToRetrieve] !=="")
               &&
               <Card key={index} className='min-w-1/2 max-w-1/2 py-2 px-4'>
                 <CardTitle className='text-sm flex flex-col'>

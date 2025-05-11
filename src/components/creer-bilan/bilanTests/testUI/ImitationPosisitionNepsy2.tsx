@@ -45,7 +45,7 @@ const ImitationPosisitionNepsy2 = () => {
   return (
     <Card className={`py-2 px-3.5 my-5 w-full`}>
       <p className='italic text-sm'>
-        &#8227; <span className='font-bold'>Test {imitationsNEPSY2?.nom?? ""}</span> : {imitationsNEPSY2?.description ?? ` : ${imitationsNEPSY2?.description}.`}
+        &#8227; <span className='font-bold'>{imitationsNEPSY2?.nom?? ""}</span> : {imitationsNEPSY2?.description ?? ` : ${imitationsNEPSY2?.description}.`}
       </p>
       <ImitationPosisitionNepsy2Table/>
       <CardContent className='p-2'>

@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { CornerUpLeft, Database, EditIcon } from 'lucide-react'
 import React, { FC, useEffect, useState } from 'react'
 
@@ -13,9 +12,10 @@ type AnamneseThemeCardProps = {
   label: string
   keyLabel: keyof AnamneseResults
   data: string|undefined|null
+  updateFunctionFromStore: ()=> void
 }
 
-const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data }) => {
+const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data, updateFunctionFromStore }) => {
   const {anamneseResults} = useAnamneseSearchDBStore()
   const [edit, setEdit] = useState<boolean>(false)
 
@@ -40,7 +40,7 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data })
       />
       <span className={`flex gap-x-2 items-center border border-transparent hover:border-slate-500 w-fit p-2 rounded-md mb-1`}>&bull; 
         <span className='underline underline-offset-2 whitespace-nowrap font-bold'>{label} : </span> 
-        <span className={`${edit && "opacity-30"}`}>{anamneseResults && anamneseResults[keyLabel]}</span>
+        <span className={`${edit && "opacity-30"}`}>{keyLabel !== "bilanMedicauxResults" && anamneseResults && anamneseResults[keyLabel]}</span>
         {
           edit
           ?
@@ -63,6 +63,7 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data })
           themeTitle={label}
           setEdit={setEdit}
           edit={edit}
+          updateFunctionFromStore={updateFunctionFromStore}
         />
       }
       <Separator className='mb-2.5' />

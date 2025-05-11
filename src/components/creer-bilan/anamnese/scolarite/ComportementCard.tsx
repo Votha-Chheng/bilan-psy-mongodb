@@ -20,7 +20,7 @@ const ComportementCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [openManagementAdjDialog, setOpenManagementAdjDialog] = useState<boolean>(false) 
-  const {anamneseResults, updatePatientInfoFromDB} = usePatientInfoStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   const {comportement} = anamneseResults ?? {}
   
@@ -71,7 +71,7 @@ const ComportementCard: FC = () => {
   }
 
   const updateFunction = ()=>{
-    updatePatientInfoFromDB(patientId)
+    getAnamneseResultsByPatientId(patientId)
   }
   useToast({state:stateCheck, updateFunction})
 

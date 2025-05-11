@@ -6,11 +6,13 @@ import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
 import AnamneseThemeCard from '../AnamneseThemeCard'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { useParams } from 'next/navigation'
 
 const AntecedentsBody = () => {
+  const {id: patientId} = useParams<{id: string}>()
   const antecedentsThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Antécédents médicaux personnels et suivis médicaux" && theme.theme)
   
-  const {anamneseResults} = useAnamneseSearchDBStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {maladiesEventuelles, handicap, accompagnementSuivi, autresAntecedents} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
@@ -33,6 +35,7 @@ const AntecedentsBody = () => {
           keyLabel='maladiesEventuelles'
           label={"Maladies éventuelles"}
           data={maladiesEventuelles}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -41,6 +44,7 @@ const AntecedentsBody = () => {
           keyLabel='handicap'
           label={"Handicap"}
           data={handicap}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -49,6 +53,7 @@ const AntecedentsBody = () => {
           keyLabel='accompagnementSuivi'
           label={"Accompagnements et suivis"}
           data={accompagnementSuivi}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -57,6 +62,7 @@ const AntecedentsBody = () => {
           keyLabel='autresAntecedents'
           label={"Autres (antécédents)"}
           data={autresAntecedents}
+          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
     </div>

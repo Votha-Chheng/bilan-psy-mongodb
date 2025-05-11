@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { openSans } from '@/fonts/openSans'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { List, Loader2 } from 'lucide-react'
+import { Database, List, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
@@ -12,6 +12,7 @@ import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormD
 import { Button } from '@/components/ui/button'
 import ManageAutonomieDescriptionsDialog from '@/components/sharedUI/alertsAndDialogs/ManageAutonomieDescriptionsDialog'
 import { useToast } from '@/customHooks/useToast'
+import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBDialog'
 
 const AutonomieCard = () => {
   const {id: patientId} = useParams<{id: string}>()
@@ -23,6 +24,7 @@ const AutonomieCard = () => {
   const [isPending, setIsPending] = useState<boolean>(false)
   const [autonomieLocal, setAutonomieLocal] = useState<string[]>(["", ""])   //<----- [autonomie, observations]
   const [openManagementAutonomieDialog, setOpenManagementAutonomieDialog] = useState<boolean>(false) 
+  const [openAnamneseDBDialog, setOpenAnamneseDBDialog] = useState<boolean>(false) 
 
   useEffect(()=> {
     getAutonomieDescriptionsListe()
@@ -51,6 +53,13 @@ const AutonomieCard = () => {
 
   return (
     <Card className='mb-5 gap-y-2'>
+      <AnamneseDBDialog
+        open={openAnamneseDBDialog}
+        setOpen={setOpenAnamneseDBDialog}
+        dialogTitle={`Données enregistrées précédemment concernant le thème "sommeil" :`}
+        searchKeys={["sommeilQuotidien"]}
+        indexDataToRetrieve={0}
+      />
       <ManageAutonomieDescriptionsDialog open={openManagementAutonomieDialog} setOpen={setOpenManagementAutonomieDialog} />
       <div className='flex gap-2.5 mb-3 items-center'>
         <div className='ml-7.5'>&bull; <span className='underline font-bold underline-offset-2'>Autonomie</span> : </div>
@@ -84,6 +93,9 @@ const AutonomieCard = () => {
         label='observation'
         themeTitle='Autonomie'
       />
+      <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenManagementAutonomieDialog(true)}>
+        <Database/> Voir les descriptions dans la base de données pour le thème "autonomie"
+      </Button>
     </Card>
   )
 }

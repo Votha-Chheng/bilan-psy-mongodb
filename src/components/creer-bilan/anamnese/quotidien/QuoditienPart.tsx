@@ -14,10 +14,14 @@ import SommeilCard from './SommeilCard'
 import DecritAuQuotidienCard from './DecritAuQuotidienCard'
 import AnamneseTitleItem from '../AnamneseTitleItem'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { useParams } from 'next/navigation'
 
 const QuoditienPart = () => {
-  const {anamneseResults} = useAnamneseSearchDBStore()
+  const {id: patientId} = useParams<{id: string}>()
+
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ecouteConsignes, agitationMotrice, gestionTemps, gestionEmotions, alimentationQuotidien, autresQuotidien} = anamneseResults ?? {}
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
   const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
@@ -54,6 +58,7 @@ const QuoditienPart = () => {
             label="Écoute des consignes"
             keyLabel="ecouteConsignes"
             data={ecouteConsignes}
+            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
         <CardWrapper themeLabel="Agitation motrice" >
@@ -61,13 +66,14 @@ const QuoditienPart = () => {
             label="Agitation motrice"
             keyLabel="agitationMotrice"
             data={agitationMotrice}
+            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
         <CardWrapper themeLabel="Devoirs" >
           <DevoirsCard/>
         </CardWrapper>
         <CardWrapper themeLabel="Gestion des émotions" >
-          <SelectAndCommentsCard stateFromDB={gestionEmotions} listeSelectItems={["Rien à signaler", "Des difficultés"]} keyAnamnese="gestionEmotions" themeLabel="Gestion des émotions" />
+          <SelectAndCommentsCard stateFromDB={gestionEmotions} listeSelectItems={["rien à signaler", "des difficultés"]} keyAnamnese="gestionEmotions" themeLabel="Gestion des émotions" />
         </CardWrapper>
         <CardWrapper themeLabel="Gestion du temps" >
           <SelectAndCommentsCard stateFromDB={gestionTemps} listeSelectItems={["correcte", "difficile"]} keyAnamnese="gestionTemps" themeLabel="Gestion du temps" />
@@ -85,6 +91,7 @@ const QuoditienPart = () => {
             label="Alimentation au quotidien"
             keyLabel="alimentationQuotidien"
             data={alimentationQuotidien}
+            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
 
@@ -93,6 +100,7 @@ const QuoditienPart = () => {
             label="Autres (quotidien)"
             keyLabel="autresQuotidien"
             data={autresQuotidien}
+            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
 

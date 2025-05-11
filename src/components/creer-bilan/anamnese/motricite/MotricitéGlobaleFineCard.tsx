@@ -63,7 +63,7 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
             <SelectValue placeholder="Difficultés/Aisance" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="des diffultés">des diffultés</SelectItem>
+            <SelectItem value="des difficultés">des difficultés</SelectItem>
             <SelectItem value="de l'aisance">de l'aisance</SelectItem>
           </SelectContent>
         </Select>

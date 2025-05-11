@@ -10,11 +10,13 @@ import { AnamneseResults } from '@/@types/Anamnese'
 import CardWrapper from '../CardWrapper'
 import AnamneseTitleItem from '../AnamneseTitleItem'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { useParams } from 'next/navigation'
 
 const MotricitePart: FC = () => {
+  const {id: patientId} = useParams<{id: string}>()
   const motriciteThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Motricité")
 
-  const {anamneseResults} = useAnamneseSearchDBStore()
+  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {motriciteFine, motriciteGlobale, praxiesGestuelles, extraScolaire, autresMotricite} = anamneseResults ?? {}
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
@@ -60,6 +62,7 @@ const MotricitePart: FC = () => {
           keyLabel='praxiesGestuelles'
           label={"Praxies gestuelles"}
           data={praxiesGestuelles}
+          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -68,6 +71,7 @@ const MotricitePart: FC = () => {
           keyLabel='extraScolaire'
           label={"Activités extra-scolaires"}
           data={extraScolaire}
+          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
       
@@ -80,6 +84,7 @@ const MotricitePart: FC = () => {
           keyLabel='autresMotricite'
           label={"Autres (motricité)"}
           data={autresMotricite}
+          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
     </article>

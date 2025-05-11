@@ -9,7 +9,7 @@ import MotifConsultation from './MotifConsultation'
 import { useParams } from 'next/navigation'
 
 const EnTete = () => {
-  const {patientInfoGenerales, fetchSinglePatientById, loadingPatientInfoFromDB} = usePatientInfoStore()
+  const {patientInfoGenerales, loadingPatientInfoFromDB} = usePatientInfoStore()
   const [changeDateBilan, setChangeDateBilan] = useState<boolean>(false)
 
   return (

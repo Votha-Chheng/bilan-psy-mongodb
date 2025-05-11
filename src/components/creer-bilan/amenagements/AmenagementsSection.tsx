@@ -11,7 +11,7 @@ const AmenagementsSection = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {patientInfoGenerales} = usePatientInfoStore()
   const {nom, prenom} = patientInfoGenerales ?? {}
-  const {getAmenagementsByPatientId, getAllAmenagementItems, getManyAmenagementItems, manyAmenagementsItems, amenagementItemsIds} = useAmenagementsStore()
+  const {getAmenagementsByPatientId, getAllAmenagementItems, getManyAmenagementItems, amenagementItemsIds} = useAmenagementsStore()
 
   useEffect(()=> {
     getAmenagementsByPatientId(patientId)

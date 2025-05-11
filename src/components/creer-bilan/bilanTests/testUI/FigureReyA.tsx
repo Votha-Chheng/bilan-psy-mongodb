@@ -43,7 +43,7 @@ const FigureReyA = () => {
   return (
     <Card className={`py-2 px-3.5 my-5 w-full gap-y-0`}>
       <p className='italic text-sm mb-5'>
-        &#8227; <span className='font-bold'>Test {figureReyATest?.nom?? ""}</span> : {figureReyATest?.description ?? ` : ${figureReyATest?.description}.`}
+        &#8227; <span className='font-bold'>{figureReyATest?.nom?? ""}</span> : {figureReyATest?.description ?? ` : ${figureReyATest?.description}.`}
       </p>
       <FigureReyATable/>
       <ThemeObservationGenerics

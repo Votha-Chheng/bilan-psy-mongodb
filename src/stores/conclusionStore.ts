@@ -5,6 +5,7 @@ import { ProfilPsyItem, ProjetPsyItem } from '@prisma/client'
 import { create } from 'zustand'
 
 type ConclusionState = {
+  consclusionId: string|null
   conclusionListe: {conclusionCommentaires: string|null, patientName: string|null}[]|null
   getConclusionList: ()=> Promise<void>
   loadingConclusionList: boolean
@@ -20,6 +21,7 @@ type ConclusionState = {
 }
 
 export const useConclusionStore = create<ConclusionState>((set) => ({
+  consclusionId: null,
   loadingConclusionList: false,
   conclusionListe: null,
   getConclusionList: async()=> {

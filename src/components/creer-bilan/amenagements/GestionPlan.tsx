@@ -16,7 +16,7 @@ import React, { useState } from 'react'
 
 const GestionPlan = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, amenagementItemsIds} = useAmenagementsStore()
+  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, getAllAmenagementItems, amenagementItemsIds} = useAmenagementsStore()
 
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -40,13 +40,15 @@ const GestionPlan = () => {
     res && setIsPending(false)
   }
 
-  useToast({state, updateFunction: ()=> updateAmenagementsByPatientId(patientId)})
+  useToast({state, updateFunction: ()=> {
+    updateAmenagementsByPatientId(patientId)
+  }})
 
   return (
     <div  className='py-5 border-l border-black w-3/5 px-3'>
       <CreateAmenagementItemDialog open={openDialog} setOpen={setOpenDialog} />
       <Button onClick={()=> setOpenDialog(true)}>
-        <ListCheckIcon/> Créer un aménagement à ajouter
+        <ListCheckIcon/> Créer un aménagement à ajouter dans la liste des choix
       </Button>
       <div className='my-3'>
         <p className={`${openSans.className} leading-7`}>

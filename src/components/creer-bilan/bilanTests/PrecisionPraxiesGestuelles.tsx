@@ -46,7 +46,7 @@ const PrecisionPraxiesGestuelles: FC<PrecisionPraxiesGestuellesProps> = ({precis
   return (
     <div>
       <p className='flex items-center gap-x-2 text-sm mb-2'>
-        &bull; <span className='underline underline-offset-4 mb-2'>Précision du geste {precisionAvec}</span> :
+        &bull; <span className='underline underline-offset-4'>Précision du geste {precisionAvec}</span> :
         <span className='italic'>{stateLocal === "" ? "(cocher les cases)": stateLocal}</span>
         {isPending && <Loader2 className='animate-spin'/>}
       </p>

@@ -48,7 +48,7 @@ const VisuomotriceNepsy2Table = () => {
           </td> 
         </tr>
         <tr className='border-collapse border border-black'>
-          <td className='border-collapse border border-black px-2 font-bold'>Précision visuomotricité</td>
+          <td className='border-collapse border border-black px-2 font-bold'>Précision visuomotrice</td>
           <td style={{backgroundColor:`${getBgColorForNoteStandard(+precisionVisuoMoteurLocal)}`}} className={`inline-flex gap-2 items-center border-collapse w-full px-5 justify-center`}>
             <Input 
               disabled={isPending}
