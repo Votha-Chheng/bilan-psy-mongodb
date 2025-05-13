@@ -1,3 +1,4 @@
+import { FiguresReyAResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -6,7 +7,6 @@ import { planificationFigureREY } from '@/datas/planificationFigureRey'
 import { upsertFigureReyAByKeyValueAction } from '@/serverActions/testsActions/figureReyAActions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { getBgColorForDeviationStandard, getBgColorForPercentiles } from '@/utils/getColorCells'
-import { figuresreya } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 
 const FigureReyATable = () => {
@@ -31,7 +31,7 @@ const FigureReyATable = () => {
     setMemoirePercentileLocal(memoirePercentile ?? "")
   }, [figuresreya])
 
-  const handleChangeState = async(value: string, keyFigureA: keyof figuresreya)=> {
+  const handleChangeState = async(value: string, keyFigureA: keyof FiguresReyAResultsDTO)=> {
     setIsPending(true)
     const res = await upsertFigureReyAByKeyValueAction<string>(keyFigureA, value, bilanId ?? "")
     // eslint-disable-next-line

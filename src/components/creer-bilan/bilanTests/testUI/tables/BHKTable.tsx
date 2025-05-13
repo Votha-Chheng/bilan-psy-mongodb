@@ -1,10 +1,10 @@
+import { BHKResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
 import { upsertBHKResultsAction } from '@/serverActions/testsActions/bhkActions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { getBgColorForDeviationStandard } from '@/utils/getColorCells'
-import { bhk } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 
 const BHKTable = () => {
@@ -24,7 +24,7 @@ const BHKTable = () => {
     setVitesseLocal(vitesseEcriture ?? "")
   }, [bhk])
 
-  const handleChangeStateAction = async(value: string, keyBHK: keyof bhk)=> {
+  const handleChangeStateAction = async(value: string, keyBHK: keyof BHKResultsDTO)=> {
     setIsPending(true)
     const res = await upsertBHKResultsAction(keyBHK, value, bilanId ?? "")
     if(res.success) {

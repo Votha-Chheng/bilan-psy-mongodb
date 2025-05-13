@@ -1,10 +1,10 @@
+import { MABC2ResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
 import { upsertMABC2ByKeyValueAction } from '@/serverActions/testsActions/mabc2Actions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { getBgColorForTableTests } from '@/utils/getColorCells'
-import { mabc2 } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 
 const MABCTable = () => {
@@ -19,7 +19,7 @@ const MABCTable = () => {
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
-  const handleUpsertMABC2Action = async(key: keyof mabc2, value: string): Promise<void>=> {
+  const handleUpsertMABC2Action = async(key: keyof MABC2ResultsDTO, value: string): Promise<void>=> {
     if(value === "") {
       if(key === "dexteriteManuelle") setDexteriteManuelleLocal(dexteriteManuelle ?? "")
       if(key === "viserAttraper") setViserAttraperLocal(viserAttraper ?? "")
