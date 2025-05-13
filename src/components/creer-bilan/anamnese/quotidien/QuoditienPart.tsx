@@ -4,7 +4,6 @@ import { anamneseKeysAndLabels } from '@/datas/anamneseConstantes'
 import { MoveRight } from 'lucide-react'
 import React, { useState } from 'react'
 import CardWrapper from '../CardWrapper'
-import AutonomieCard from './AutonomieCard'
 import AnamneseThemeCard from '../AnamneseThemeCard'
 import DevoirsCard from './DevoirsCard'
 import SelectAndCommentsCard from '../../SelectAndCommentsCard'
@@ -19,7 +18,7 @@ const QuoditienPart = () => {
   const {id: patientId} = useParams<{id: string}>()
 
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
-  const {ecouteConsignes, agitationMotrice, gestionTemps, gestionEmotions, alimentationQuotidien, autresQuotidien} = anamneseResults ?? {}
+  const {ecouteConsignes, agitationMotrice, gestionTemps, gestionEmotions, alimentationQuotidien, autresQuotidien, autonomie} = anamneseResults ?? {}
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
@@ -50,7 +49,12 @@ const QuoditienPart = () => {
         </CardWrapper>
 
         <CardWrapper themeLabel="Autonomie" >
-          <AutonomieCard/>
+          <AnamneseThemeCard
+            label="Autonomie"
+            keyLabel="autonomie"
+            data={autonomie}
+            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          />
         </CardWrapper>
         <CardWrapper themeLabel="Écoute des consignes" >
           <AnamneseThemeCard

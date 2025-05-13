@@ -96,7 +96,7 @@ export type AnamneseRawData = {
   anterieur: string|null
   sommeilQuotidien: string|null             //<---- [dort seul, difficultés à s'endormair, observations]
   decritAuQuotidien: string|null             //<---- [commentaires, suite de descriptions...]
-  autonomie: string|null             //<---- [commentaires, suite de descriptions...]
+  autonomie: string|null             
   ecouteConsignes: string|null
   agitationMotrice: string|null
   devoirs : string|null
@@ -149,7 +149,7 @@ export type AnamneseDTO = {
   anterieur?: string|null
   sommeilQuotidien?: string[]|null             //<---- [dort seul, difficultés à s'endormair, observations]
   decritAuQuotidien?: string[]|null             //<---- [commentaires, suite de descriptions...]
-  autonomie?: string[]|null             //<---- [commentaires, suite de descriptions...]
+  autonomie?: string|null             
   ecouteConsignes?: string|null
   agitationMotrice?: string|null
   devoirs ?: string|null
@@ -202,7 +202,7 @@ export type AnamneseResults = {
   anterieur?: string|null
   sommeilQuotidien?: string[]|null             //<---- [dort seul, difficultés à s'endormair, observations]
   decritAuQuotidien?: string[]|null             //<---- [commentaires, suite de descriptions...]
-  autonomie?:string[]|null             //<---- [commentaires, suite de descriptions...]
+  autonomie?:string|null            
   ecouteConsignes?: string|null
   agitationMotrice?: string|null
   devoirs ?: string|null
@@ -277,10 +277,6 @@ export type ListeAdjectifsDTO = {
   adjectifsComportement: string[]|null
 }
 
-export type AutonomieDescriptionDTO = {
-  id: string
-  descriptionsListe: string[]|null
-}
 
 export type TemperamentDescriptionDTO = {
   id: string

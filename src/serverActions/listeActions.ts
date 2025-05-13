@@ -1,6 +1,6 @@
 "use server"
 
-import { AutonomieDescriptionDTO, ListeAdjectifs, ListeAdjectifsDTO, ListeTypeSensorialite, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
+import { ListeAdjectifs, ListeAdjectifsDTO, ListeTypeSensorialite, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
@@ -132,58 +132,6 @@ export const fetchAllTypeSensorialite = async(): Promise<ServiceResponse<ListeTy
     }
   } catch (error) {
     console.log("Error in upsertListeSensorialiteAction", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-
-export const upsertAutonomieDescriptionAction = async(descriptionAutonomie: string, listeId?: string): Promise<ServiceResponse<AutonomieDescriptionDTO|null>> =>{
-  const parsedData = validateWithZodSchema(
-    z.string().min(1, "Il manque un adjectif à rajouter."), 
-    descriptionAutonomie
-  )
-  if(!parsedData.success) return validationError(parsedData)
-  
-  let existingDescriptions: string[]|null = null
-  let finalDescriptionArray: string[]|null = null
-  try {
-    if(listeId){
-      const res = await db.autonomieDescription.findUnique({
-        where: {
-          id: listeId
-        }
-      })
-      if(!res) return dataBaseError()
-      existingDescriptions = res.descriptionsListe ? JSON.parse(res.descriptionsListe) : null
-    }
-
-    if(!existingDescriptions){
-      finalDescriptionArray = [descriptionAutonomie]
-    } else {
-      finalDescriptionArray = [...existingDescriptions, descriptionAutonomie]
-    }
-
-    const result = await db.autonomieDescription.upsert({
-      where :{
-        id: listeId ?? ""
-      },
-      create : {
-        descriptionsListe:finalDescriptionArray.length>0 ? JSON.stringify(finalDescriptionArray) : null
-      },
-      update: {
-        descriptionsListe:finalDescriptionArray.length>0 ? JSON.stringify(finalDescriptionArray) : null
-      }
-    })
-
-    const data: AutonomieDescriptionDTO = {...result, descriptionsListe: result?.descriptionsListe ? JSON.parse(result.descriptionsListe):null}
-
-    return {
-      success: true,
-      data,
-      message: "Desciption ajouté à la liste !"
-    }
-
-  } catch (error) {
-    console.log("Error in upsertAutonomieDescriptionAction", error)
     return serverError(error, "Erreur lors de la récupération de la liste.")
   }
 }

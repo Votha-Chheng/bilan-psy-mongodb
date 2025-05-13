@@ -83,11 +83,6 @@ model ListeAdjectifs {
   adjectifsComportement String?            //<---- Données JSON de type string[liste] 
 }
 
-model AutonomieDescription {
-  id                    String              @id @default(cuid()) @map("_id")
-  descriptionsListe     String?            //<---- Données JSON de type string[liste] 
-}
-
 model TemperamentDescription {
   id                    String              @id @default(cuid()) @map("_id")
   temperamentListe      String?            //<---- Données JSON de type string[liste] 

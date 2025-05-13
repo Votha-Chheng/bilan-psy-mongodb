@@ -105,7 +105,7 @@ export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise
         continence : true,                        //<-- JSON tranformé en string[] côté serveur
         velo: true,                              //<-- JSON tranformé en string[] côté serveur
         motriciteGlobale: true,                      //<-- JSON tranformé en string[] côté serveur
-        motriciteFine: true,               //<-- JSON tranformé en string[] côté serveur
+        motriciteFine: true,                     //<-- JSON tranformé en string[] côté serveur
         praxiesGestuelles: true,
         sensorialite: true,                  //<--- JSON de type string[type, commentaires] transformé coté serveur   
         extraScolaire: true,
@@ -122,13 +122,13 @@ export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise
         anterieur: true,
         sommeilQuotidien: true,             //<---- [dort seul, difficultés à s'endormair, observations]
         decritAuQuotidien: true,             //<---- [commentaires, suite de descriptions...]
-        autonomie:true,             //<---- [commentaires, suite de descriptions...]
+        autonomie:true,                      //<---- [commentaires, suite de descriptions...]
         ecouteConsignes: true,
         agitationMotrice: true,
         devoirs : true,
-        gestionEmotions: true,         //<--------- [difficultés, observations] 
-        gestionTemps: true,         //<--------- [difficultés, observations] 
-        temperament: true,       //<--------- [temperament, observations] 
+        gestionEmotions: true,                  //<--------- [difficultés, observations] 
+        gestionTemps: true,                     //<--------- [difficultés, observations] 
+        temperament: true,                      //<--------- [temperament, observations] 
         alimentationQuotidien: true, 
         autresQuotidien: true,
         bilansMedicauxResults: {
@@ -312,9 +312,6 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
       }
       if ("decritAuQuotidien" in newRecord){
         newRecord["decritAuQuotidien"] = JSON.parse(record["decritAuQuotidien"]) 
-      }
-      if ("autonomie" in newRecord){
-        newRecord["autonomie"] = JSON.parse(record["autonomie"]) 
       }
       if ("temperament" in newRecord){
         newRecord["temperament"] = JSON.parse(record["temperament"]) 

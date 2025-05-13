@@ -42,6 +42,10 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data, u
         <span className='underline underline-offset-2 whitespace-nowrap font-bold'>{label} : </span> 
         <span className={`${edit && "opacity-30"}`}>{keyLabel !== "bilanMedicauxResults" && anamneseResults && anamneseResults[keyLabel]}</span>
         {
+          !Boolean(data)
+          ?
+          null
+          :
           edit
           ?
           <CornerUpLeft 
