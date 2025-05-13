@@ -4,17 +4,17 @@ import PrecisionPraxiesGestuelles from './PrecisionPraxiesGestuelles'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2 } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
-import { praxiesgestuelles } from '@prisma/client'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { upsertPraxiesGestuellesByKeyValueAction } from '@/serverActions/testsActions/praxiesGestuellesActions'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { useToast } from '@/customHooks/useToast'
+import { PraxiesGestuellesResultsDTO } from '@/@types/BilanTests'
 
 type PraxiesGestuellesCardProps = {
-  keyPrecision: keyof praxiesgestuelles
-  keyTenue: keyof praxiesgestuelles
-  keyGestionTonus: keyof praxiesgestuelles
-  keyHyperHypo: keyof praxiesgestuelles
+  keyPrecision: keyof PraxiesGestuellesResultsDTO
+  keyTenue: keyof PraxiesGestuellesResultsDTO
+  keyGestionTonus: keyof PraxiesGestuellesResultsDTO
+  keyHyperHypo: keyof PraxiesGestuellesResultsDTO
   precisionAvec: string
   setStateLocal: Dispatch<SetStateAction<string>>
   stateLocal: string
@@ -48,7 +48,7 @@ const PraxiesGestuellesCard: FC<PraxiesGestuellesCardProps> = ({
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  const handleChangeCiseauState = async(value: string, keyPraxies: keyof praxiesgestuelles): Promise<void>=> {
+  const handleChangeCiseauState = async(value: string, keyPraxies: keyof PraxiesGestuellesResultsDTO): Promise<void>=> {
     setIsPending(true)
     const res = await upsertPraxiesGestuellesByKeyValueAction<string>(keyPraxies, value, bilanId ?? "")
     // eslint-disable-next-line
