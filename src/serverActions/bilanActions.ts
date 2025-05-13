@@ -1,12 +1,11 @@
 "use server"
 
-import { BilanDTO } from "@/@types/BilanTests"
+import { BilanDTO, BilanRaw } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { Bilan } from "@prisma/client"
 import { z } from "zod"
 
 export const fetchBilanResultsByPatientId = async(patientId: string): Promise<ServiceResponse<BilanDTO|null>>=> {
@@ -101,7 +100,7 @@ export const upsertTestsListeAction = async(patientId: string, testListe: string
   }
 }
 
-export const upsertBilanByKeyValueAction = async<T>(key: keyof Bilan, value: T, patientId: string): Promise<ServiceResponse<Bilan|null>>=> {
+export const upsertBilanByKeyValueAction = async<T>(key: keyof BilanRaw, value: T, patientId: string): Promise<ServiceResponse<BilanRaw|null>>=> {
   try {
     const res = await db.bilan.upsert({
       where: {
