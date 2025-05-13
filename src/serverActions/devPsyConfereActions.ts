@@ -11,8 +11,9 @@ const devPsyConfereExists = async(confere: string|undefined): Promise<ServiceRes
   if(!confere) return { data: true, success: false, message: "Il manque l'intitulé du confère !"}
 
   try {
-    const res = await db.devPsyConfere.findMany({
+    const res: DevPsyConfere[] = await db.devPsyConfere.findMany({
       select: {
+        id: true,
         confere: true
       }
     })
