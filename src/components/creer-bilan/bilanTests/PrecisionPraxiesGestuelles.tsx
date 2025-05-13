@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/customHooks/useToast'
 import { upsertPraxiesGestuellesByKeyValueAction } from '@/serverActions/testsActions/praxiesGestuellesActions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
-import { praxiesgestuelles } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import React, { Dispatch, FC, SetStateAction, useState } from 'react'
 
