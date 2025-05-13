@@ -1,10 +1,10 @@
 'use server'
 
+import { DevPsyConfere } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { DevPsyConfere } from "@prisma/client"
 import { z } from "zod"
 
 const devPsyConfereExists = async(confere: string|undefined): Promise<ServiceResponse<boolean>> => {

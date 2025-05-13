@@ -252,6 +252,11 @@ export type AnamneseTheme = {
   description?: string
 }
 
+export type DevPsyConfere = {
+  id: string
+  confere: string
+}
+
 export type ListeTypeSensorialiteDTO = {
   id: string
   typesSensorialite: string[]|null
