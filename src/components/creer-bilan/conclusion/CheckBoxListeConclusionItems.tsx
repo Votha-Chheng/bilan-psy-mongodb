@@ -1,6 +1,6 @@
+import { ProfilPsyItemDTO, ProjetPsyItemDTO } from '@/@types/ConclusionTypes'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useConclusionStore } from '@/stores/conclusionStore'
-import { ProfilPsyItem, ProjetPsyItem } from '@prisma/client'
 import { Loader2, Trash2 } from 'lucide-react'
 import React, { FC } from 'react'
 
@@ -30,7 +30,7 @@ const CheckBoxListeConclusionItems: FC<CheckBoxListeConclusionItemsProps> = ({
       {
         projetPsyItems && projetPsyItems.length>0 
         ?
-        projetPsyItems.map((projetPsy: ProjetPsyItem, index: number)=> (
+        projetPsyItems.map((projetPsy: ProjetPsyItemDTO, index: number)=> (
         <div key={index} className={`flex gap-x-2 items-center border p-1 rounded-md`}>
           <Checkbox 
             disabled={isPending}
@@ -67,7 +67,7 @@ const CheckBoxListeConclusionItems: FC<CheckBoxListeConclusionItemsProps> = ({
       {
         profilPsyItems && profilPsyItems.length>0 
         ?
-        profilPsyItems.map((profilPsy: ProfilPsyItem, index: number)=> (
+        profilPsyItems.map((profilPsy: ProfilPsyItemDTO, index: number)=> (
         <div key={index} className={`flex gap-x-2 items-center border p-1 rounded-md`}>
           <Checkbox 
             disabled={isPending}

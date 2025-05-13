@@ -5,3 +5,13 @@ export type ConclusionDTO = {
   profilPsy?: string[]|null
   projetPsy?: string[]|null 
 }
+
+export type ProjetPsyItemDTO = {
+  id: string
+  proposition: string
+}
+
+export type ProfilPsyItemDTO = {
+  id: string
+  recommandation: string
+}
