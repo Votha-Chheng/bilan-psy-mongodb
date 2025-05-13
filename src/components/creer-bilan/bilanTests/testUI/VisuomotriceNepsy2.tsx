@@ -6,7 +6,7 @@ import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { useObservationStore } from '@/stores/observationStore'
 import { upsertVisuomotriceNepsy2ByKeyValueAction } from '@/serverActions/testsActions/visuomotriceNepsy2Actions'
-import { visuomotricenepsy2 } from '@prisma/client'
+import { VisuomotriceNEPSY2ResultsDTO } from '@/@types/BilanTests'
 
 const VisuomotriceNepsy2 = () => {
   const {visuomotricenepsy2, updatevisuomotricenepsy2, bilanId} = useBilanTestsStore()
@@ -41,15 +41,15 @@ const VisuomotriceNepsy2 = () => {
   }
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof visuomotricenepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof VisuomotriceNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof visuomotricenepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof VisuomotriceNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof visuomotricenepsy2, "", bilanId ?? "")
+    return await upsertVisuomotriceNepsy2ByKeyValueAction<string>(keyTest as keyof VisuomotriceNEPSY2ResultsDTO, "", bilanId ?? "")
   }
   
   return (

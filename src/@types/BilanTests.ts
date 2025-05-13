@@ -59,7 +59,7 @@ export type MABC2ResultsDTO = {
 }
 
 export type VisuomotriceNEPSY2ResultsDTO = {
-  patientId?: string
+  //patientId?: string
   id?: string|null
   bilanId?: string|null
   precisionVisuoMoteur?: string|null,

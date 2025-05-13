@@ -5,12 +5,12 @@ import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import React, { useEffect, useState } from 'react'
 import MABCTable from './tables/MABCTable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import {mabc2} from '@prisma/client'
 import { upsertMABC2ByKeyValueAction } from '@/serverActions/testsActions/mabc2Actions'
 import { Loader2 } from 'lucide-react'
 import { useObservationStore } from '@/stores/observationStore'
 import { useToast } from '@/customHooks/useToast'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
+import { MABC2ResultsDTO } from '@/@types/BilanTests'
 
 const MABC2 = () => {
   const {mabc2, updatemabc2, bilanId} = useBilanTestsStore()
@@ -50,7 +50,7 @@ const MABC2 = () => {
     setObservationsComplementairesLocal(observationsComplementairesLocal ?? "")
   }, [mabc2])
 
-  const handleChangeMABC2Action = async(key: keyof mabc2, value: string): Promise<void>=> {
+  const handleChangeMABC2Action = async(key: keyof MABC2ResultsDTO, value: string): Promise<void>=> {
     setIsPending(true)
     const res = await upsertMABC2ByKeyValueAction(key, value, bilanId ?? null)
     // eslint-disable-next-line
@@ -60,15 +60,15 @@ const MABC2 = () => {
   }
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof mabc2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof MABC2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof mabc2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof MABC2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof mabc2, "", bilanId ?? "")
+    return await upsertMABC2ByKeyValueAction<string>(keyTest as keyof MABC2ResultsDTO, "", bilanId ?? "")
   }
 
   const updateObservationsListe = ()=> {

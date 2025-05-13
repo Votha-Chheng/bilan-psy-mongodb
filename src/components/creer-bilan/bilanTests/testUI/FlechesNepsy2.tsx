@@ -5,8 +5,8 @@ import FlechesNepsy2Table from './tables/FlechesNepsy2Table'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useObservationStore } from '@/stores/observationStore'
 import { upsertFlechesNepsy2ResultsAction } from '@/serverActions/testsActions/flechesNepsy2Actions'
-import { flechesnepsy2 } from '@prisma/client'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
+import { FlechesNEPSY2ResultsDTO } from '@/@types/BilanTests'
 
 const FlechesNepsy2 = () => {
   const {flechesnepsy2, updateFlechesNepsy2, bilanId} = useBilanTestsStore()
@@ -28,15 +28,15 @@ const FlechesNepsy2 = () => {
   }, [flechesnepsy2])
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof flechesnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof FlechesNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof flechesnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof FlechesNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof flechesnepsy2, "", bilanId ?? "")
+    return await upsertFlechesNepsy2ResultsAction<string>(keyTest as keyof FlechesNEPSY2ResultsDTO, "", bilanId ?? "")
   }
 
   const updateObservationsListe = ()=> {

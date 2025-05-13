@@ -6,7 +6,7 @@ import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { useObservationStore } from '@/stores/observationStore'
 import { upsertImitationNepsy2ByKeyValueAction } from '@/serverActions/testsActions/imitationNepsy2Actions'
-import { imitationpositionsnepsy2 } from '@prisma/client'
+import { ImitationPositionsNEPSY2ResultsDTO } from '@/@types/BilanTests'
 
 const ImitationPosisitionNepsy2 = () => {
   const {imitationpositionsnepsy2, updateImitationNepsy2, bilanId} = useBilanTestsStore()
@@ -27,15 +27,15 @@ const ImitationPosisitionNepsy2 = () => {
   }, [])
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof imitationpositionsnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof ImitationPositionsNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof imitationpositionsnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof ImitationPositionsNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof imitationpositionsnepsy2, "", bilanId ?? "")
+    return await upsertImitationNepsy2ByKeyValueAction<string>(keyTest as keyof ImitationPositionsNEPSY2ResultsDTO, "", bilanId ?? "")
   }
 
   const updateFunction = ()=> {
