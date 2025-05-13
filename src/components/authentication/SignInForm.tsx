@@ -13,7 +13,9 @@ import Link from 'next/link'
 
 const SignInForm: FC = () => {
   const [state, formAction, isPending] = useActionState(signInAction, {})
-  const {data: session, isPending: isLoading } = authClient.useSession();
+  const {data: session, isPending: isLoading } = authClient.useSession()
+
+  console.log(state)
 
   if(isLoading || isPending) {
     return (
