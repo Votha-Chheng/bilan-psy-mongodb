@@ -2,6 +2,8 @@ export type BilanRaw = {
   id: string|null,
   patientId: string|null
   tests: string|null
+  lateralite?: string|null
+  tonus?: string|null
 }
 
 export type BilanDTO = {
