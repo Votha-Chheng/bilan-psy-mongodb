@@ -1,7 +1,6 @@
 
-import { ConclusionDTO } from '@/@types/ConclusionTypes'
+import { ConclusionDTO, ProfilPsyItemDTO, ProjetPsyItemDTO } from '@/@types/ConclusionTypes'
 import { fetchAllConclusion, fetchAllProfilPsyItems, fetchAllProjetPsyItems, fetchConclusionPatientId } from '@/serverActions/conclusionActions'
-import { ProfilPsyItem, ProjetPsyItem } from '@prisma/client'
 import { create } from 'zustand'
 
 type ConclusionState = {
@@ -13,9 +12,9 @@ type ConclusionState = {
   conclusion : ConclusionDTO|null
   getConclusionByPatientId: (patientId: string)=> Promise<void>
   updateConclusionByPatientId: (patientId: string)=> Promise<void>
-  profilPsyItems: ProfilPsyItem[]|null
+  profilPsyItems: ProfilPsyItemDTO[]|null
   getProfilPsyItems : ()=> Promise<void>
-  projetPsyItems: ProjetPsyItem[]|null
+  projetPsyItems: ProjetPsyItemDTO[]|null
   getProjetPsyItems : ()=> Promise<void>
   
 }
