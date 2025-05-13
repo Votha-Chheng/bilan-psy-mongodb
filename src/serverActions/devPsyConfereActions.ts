@@ -73,7 +73,7 @@ export const createDevPsyConfereAction = async(prevState: ServiceResponse<null>,
 
 export const fetchDevPsyConfereListe = async(): Promise<ServiceResponse<string[]|null>>=> {
   try {
-    const res = await db.devPsyConfere.findMany()
+    const res: DevPsyConfere[] = await db.devPsyConfere.findMany()
     if(!res) return dataBaseError("Impossible de récupérer la liste des 'confère'!")
     const liste = res.map(confere=> confere.confere)
     return {
