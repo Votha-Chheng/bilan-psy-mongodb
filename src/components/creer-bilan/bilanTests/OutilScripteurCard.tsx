@@ -1,10 +1,10 @@
+import { BHKResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { upsertBHKResultsAction } from '@/serverActions/testsActions/bhkActions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
-import { bhk } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -28,7 +28,7 @@ const OutilScripteurCard = () => {
   }, [bhk])
 
 
-  const handleChangeState = async(value: string, index: number, key: keyof bhk)=> {
+  const handleChangeState = async(value: string, index: number, key: keyof BHKResultsDTO)=> {
     setIsPending(key)
     const newState = [...tenueOutilScripteurLocal]
     newState[index] = value
@@ -41,7 +41,7 @@ const OutilScripteurCard = () => {
     res && setState(res)
   }
 
-  const handleChangeFonctionnaliteAndPosture = async(value: string, key: keyof bhk)=> {
+  const handleChangeFonctionnaliteAndPosture = async(value: string, key: keyof BHKResultsDTO)=> {
     setIsPending(key)
     const res = await upsertBHKResultsAction(key, value, bilanId ?? "")
     if(key === "fonctionnalite"){
