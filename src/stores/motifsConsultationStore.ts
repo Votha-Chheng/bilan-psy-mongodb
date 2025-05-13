@@ -1,9 +1,9 @@
+import { Motif } from '@/@types/Anamnese'
 import { fetchAllMotifsConsultation } from '@/serverActions/motifActions'
-import { MotifConsultation } from '@prisma/client'
 import { create } from 'zustand'
 
 type MotifConsultationState = {
-  listeMotifs: MotifConsultation[]|null
+  listeMotifs: Motif[]|null
   fetchListeMotifs : ()=> Promise<void>
   updateListeMotifs : ()=> Promise<void>
   
