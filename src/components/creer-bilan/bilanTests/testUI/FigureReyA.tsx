@@ -5,8 +5,8 @@ import FigureReyATable from './tables/FigureReyATable'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { useObservationStore } from '@/stores/observationStore'
-import { figuresreya } from '@prisma/client'
 import { upsertFigureReyAByKeyValueAction } from '@/serverActions/testsActions/figureReyAActions'
+import { FiguresReyAResultsDTO } from '@/@types/BilanTests'
 
 const FigureReyA = () => {
   const {figuresreya, updateFiguresReya, bilanId} = useBilanTestsStore()
@@ -28,15 +28,15 @@ const FigureReyA = () => {
   }, [])
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof figuresreya, newStateLocal.trim(), bilanId ?? "")
+    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof FiguresReyAResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof figuresreya, newStateLocal.trim(), bilanId ?? "")
+    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof FiguresReyAResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof figuresreya, "", bilanId ?? "")
+    return await upsertFigureReyAByKeyValueAction<string>(keyTest as keyof FiguresReyAResultsDTO, "", bilanId ?? "")
   }
   
 
