@@ -40,23 +40,13 @@ export type PatientInfoDocx = {
   bilan?: BilanDTO|null
 }
 
-export type PatientInfoFromDB = {
-  id?: string
-  nom: string,
-  prenom: string,
-  dateNaissance: string
-  ecole?: string|null
-  sexe?: "m"|"f",
-  adulte: boolean,
-  medecin?: string|null,
-  motif?: string|null,
-  dateBilan?: string|null
-  userId?: string
-  createdAt: Date
-  updated : Date
-  anamnese? : AnamneseDTO|null,
-  // amenagements?: AmenagementsPlanDTO[]
-  // conclusion?: Conclusion|null
-  bilan?: BilanDTO|null
-  // dateBilan?: DateBilan|null
+export type MedecinDTO = {
+  id : string
+  nom : string
 }
+
+export type EcoleDTO = {
+  id : string
+  nom : string
+}
+

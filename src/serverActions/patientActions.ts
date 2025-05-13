@@ -1,6 +1,6 @@
 'use server'
 
-import { PatientInfoFromDB, PatientInfosGenerales } from "@/@types/PatientTypes";
+import { PatientInfosGenerales } from "@/@types/PatientTypes";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db  from "@/utils/db";
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError";
@@ -10,13 +10,13 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createMotifConsultationAction, motifConsultationExistsAction } from "./motifActions";
 
-export const createPatientAction = async (prevState: ServiceResponse<PatientInfoFromDB|null>, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
+export const createPatientAction = async (prevState: ServiceResponse<PatientInfosGenerales|null>, formData: FormData): Promise<ServiceResponse<PatientInfosGenerales|null>> => {
   const rawData = Object.fromEntries(formData)
   const response = validateWithZodSchema(CreatePatientSchema, rawData)
   
   if(!response.success) return validationError(response)
     
-  const data = response.data as Partial<PatientInfoFromDB>
+  const data = response.data as Partial<PatientInfosGenerales>
 
   let id = null
 

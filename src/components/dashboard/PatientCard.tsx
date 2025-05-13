@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Card, CardFooter } from '../ui/card'
-import { PatientInfoFromDB } from '@/@types/PatientTypes'
+import { PatientInfosGenerales } from '@/@types/PatientTypes'
 import dayjs from 'dayjs'
 import { Button } from '../ui/button'
 import Link from 'next/link'
@@ -8,7 +8,7 @@ import { EyeIcon, Trash2Icon } from 'lucide-react'
 import DeletePatientAlert from '../sharedUI/alertsAndDialogs/DeletePatientAlert'
 
 type PatientCardProps = {
-  patient: PatientInfoFromDB
+  patient: PatientInfosGenerales
 }
 
 const PatientCard: FC<PatientCardProps> = ({patient}) => {

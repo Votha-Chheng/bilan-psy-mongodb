@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { createPatientAction } from '@/serverActions/patientActions'
-import { Ecole, Medecin } from '@prisma/client'
 import { useEcoleStore } from '@/stores/ecoleStore'
 import SubmitButton from '@/components/ui/SubmitButton'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,6 +20,7 @@ import { authClient } from '@/utils/auth-client'
 import AddOrdeleteMedecinDialog from '@/components/sharedUI/alertsAndDialogs/AddOrdeleteMedecinDialog'
 import AddorDeleteEcoleDialog from '@/components/sharedUI/alertsAndDialogs/AddorDeleteEcoleDialog'
 import MotifsListeDialog from '@/components/sharedUI/alertsAndDialogs/MotifsListeDialog'
+import { EcoleDTO, MedecinDTO } from '@/@types/PatientTypes'
 
 const CreatePatientForm = () => {
   const [state, formAction, isPending] = useActionState(createPatientAction, {})
@@ -132,7 +132,7 @@ const CreatePatientForm = () => {
                 <SelectContent>
                   <SelectGroup>
                     {                 
-                      listeMedecins && listeMedecins.length>0 && listeMedecins.map((medecin: Medecin)=>(
+                      listeMedecins && listeMedecins.length>0 && listeMedecins.map((medecin: MedecinDTO)=>(
                         <SelectItem key={medecin.id} value={medecin.nom}>{medecin.nom}</SelectItem>
                       ))
                     }
@@ -160,7 +160,7 @@ const CreatePatientForm = () => {
                 <SelectContent>
                   <SelectGroup>
                     {                 
-                      listeEcoles && listeEcoles.length>0 && listeEcoles.map((ecole: Ecole)=>(
+                      listeEcoles && listeEcoles.length>0 && listeEcoles.map((ecole: EcoleDTO)=>(
                         <SelectItem key={ecole.id} value={ecole.nom}>{ecole.nom}</SelectItem>
                       ))
                     }
