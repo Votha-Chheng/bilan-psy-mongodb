@@ -1,3 +1,9 @@
+export type BilanRaw = {
+  id: string|null,
+  patientId: string|null
+  tests: string|null
+}
+
 export type BilanDTO = {
   id?: string|null,
   patientId?: string|null

@@ -1,14 +1,13 @@
 import { AnamneseDTO, AnamneseRawData } from "@/@types/Anamnese"
-import { BilanDTO } from "@/@types/BilanTests"
+import { BilanDTO, BilanRaw } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
-import { Anamnese, Bilan } from "@prisma/client"
 
 export const returnArrayIfJson = <T>(json: string|null): T|null=> {
   return json ? JSON.parse(json) as T : null
 }
 
-export const returnParsedBilanResults = (bilan: Bilan): BilanDTO => {
+export const returnParsedBilanResults = (bilan: BilanRaw): BilanDTO => {
   const {tests, ...rest} = bilan ?? {}
 
   return {
