@@ -189,55 +189,6 @@ export const upsertTemperamentAction = async(temperamentToAdd: string, listeId: 
   }
 }
 
-export const deleteDescriptionAction = async(listeId: string|undefined, descriptionToDelete: string): Promise<ServiceResponse<null>> => {
-  if(!listeId) return dataBaseError("La liste n'existe pas !")
-  const parsedData = validateWithZodSchema(
-    z.string().min(1, "Il manque un adjectif à rajouter."), 
-    descriptionToDelete
-  )
-
-  if(!parsedData.success) return validationError(parsedData)
-
-  let arrayDescriptions: string[]|null = null
-
-  try {
-    const res = await db.autonomieDescription.findUnique({
-      where: {
-        id: listeId
-      }
-    })
-    if(!res) return dataBaseError()
-    
-    const temp: string[]|null = res?.descriptionsListe ? JSON.parse(res.descriptionsListe) : null
-
-    if(!temp) return dataBaseError()
-    if(temp && temp.length !== 0) {
-      arrayDescriptions = temp.filter(val => val !== descriptionToDelete)
-    }
-
-    const final = (!arrayDescriptions || arrayDescriptions.length===0) ? null : JSON.stringify(arrayDescriptions)
-
-    await db.autonomieDescription.update({
-      where: {
-        id: listeId
-      },
-      data: {
-        descriptionsListe: final
-      }
-    })
-
-    return {
-      success: true,
-      message: "Description supprimée de la liste !"
-    }
-
-
-  } catch (error) {
-    console.log("Error in deleteDescriptionAction", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-
 export const deleteTemperamentAction = async(listeId: string|undefined|null, temperamentToDelete: string): Promise<ServiceResponse<null>> => {
   if(!listeId) return dataBaseError("La liste n'existe pas !")
 
