@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react'
 import EpreuveCubeNepsy2Table from './tables/EpreuveCubeNepsy2Table'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
-import { epreuvecubesnepsy2 } from '@prisma/client'
 import { upsertEpreuveCubesNepsy2ByKeyValueAction } from '@/serverActions/testsActions/epreuveCubesNepsy2Action'
 import { useObservationStore } from '@/stores/observationStore'
+import { EpreuveCubesNEPSY2ResultsDTO } from '@/@types/BilanTests'
 
 const EpreuveCubeNepsy2 = () => {
   const {epreuvecubesnepsy2, bilanId, updateEpreuveCubesNepsy2} = useBilanTestsStore()
@@ -26,15 +26,15 @@ const EpreuveCubeNepsy2 = () => {
   }, [])
 
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof epreuvecubesnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof EpreuveCubesNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof epreuvecubesnepsy2, newStateLocal.trim(), bilanId ?? "")
+    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof EpreuveCubesNEPSY2ResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof epreuvecubesnepsy2, "", bilanId ?? "")
+    return await upsertEpreuveCubesNepsy2ByKeyValueAction<string>(keyTest as keyof EpreuveCubesNEPSY2ResultsDTO, "", bilanId ?? "")
   }
     
 
