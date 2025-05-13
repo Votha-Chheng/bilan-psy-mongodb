@@ -4,9 +4,8 @@ import { EpreuveCubesNEPSY2ResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { epreuvecubesnepsy2 } from "@prisma/client"
 
-export const upsertEpreuveCubesNepsy2ByKeyValueAction = async<T>(key: keyof epreuvecubesnepsy2, value: T, bilanId: string|null): Promise<ServiceResponse<epreuvecubesnepsy2|null>>=> {
+export const upsertEpreuveCubesNepsy2ByKeyValueAction = async<T>(key: keyof EpreuveCubesNEPSY2ResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<EpreuveCubesNEPSY2ResultsDTO|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
 
   try {
@@ -36,7 +35,7 @@ export const upsertEpreuveCubesNepsy2ByKeyValueAction = async<T>(key: keyof epre
   }
 }
 
-export const setEpreuveCubesNepsy2ResultsToNull = async(epreuveCubesNepsy2Id: string|null): Promise<ServiceResponse<epreuvecubesnepsy2|null>>=> {
+export const setEpreuveCubesNepsy2ResultsToNull = async(epreuveCubesNepsy2Id: string|null): Promise<ServiceResponse<EpreuveCubesNEPSY2ResultsDTO|null>>=> {
   try {
     if(!epreuveCubesNepsy2Id) return dataBaseError("Il faut un identifiant pour le test !")
 

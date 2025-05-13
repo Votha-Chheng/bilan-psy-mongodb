@@ -4,9 +4,8 @@ import { FiguresReyAResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { figuresreya } from "@prisma/client"
 
-export const upsertFigureReyAByKeyValueAction = async<T>(key: keyof figuresreya, value: T, bilanId: string|null): Promise<ServiceResponse<figuresreya|null>>=> {
+export const upsertFigureReyAByKeyValueAction = async<T>(key: keyof FiguresReyAResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<FiguresReyAResultsDTO|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
 
   try {
@@ -36,7 +35,7 @@ export const upsertFigureReyAByKeyValueAction = async<T>(key: keyof figuresreya,
   }
 }
 
-export const setFigureReyAResultsToNull = async(figureReyAId: string|null): Promise<ServiceResponse<figuresreya|null>>=> {
+export const setFigureReyAResultsToNull = async(figureReyAId: string|null): Promise<ServiceResponse<FiguresReyAResultsDTO|null>>=> {
   try {
     if(!figureReyAId) return dataBaseError("Il faut un identifiant pour le test !")
 

@@ -4,9 +4,8 @@ import { PraxiesGestuellesResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { praxiesgestuelles } from "@prisma/client"
 
-export const upsertPraxiesGestuellesByKeyValueAction = async<T>(key: keyof praxiesgestuelles, value: T, bilanId: string|null): Promise<ServiceResponse<praxiesgestuelles|null>>=> {
+export const upsertPraxiesGestuellesByKeyValueAction = async<T>(key: keyof PraxiesGestuellesResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<PraxiesGestuellesResultsDTO|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
   try {
     const res = await db.praxiesgestuelles.upsert({
@@ -35,7 +34,7 @@ export const upsertPraxiesGestuellesByKeyValueAction = async<T>(key: keyof praxi
   }
 }
 
-export const setPraxiesGestuellesResultsToNull = async(praxiesgestuellesId: string|null): Promise<ServiceResponse<praxiesgestuelles|null>>=> {
+export const setPraxiesGestuellesResultsToNull = async(praxiesgestuellesId: string|null): Promise<ServiceResponse<PraxiesGestuellesResultsDTO|null>>=> {
   try {
     if(!praxiesgestuellesId) return dataBaseError("Il faut un identifiant pour le test !")
 

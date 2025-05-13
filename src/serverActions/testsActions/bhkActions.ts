@@ -1,13 +1,12 @@
 "use server"
 
-import { BHKResultsDTO } from "@/@types/BilanTests"
+import { BHK, BHKResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { bhk } from "@prisma/client"
 
-export const upsertBHKResultsAction = async<T>(key: keyof bhk, value: T, bilanId: string|null): Promise<ServiceResponse<bhk|null>>=> {
+export const upsertBHKResultsAction = async<T>(key: keyof BHKResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<BHK|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
 
   try {
@@ -37,7 +36,7 @@ export const upsertBHKResultsAction = async<T>(key: keyof bhk, value: T, bilanId
   }
 }
 
-export const setBHKResultsToNull = async(bhkId: string|null): Promise<ServiceResponse<bhk|null>>=> {
+export const setBHKResultsToNull = async(bhkId: string|null): Promise<ServiceResponse<BHK|null>>=> {
   try {
     if(!bhkId) return dataBaseError("Il faut un identifiant pour le test !")
 

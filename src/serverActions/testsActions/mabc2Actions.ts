@@ -6,10 +6,9 @@ import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { isMABC2Key } from "@/utils/typeGuards"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { mabc2 } from "@prisma/client"
 import { z } from "zod"
 
-export const upsertMABC2ByKeyValueAction = async<T>(key: keyof mabc2, value: T, bilanId: string|null): Promise<ServiceResponse<mabc2|null>>=> {
+export const upsertMABC2ByKeyValueAction = async<T>(key: keyof MABC2ResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<MABC2ResultsDTO|null>>=> {
   const parsedResults = validateWithZodSchema(z.string().refine(val => isMABC2Key(val)), key)
   if(!parsedResults.success) return validationError(parsedResults)
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
@@ -40,7 +39,7 @@ export const upsertMABC2ByKeyValueAction = async<T>(key: keyof mabc2, value: T, 
   }
 }
 
-export const setMABC2ResultsToNull = async(mabc2Id: string|null): Promise<ServiceResponse<mabc2|null>>=> {
+export const setMABC2ResultsToNull = async(mabc2Id: string|null): Promise<ServiceResponse<MABC2ResultsDTO|null>>=> {
   try {
     if(!mabc2Id) return dataBaseError("Il faut un identifiant pour le test !")
 

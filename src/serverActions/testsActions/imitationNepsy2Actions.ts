@@ -4,9 +4,8 @@ import { ImitationPositionsNEPSY2ResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { imitationpositionsnepsy2 } from "@prisma/client"
 
-export const upsertImitationNepsy2ByKeyValueAction = async<T>(key: keyof imitationpositionsnepsy2, value: T, bilanId: string|null): Promise<ServiceResponse<imitationpositionsnepsy2|null>>=> {
+export const upsertImitationNepsy2ByKeyValueAction = async<T>(key: keyof ImitationPositionsNEPSY2ResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<ImitationPositionsNEPSY2ResultsDTO|null>>=> {
 
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
   try {
@@ -36,7 +35,7 @@ export const upsertImitationNepsy2ByKeyValueAction = async<T>(key: keyof imitati
   }
 }
 
-export const setImitationNepsy2ResultsToNull = async(imitationNepsy2Id: string|null): Promise<ServiceResponse<imitationpositionsnepsy2|null>>=> {
+export const setImitationNepsy2ResultsToNull = async(imitationNepsy2Id: string|null): Promise<ServiceResponse<ImitationPositionsNEPSY2ResultsDTO|null>>=> {
   try {
     if(!imitationNepsy2Id) return dataBaseError("Il faut un identifiant pour le test !")
 

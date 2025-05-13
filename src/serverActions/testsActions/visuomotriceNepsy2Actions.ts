@@ -4,9 +4,8 @@ import { VisuomotriceNEPSY2ResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { visuomotricenepsy2 } from "@prisma/client"
 
-export const upsertVisuomotriceNepsy2ByKeyValueAction = async<T>(key: keyof visuomotricenepsy2, value: T, bilanId: string|null): Promise<ServiceResponse<visuomotricenepsy2|null>>=> {
+export const upsertVisuomotriceNepsy2ByKeyValueAction = async<T>(key: keyof VisuomotriceNEPSY2ResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<VisuomotriceNEPSY2ResultsDTO|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
   try {
     const res = await db.visuomotricenepsy2.upsert({
@@ -37,7 +36,7 @@ export const upsertVisuomotriceNepsy2ByKeyValueAction = async<T>(key: keyof visu
   }
 }
 
-export const setVisuomotriceNepsy2ResultsToNull = async(visuomotricenepsy2Id: string|null): Promise<ServiceResponse<visuomotricenepsy2|null>>=> {
+export const setVisuomotriceNepsy2ResultsToNull = async(visuomotricenepsy2Id: string|null): Promise<ServiceResponse<VisuomotriceNEPSY2ResultsDTO|null>>=> {
   try {
     if(!visuomotricenepsy2Id) return dataBaseError("Il faut un identifiant pour le test !")
 

@@ -4,9 +4,8 @@ import { ConnaissancesDroiteGaucheResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { connaissancedroitegauche } from "@prisma/client"
 
-export const upsertConnaisanceDroiteGaucheByKeyValueAction = async<T>(key: keyof connaissancedroitegauche, value: T, bilanId: string|null): Promise<ServiceResponse<connaissancedroitegauche|null>>=> {
+export const upsertConnaisanceDroiteGaucheByKeyValueAction = async<T>(key: keyof ConnaissancesDroiteGaucheResultsDTO, value: T, bilanId: string|null): Promise<ServiceResponse<ConnaissancesDroiteGaucheResultsDTO|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}
   try {
     const res = await db.connaissancedroitegauche.upsert({
@@ -35,7 +34,7 @@ export const upsertConnaisanceDroiteGaucheByKeyValueAction = async<T>(key: keyof
   }
 }
 
-export const setConnaissanceDroiteGaucheResultsToNull = async(connaissancedroitegaucheResultsId: string|null): Promise<ServiceResponse<connaissancedroitegauche|null>>=> {
+export const setConnaissanceDroiteGaucheResultsToNull = async(connaissancedroitegaucheResultsId: string|null): Promise<ServiceResponse<ConnaissancesDroiteGaucheResultsDTO|null>>=> {
   try {
     if(!connaissancedroitegaucheResultsId) return dataBaseError("Il faut un identifiant pour le test !")
 

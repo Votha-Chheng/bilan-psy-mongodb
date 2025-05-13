@@ -31,6 +31,22 @@ export type TestBilan = {
   keyTest: keyof BilanDTO
 }
 
+export type BHK= {
+  id?: string|null
+  bilanId?: string|null
+  qualiteEcriture?: string|null
+  vitesseEcriture?: string|null
+  lecture?: string|null
+  tenueOutilScripteur?: string|null
+  fonctionnalite ?: string|null
+  posturePoignet ?: string|null
+  memorisation ?: string|null
+  comportement ?: string|null
+  ecriture?: string|null
+  ressenti ?: string|null
+  autres ?: string|null
+}
+
 export type BHKResultsDTO = {
   id?: string|null
   bilanId?: string|null
@@ -67,7 +83,6 @@ export type MABC2ResultsDTO = {
 }
 
 export type VisuomotriceNEPSY2ResultsDTO = {
-  //patientId?: string
   id?: string|null
   bilanId?: string|null
   precisionVisuoMoteur?: string|null,
