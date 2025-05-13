@@ -1,6 +1,6 @@
 'use server'
 
-import { AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
+import { AnamneseRawData, AnamneseResults, BilanMedicalKeys, BilanMedicauxRaw, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions"
@@ -8,7 +8,6 @@ import { dataBaseError, serverError, validationError } from "@/utils/serviceResp
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { KeyAnamneseSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
 import { BilanMedicalSchema } from "@/zodSchemas/bilanMedicalSchema"
-import { Anamnese, BilanMedical } from "@prisma/client"
 import { z } from "zod"
 import { getChosenThemeArray } from "@/utils/sortAnamneseDatas"
 
@@ -44,7 +43,7 @@ export const fetchBilanMedicauxResultsByAnamneseId = async(anamneseId: string|nu
       }
     })
     if(!res) return dataBaseError()
-    const bilansMedicauxResults = res as unknown as BilanMedical
+    const bilansMedicauxResults = res as unknown as BilanMedicauxRaw
     const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans, ...rest} = bilansMedicauxResults ?? {}
 
     const bilansParsed: BilanMedicauxResults = {
@@ -162,7 +161,7 @@ export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise
       bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
       selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
     }
-    const copy = rest as unknown as Anamnese
+    const copy = rest as unknown as AnamneseRawData
     const data: AnamneseResults = { ...returnParseAnamneseResult(copy), bilanMedicauxResults: bilansParsed}
     
     return {
@@ -347,9 +346,8 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
 export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: ServiceResponse<AnamneseResults|null>, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
-  console.log(parsedData)
   if(!parsedData.success) return validationError(parsedData)
-  const dataFinal = parsedData.data as {key: keyof Anamnese, value: string, patientId: string}
+  const dataFinal = parsedData.data as {key: keyof AnamneseRawData, value: string, patientId: string}
   const {key, value, patientId} = dataFinal
 
   try {
@@ -433,12 +431,12 @@ export const setPropertyToNullByKeyAction = async(prevState: ServiceResponse<Ana
   const validateData = validateWithZodSchema(KeyAnamneseSchema, rawData)
 
   if(!validateData.success) return validationError(validateData)
-  const {key, patientId} = validateData.data as {key: keyof Anamnese, patientId: string}
+  const {key, patientId} = validateData.data as {key: keyof AnamneseRawData, patientId: string}
 
   try {
     const updatedData = {[key]: null}
 
-    const updatedRecord: Anamnese = await db.anamnese.update({
+    const updatedRecord: AnamneseRawData = await db.anamnese.update({
       where: {
         patientId 
       },
@@ -461,7 +459,7 @@ export const setPropertyToNullByKeyAction = async(prevState: ServiceResponse<Ana
   }
 }
 
-export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedicalKeys, bilanMedicalId: string): Promise<ServiceResponse<BilanMedical|null>> => {
+export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedicalKeys, bilanMedicalId: string): Promise<ServiceResponse<BilanMedicauxRaw|null>> => {
   try {
     const record = await db.bilanMedical.update({
       where: {
@@ -486,7 +484,7 @@ export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedi
   }
 }
 
-export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId?: string, keyToNull?: keyof BilanMedicauxResults):Promise<ServiceResponse<BilanMedical|null>>=> {
+export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId?: string, keyToNull?: keyof BilanMedicauxResults):Promise<ServiceResponse<BilanMedicauxRaw|null>>=> {
   let createdAnamneseId = undefined
 
   try {
@@ -516,7 +514,7 @@ export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], p
     })    
 
     return {
-      data:res,
+      data: res,
       success: true,
       message: "Liste des bilans médicaux modifiés"
     }
@@ -526,7 +524,7 @@ export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], p
   }
 }
 
-export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof BilanMedicauxResults, value: T, patientId: string, anamneseId?: string): Promise<ServiceResponse<BilanMedical|null>> => {
+export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof BilanMedicauxResults, value: T, patientId: string, anamneseId?: string): Promise<ServiceResponse<BilanMedicauxRaw|null>> => {
   let createdAnamneseId = undefined
   const parsedData = validateWithZodSchema(BilanMedicalSchema, {bilanMedicalKey, value, patientId, anamneseId})
   
@@ -578,14 +576,14 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
   }
 }
 
-export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedical, anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
+export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedicauxRaw, anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
   try {
     if(!anamneseId) return { success: false, message: "L'anamnese n'a pas été encore créee."}
     const selectOptions = {
       [key]: true,
       selectedBilans: true
     }
-    const res: Partial<BilanMedical>|null = await db.bilanMedical.findUnique({
+    const res: Partial<BilanMedicauxRaw>|null = await db.bilanMedical.findUnique({
       where: {
         anamneseId
       },

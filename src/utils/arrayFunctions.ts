@@ -1,4 +1,4 @@
-import { AnamneseDTO } from "@/@types/Anamnese"
+import { AnamneseDTO, AnamneseRawData } from "@/@types/Anamnese"
 import { BilanDTO } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
@@ -17,7 +17,7 @@ export const returnParsedBilanResults = (bilan: Bilan): BilanDTO => {
   }
 }
 
-export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {
+export const returnParseAnamneseResult = (anamnese: AnamneseRawData): AnamneseDTO => {
   const {
     ageMarche,
     acquisitionLangage,
@@ -44,7 +44,7 @@ export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {
   } = anamnese ?? {}
 
   return {
-    ageMarche: returnArrayIfJson(ageMarche), 
+    ageMarche: returnArrayIfJson(ageMarche ?? null), 
     acquisitionLangage: returnArrayIfJson(acquisitionLangage), 
     continence: returnArrayIfJson(continence), 
     accouchement: returnArrayIfJson(accouchement),
