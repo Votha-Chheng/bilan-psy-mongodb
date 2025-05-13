@@ -1,5 +1,6 @@
+import { ObservationDTO } from '@/@types/ObservationTestDTO'
 import { ServiceResponse } from '@/@types/ServiceResponse'
-import { ObservationTestDTO, TestsNames } from '@/@types/TestTypes'
+import { TestsNames } from '@/@types/TestTypes'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -16,7 +17,7 @@ type ThemeObservationGenericsProps = {
   test: TestsNames
   stateLocal: string
   setStateLocal: Dispatch<SetStateAction<string>>
-  observationsTest: ObservationTestDTO[] | null
+  observationsTest: ObservationDTO[] | null
   // eslint-disable-next-line
   addToTestThemeAction : (newLocalState: string, keyTest?:string)=> Promise<ServiceResponse<any>>
   // eslint-disable-next-line
