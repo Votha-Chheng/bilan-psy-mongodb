@@ -13,9 +13,7 @@ import Link from 'next/link'
 
 const SignInForm: FC = () => {
   const [state, formAction, isPending] = useActionState(signInAction, {})
-  const {data: session, isPending: isLoading } = authClient.useSession()
-
-  console.log(state.success)
+  const {data: session, isPending: isLoading } = authClient.useSession();
 
   if(isLoading || isPending) {
     return (
@@ -26,7 +24,7 @@ const SignInForm: FC = () => {
     )
   }
 
-  if(session?.user) {
+  if(state.success || session?.user) {
     return (
     <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
       <Link href={`/dashboard`}>
