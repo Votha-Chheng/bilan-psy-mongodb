@@ -1,11 +1,11 @@
 "use server"
 
+import { Motif } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { MotifConsultation } from "@prisma/client"
 
-export const createMotifConsultationAction = async(motif: string): Promise<ServiceResponse<MotifConsultation|null>> => {
+export const createMotifConsultationAction = async(motif: string): Promise<ServiceResponse<Motif|null>> => {
   try {
     const res = await db.motifConsultation.create({
       data: {
@@ -24,7 +24,7 @@ export const createMotifConsultationAction = async(motif: string): Promise<Servi
   } 
 }
 
-export const fetchAllMotifsConsultation = async(): Promise<ServiceResponse<MotifConsultation[]|null>> => {
+export const fetchAllMotifsConsultation = async(): Promise<ServiceResponse<Motif[]|null>> => {
   try {
     const res = await db.motifConsultation.findMany()
 

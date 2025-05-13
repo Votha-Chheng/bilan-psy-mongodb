@@ -252,6 +252,11 @@ export type AnamneseTheme = {
   description?: string
 }
 
+export type Motif = {
+  id:  string
+  motif: string
+}
+
 export type MedecinDTO = {
   id: string
   nom: string
