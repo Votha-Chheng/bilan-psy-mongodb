@@ -1,11 +1,11 @@
 "use server"
 
+import { ObservationTest } from "@/@types/ObservationTestDTO"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { ObservationTestDTO, TestsNames } from "@/@types/TestTypes"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { ObservationTest } from "@prisma/client"
 
 export const fetchObservationsByTestName = async(testName: TestsNames): Promise<ServiceResponse<ObservationTestDTO[]|null>> => {
   try {

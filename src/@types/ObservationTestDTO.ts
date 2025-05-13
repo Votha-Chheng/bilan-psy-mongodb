@@ -1,5 +1,13 @@
 import { TestsNames } from "@/@types/TestTypes"
 
+export type ObservationTest = {
+  id : string|null 
+  testNameAndThemeId: string|null 
+  testName : string|null 
+  theme: string|null 
+  listeObservations: string|null 
+}
+
 export type ObservationDTO = {
   id: string|null
   test: TestsNames|null
