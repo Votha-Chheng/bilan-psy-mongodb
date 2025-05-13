@@ -257,9 +257,19 @@ export type DevPsyConfere = {
   confere: string
 }
 
+export type ListeTypeSensorialite = {
+  id: string
+  typesSensorialite: string|null
+}
+
 export type ListeTypeSensorialiteDTO = {
   id: string
   typesSensorialite: string[]|null
+}
+
+export type ListeAdjectifs = {
+  id: string
+  adjectifsComportement: string|null
 }
 
 export type ListeAdjectifsDTO = {

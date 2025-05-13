@@ -1,16 +1,15 @@
 "use server"
 
-import { AutonomieDescriptionDTO, ListeAdjectifsDTO, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
+import { AutonomieDescriptionDTO, ListeAdjectifs, ListeAdjectifsDTO, ListeTypeSensorialite, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
-import { AutonomieDescription, ListeAdjectifs, ListeTypeSensorialite, TemperamentDescription } from "@prisma/client"
 import { z } from "zod"
 
 //formData = {listeId, typesSensorialite}
-export const upsertListeSensorialiteAction = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<ListeTypeSensorialite>> => {
+export const upsertListeSensorialiteAction = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<ListeTypeSensorialite|null>> => {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({
@@ -340,32 +339,13 @@ export const deleteTemperamentAction = async(listeId: string|undefined|null, tem
   }
 }
 
-export const fetchAutonomieDescriptions = async(): Promise<ServiceResponse<AutonomieDescriptionDTO|null>>=> {
-  try {
-
-    const res = await db.autonomieDescription.findMany()
-    if(!res) return dataBaseError()
-    const rawData = res[0] as AutonomieDescription
-
-    const data: AutonomieDescriptionDTO = {id: rawData.id, descriptionsListe: rawData?.descriptionsListe ? JSON.parse(rawData.descriptionsListe):null}
-
-    return {
-      success: true,
-      data
-    }
-  } catch (error) {
-    console.log("Error in fetchAutonomieDescriptions", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-
 export const fetchAllTemperaments = async(): Promise<ServiceResponse<TemperamentDescriptionDTO|null>>=> {
   try {
     const res = await db.temperamentDescription.findMany()
 
     if(!res) return dataBaseError()
     if(res && res.length===0 ) return dataBaseError()
-    const rawData = res[0] as TemperamentDescription
+    const rawData = res[0]
 
     const data: TemperamentDescriptionDTO = {id: rawData.id, temperamentListe: rawData?.temperamentListe ? JSON.parse(rawData.temperamentListe):null}
 

@@ -2,7 +2,7 @@ import { AnamneseResults, AutonomieDescriptionDTO, BilanMedicauxResults, ListeTy
 import { fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serverActions/anamneseActions'
 import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
 import { fetchAnamneseByKeysWithCache, fetchAnamneseResultsByPatientIdWithCache } from '@/serverActions/fetchingWithCache'
-import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite, fetchAutonomieDescriptions } from '@/serverActions/listeActions'
+import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite } from '@/serverActions/listeActions'
 import { create } from 'zustand'
 
 type AnamneseSearchDBState = {
@@ -17,8 +17,6 @@ type AnamneseSearchDBState = {
   getListeTemperament: ()=> Promise<void>
   anamneseInDBByDomaine: (Omit<AnamneseResults, "bilanMedicauxResults">)[]|null
   devPsyConfereListe: string[]
-  autonomieDescription: AutonomieDescriptionDTO|null
-  getAutonomieDescriptionsListe: ()=> void
   getDevPsyConfereList: ()=> Promise<void>
   getAnamneseDBByKeys : (keys: (keyof AnamneseResults)[])=> Promise<void>
   loadingData: boolean
@@ -76,16 +74,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       console.log("Can't getListeTemperament", error)
     }
   },
-  autonomieDescription: null,
-  getAutonomieDescriptionsListe: async()=> {
-    try {
-      const result = await fetchAutonomieDescriptions()
-      set({autonomieDescription: result.data})
-      
-    } catch (error) {
-      console.log("Can't getAutonomieDescriptionsListe", error)
-    }
-  },
+
   anamneseInDBByDomaine: null,
   loadingData: false,
   devPsyConfereListe: [],
