@@ -252,6 +252,11 @@ export type AnamneseTheme = {
   description?: string
 }
 
+export type MedecinDTO = {
+  id: string
+  nom: string
+}
+
 export type DevPsyConfere = {
   id: string
   confere: string

@@ -1,13 +1,13 @@
 'use server'
 
+import { MedecinDTO } from "@/@types/Anamnese";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError";
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema";
-import { Medecin } from "@prisma/client";
 import { z } from "zod";
 
-export const createMedecinAction = async(prevState: ServiceResponse<Medecin|null>, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
+export const createMedecinAction = async(prevState: ServiceResponse<MedecinDTO|null>, formData: FormData): Promise<ServiceResponse<MedecinDTO|null>> => {
   try {
     const rawData = Object.fromEntries(formData.entries());
     const parsedData = validateWithZodSchema( 
@@ -38,7 +38,7 @@ export const createMedecinAction = async(prevState: ServiceResponse<Medecin|null
   }
 }
 
-export const deleteMedecinAction = async(prevState: ServiceResponse<Medecin|null>, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
+export const deleteMedecinAction = async(prevState: ServiceResponse<MedecinDTO|null>, formData: FormData): Promise<ServiceResponse<MedecinDTO|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema(z.object({
     medecinId: z.string().min(1, "L'identifiant du médecin est requis."),
@@ -68,7 +68,7 @@ export const deleteMedecinAction = async(prevState: ServiceResponse<Medecin|null
   }
 }
 
-export const fetchAllMedecins = async(): Promise<ServiceResponse<Medecin[]>> => {
+export const fetchAllMedecins = async(): Promise<ServiceResponse<MedecinDTO[]>> => {
   try {
     const res = await db.medecin.findMany({
       orderBy: {
