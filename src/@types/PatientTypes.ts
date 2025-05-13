@@ -50,3 +50,8 @@ export type EcoleDTO = {
   nom : string
 }
 
+export type MotifConsultationDTO = {
+  id: string
+  motif: string
+}
+

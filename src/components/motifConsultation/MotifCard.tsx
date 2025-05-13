@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { Card } from '../ui/card'
-import { MotifConsultation } from '@prisma/client'
 import CopyIconTooltip from '../sharedUI/tooltipComponents/CopyIconTooltip'
+import { MotifConsultationDTO } from '@/@types/PatientTypes'
 
 type MotifCardProps = {
-  motifConsultation: MotifConsultation
+  motifConsultation: MotifConsultationDTO
 }
 
 const MotifCard: FC<MotifCardProps> = ({motifConsultation}) => {
