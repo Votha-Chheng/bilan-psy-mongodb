@@ -1,10 +1,10 @@
 
+import { EcoleDTO } from '@/@types/PatientTypes'
 import { fetchAllEcoles } from '@/serverActions/ecoleActions'
-import { Ecole } from '@prisma/client'
 import { create } from 'zustand'
 
 type EcoleState = {
-  listeEcoles: Ecole[]|null
+  listeEcoles: EcoleDTO[]|null
   fetchListeEcoles : ()=> Promise<void>
   updateListeEcoles : ()=> Promise<void>
   

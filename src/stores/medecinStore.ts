@@ -1,10 +1,10 @@
 
+import { MedecinDTO } from '@/@types/Anamnese'
 import { fetchAllMedecins } from '@/serverActions/medecinActions'
-import { Medecin } from '@prisma/client'
 import { create } from 'zustand'
 
 type MedecinState = {
-  listeMedecins: Medecin[]|null
+  listeMedecins: MedecinDTO[]|null
   fetchListeMedecins : ()=> Promise<void>
   updateListeMedecins : ()=> Promise<void>
   
