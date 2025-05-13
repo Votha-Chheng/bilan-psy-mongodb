@@ -1,11 +1,10 @@
 'use server'
 
-import { ConclusionDTO } from "@/@types/ConclusionTypes"
+import { ConclusionDTO, ConclusionRawData, ProfilPsyItemDTO, ProjetPsyItemDTO } from "@/@types/ConclusionTypes"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { Conclusion, ProfilPsyItem, ProjetPsyItem } from "@prisma/client"
 import { fetchPatientsList } from "./patientActions"
 import { getPatientNameById } from "@/utils/getPatientName"
 
@@ -56,7 +55,7 @@ export const fetchConclusionPatientId = async(patientId: string): Promise<Servic
   }
 }
 
-export const upsertConclusionByKeyValueAction = async<T>(key: keyof Conclusion, value: T, patientId: string): Promise<ServiceResponse<Conclusion|null>>=> {
+export const upsertConclusionByKeyValueAction = async<T>(key: keyof ConclusionRawData, value: T, patientId: string): Promise<ServiceResponse<ConclusionRawData|null>>=> {
   const updatedValue= Array.isArray(value) ? {[key]: JSON.stringify(value)} : {[key]: value}
 
   try {
@@ -86,7 +85,7 @@ export const upsertConclusionByKeyValueAction = async<T>(key: keyof Conclusion, 
   }
 }
 
-export const fetchAllProfilPsyItems = async(): Promise<ServiceResponse<ProfilPsyItem[]|null>>=> {
+export const fetchAllProfilPsyItems = async(): Promise<ServiceResponse<ProfilPsyItemDTO[]|null>>=> {
   try {
     const res = await db.profilPsyItem.findMany()
     if(!res) return dataBaseError()
@@ -100,7 +99,7 @@ export const fetchAllProfilPsyItems = async(): Promise<ServiceResponse<ProfilPsy
   }
 }
 
-export const fetchAllProjetPsyItems = async(): Promise<ServiceResponse<ProjetPsyItem[]|null>>=> {
+export const fetchAllProjetPsyItems = async(): Promise<ServiceResponse<ProjetPsyItemDTO[]|null>>=> {
   try {
     const res = await db.projetPsyItem.findMany()
     if(!res) return dataBaseError()
@@ -114,7 +113,7 @@ export const fetchAllProjetPsyItems = async(): Promise<ServiceResponse<ProjetPsy
   }
 }
 
-export const createProjetPsyItemAction = async(proposition: string): Promise<ServiceResponse<ProjetPsyItem|null>>=> {
+export const createProjetPsyItemAction = async(proposition: string): Promise<ServiceResponse<ProjetPsyItemDTO|null>>=> {
   try {
     const item = await db.projetPsyItem.findFirst({
       where: {
@@ -140,7 +139,7 @@ export const createProjetPsyItemAction = async(proposition: string): Promise<Ser
   }
 }
 
-export const createProfilPsyItemAction = async(recommandation: string): Promise<ServiceResponse<ProfilPsyItem|null>>=> {
+export const createProfilPsyItemAction = async(recommandation: string): Promise<ServiceResponse<ProfilPsyItemDTO|null>>=> {
   try {
     const item = await db.profilPsyItem.findFirst({
       where: {
@@ -167,7 +166,7 @@ export const createProfilPsyItemAction = async(recommandation: string): Promise<
   }
 }
 
-export const deleteProfilPsyItemAction = async(id: string): Promise<ServiceResponse<ProfilPsyItem|null>>=> {
+export const deleteProfilPsyItemAction = async(id: string): Promise<ServiceResponse<ProfilPsyItemDTO|null>>=> {
   try {
     const res = await db.profilPsyItem.delete({
       where: {
@@ -186,7 +185,7 @@ export const deleteProfilPsyItemAction = async(id: string): Promise<ServiceRespo
   }
 }
 
-export const deleteProjetPsyItemAction = async(id: string): Promise<ServiceResponse<ProjetPsyItem|null>>=> {
+export const deleteProjetPsyItemAction = async(id: string): Promise<ServiceResponse<ProjetPsyItemDTO|null>>=> {
   try {
     const res = await db.projetPsyItem.delete({
       where: {

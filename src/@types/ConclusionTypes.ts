@@ -1,3 +1,11 @@
+export type ConclusionRawData = {
+  id: string
+  patientId: string|null
+  conclusionCommentaires: string|null
+  profilPsy: string|null 
+  projetPsy: string|null
+}
+
 export type ConclusionDTO = {
   id?: string
   patientId?: string
