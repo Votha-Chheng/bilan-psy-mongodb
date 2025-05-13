@@ -9,8 +9,9 @@ export type ObservationTest = {
 }
 
 export type ObservationDTO = {
+  testNameAndThemeId: string|null 
   id: string|null
-  test: TestsNames|null
-  theme:string
+  testName: TestsNames|null
+  theme:string|null
   listeObservations: string[]|null 
 }

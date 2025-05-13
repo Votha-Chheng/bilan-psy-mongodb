@@ -1,13 +1,13 @@
 "use server"
 
-import { ObservationTest } from "@/@types/ObservationTestDTO"
+import { ObservationDTO, ObservationTest } from "@/@types/ObservationTestDTO"
 import { ServiceResponse } from "@/@types/ServiceResponse"
-import { ObservationTestDTO, TestsNames } from "@/@types/TestTypes"
+import { TestsNames } from "@/@types/TestTypes"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
 
-export const fetchObservationsByTestName = async(testName: TestsNames): Promise<ServiceResponse<ObservationTestDTO[]|null>> => {
+export const fetchObservationsByTestName = async(testName: TestsNames): Promise<ServiceResponse<ObservationDTO[]|null>> => {
   try {
     const res = await db.observationTest.findMany({
       where: {
@@ -16,9 +16,10 @@ export const fetchObservationsByTestName = async(testName: TestsNames): Promise<
     })
     if(!res || res.length === 0) return dataBaseError("Aucune observation trouvée !") 
 
-    const data: ObservationTestDTO[] = res.map((observation: ObservationTest) => ({
+    const data: ObservationDTO[] = res.map((observation: ObservationTest) => ({
       id: observation.id,
-      test: observation.testName as TestsNames,
+      testNameAndThemeId: observation.testNameAndThemeId,
+      testName: observation.testName as TestsNames,
       theme: observation.theme,
       listeObservations: returnArrayIfJson(observation.listeObservations) as string[]|null
     }))
