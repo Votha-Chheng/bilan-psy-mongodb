@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card'
 import React, { useEffect, useState } from 'react'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
@@ -22,15 +21,15 @@ const TonusAction = () => {
     if(!tonus) return
     setTonusActionLocal(tonus)
   }, [tonus])
-
+// eslint-disable-next-line
   const addToTestThemeAction = async (newStateLocal: string): Promise<ServiceResponse<any>> => {
     return await upsertBilanByKeyValueAction<string>("tonus", newStateLocal.trim(), patientId ?? "")
   }
-
+// eslint-disable-next-line
   const removeToTestThemeAction = async (newStateLocal: string): Promise<ServiceResponse<any>> => {
     return await upsertBilanByKeyValueAction<string>("tonus", newStateLocal.trim(), patientId ?? "")
   }
-
+// eslint-disable-next-line
   const setValueToNull = async (): Promise<ServiceResponse<any>> => {
     return await upsertBilanByKeyValueAction<string>("tonus", "", patientId ?? "")
   }

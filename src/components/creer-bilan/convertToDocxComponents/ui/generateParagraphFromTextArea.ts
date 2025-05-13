@@ -1,6 +1,6 @@
-import { Paragraph, TextRun } from "docx";
+import { Paragraph } from "docx";
 import { generateRawTextRun } from "./ParagraphFunctions";
-import { defaultCellStyle, defaultTextStyle } from "@/@types/DocxTypes";
+import { defaultTextStyle } from "@/@types/DocxTypes";
 
 export function generateParagraphFromTextarea(text: string): Paragraph[] {
   const lines = text.split("\n");

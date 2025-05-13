@@ -1,4 +1,3 @@
-import HiddenAnamneseForm from '@/components/forms/anamnese/HiddenAnamneseForm'
 import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBDialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -6,10 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Database, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { FC, Ref, useActionState, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
@@ -37,7 +35,9 @@ const RelationsPairsCard: FC = () => {
     const newState = [...relationsPairsLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction("relationsPairs", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateSelect(res)
+    // eslint-disable-next-line
     res && setIsPendingSelect(false)
   }
 
@@ -81,7 +81,7 @@ const RelationsPairsCard: FC = () => {
         themeTitle='Relations avec les pairs'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "Relations avec les pairs"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;Relations avec les pairs&quot;
       </Button>
     </Card>
   )

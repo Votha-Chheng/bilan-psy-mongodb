@@ -1,7 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import React, { FC, useActionState, useEffect } from 'react'
+import React, { FC, useActionState } from 'react'
 import { Card, CardContent, CardTitle } from '../ui/card'
 import { signInAction } from '@/serverActions/usersActions'
 import { authClient } from '@/utils/auth-client'

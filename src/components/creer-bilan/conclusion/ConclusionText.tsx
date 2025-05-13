@@ -12,9 +12,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 const ConclusionText = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {conclusion, getConclusionByPatientId, updateConclusionByPatientId} = useConclusionStore()
+  const {conclusion, updateConclusionByPatientId} = useConclusionStore()
   const {conclusionCommentaires} = conclusion ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -27,7 +27,9 @@ const ConclusionText = () => {
   const savetext = async()=> {
     setIsPending(true)
     const res = await upsertConclusionByKeyValueAction<string>("conclusionCommentaires", textConclusion, patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

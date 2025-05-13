@@ -18,7 +18,7 @@ export const useMedecinStore = create<MedecinState>((set) => ({
       set({ listeMedecins: response.data })
 
     } catch (error) {
-      console.log("Can't fetch all patients")
+      console.log("Can't fetch all patients", error)
     }
   },
   updateListeMedecins: async () => {
@@ -27,7 +27,7 @@ export const useMedecinStore = create<MedecinState>((set) => ({
       set({ listeMedecins: response.data })
       
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
     }
   }
 }))

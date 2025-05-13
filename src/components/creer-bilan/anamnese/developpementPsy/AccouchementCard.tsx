@@ -1,6 +1,6 @@
 
 import { Card } from '@/components/ui/card'
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { Input } from '@/components/ui/input'
@@ -18,7 +18,7 @@ const AccouchementCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {accouchement} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
   
@@ -32,20 +32,27 @@ const AccouchementCard: FC = () => {
     const newState = [...accouchementLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("accouchement", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setAccouchementLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIspending(false)
   }
 
   const handleCheckedChange = async(checked: boolean)=> {
     setIspending(true)
-    let newState = [...accouchementLocal] 
+    const newState = [...accouchementLocal] 
+    // eslint-disable-next-line
     checked
     ? newState[3] = "L'accouchement a été déclenché."
     : newState[3] = ""
     const res = await upsertAnamneseByKeyValueAction("accouchement", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setAccouchementLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIspending(false)
   }
 
@@ -97,7 +104,7 @@ const AccouchementCard: FC = () => {
           </SelectContent>
         </Select>
         | 
-        <span className={`italic select-none ${openSans.className} ${accouchementLocal[3] === "" && "text-muted-foreground"}`}>L'accouchement a été déclenché.</span>
+        <span className={`italic select-none ${openSans.className} ${accouchementLocal[3] === "" && "text-muted-foreground"}`}>L&apos;accouchement a été déclenché.</span>
         <Switch disabled={isPending} checked={accouchementLocal[3] === "L'accouchement a été déclenché."} onCheckedChange={(checked: boolean)=> handleCheckedChange(checked)}/>
           {isPending && <Loader2 className='animate-spin' />}
       </div>

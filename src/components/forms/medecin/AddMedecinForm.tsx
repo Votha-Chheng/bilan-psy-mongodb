@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import SubmitButton from '@/components/ui/SubmitButton'
 import { createMedecinAction } from '@/serverActions/medecinActions'
 import { useMedecinStore } from '@/stores/medecinStore'
-import React, { useActionState, useEffect, useState } from 'react'
+import React, { useActionState, useEffect } from 'react'
 
 const AddMedecinForm = () => {
   const [state, formAction, isPending] = useActionState(createMedecinAction, {})

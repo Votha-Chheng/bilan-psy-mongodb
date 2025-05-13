@@ -6,12 +6,14 @@ import { Plus } from 'lucide-react'
 import React, { FC, useState } from 'react'
 
 type AddElementToListGenericProps = {
+  // eslint-disable-next-line
   actionFunction: (value: string, listeId: string|undefined|null)=> Promise<ServiceResponse<any>>   //<----- function need (value, listeId)
   listeId: string|null |undefined
   updateFunction: ()=> void
 }
 
 const AddElementToListGeneric: FC<AddElementToListGenericProps> = ({actionFunction, listeId, updateFunction}) => {
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -21,8 +23,11 @@ const AddElementToListGeneric: FC<AddElementToListGenericProps> = ({actionFuncti
     if(value === "") return
     setIsPending(true)
     const res = await actionFunction(value, listeId ?? "")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
+    // eslint-disable-next-line
     res.success && setNewElementToAdd("")
   }
 

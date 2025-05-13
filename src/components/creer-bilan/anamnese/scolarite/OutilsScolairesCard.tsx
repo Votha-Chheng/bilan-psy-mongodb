@@ -3,28 +3,22 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
-import React, { FC, Ref, useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Database, Loader2 } from 'lucide-react'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
-type OutilsScolairesCardProps = {
-  
-}
 
-const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
+const OutilsScolairesCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const { chosenThemes } = useAnamneseSearchDBStore()
   const {outils} = anamneseResults ?? {}
-  
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
   const [outilsLocal, setOutilsLocal] = useState<string[]>(["", ""])                //<-- [niveau, commentaires]
@@ -34,8 +28,11 @@ const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
     const newState = [...outilsLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction("outils", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setOutilsLocal(newState)
+    // eslint-disable-next-line
     res && setStateSelect(res)
+    // eslint-disable-next-line
     res && setIsPendingSelect(false)
   }
 
@@ -85,7 +82,7 @@ const OutilsScolairesCard: FC<OutilsScolairesCardProps> = ({}) => {
         themeTitle='Utilisation des outils scolaires'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les commentaires dans la base de données pour le thème "Utilisation des outils scolaires"
+        <Database/> Voir les commentaires dans la base de données pour le thème &quot;Utilisation des outils scolaires&quot;
       </Button>
     </Card>
   )

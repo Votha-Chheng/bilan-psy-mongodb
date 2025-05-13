@@ -10,11 +10,11 @@ export default function Home() {
           Se connecter
         </Link>
       </Button>
-      <Button>
+      {/* <Button>
         <Link href={"/inscription"}>
-          S'inscrire
+          S&apos;inscrire
         </Link>
-      </Button>
+      </Button> */}
     </main>
   );
 }

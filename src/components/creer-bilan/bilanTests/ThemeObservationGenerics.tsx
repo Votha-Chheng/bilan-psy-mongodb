@@ -6,9 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
 import { planificationFigureREY } from '@/datas/planificationFigureRey'
-import { arimo } from '@/fonts/arimo'
 import { inter } from '@/fonts/inter'
-import { openSans } from '@/fonts/openSans'
 import { upsertListeObservationsByTestName } from '@/serverActions/observationActions'
 import { Loader, Loader2, Trash2, Trash2Icon } from 'lucide-react'
 import React, { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
@@ -19,8 +17,11 @@ type ThemeObservationGenericsProps = {
   stateLocal: string
   setStateLocal: Dispatch<SetStateAction<string>>
   observationsTest: ObservationTestDTO[] | null
+  // eslint-disable-next-line
   addToTestThemeAction : (newLocalState: string, keyTest?:string)=> Promise<ServiceResponse<any>>
+  // eslint-disable-next-line
   removeToTestThemeAction : (newLocalState: string, keyTest?:string)=> Promise<ServiceResponse<any>>
+  // eslint-disable-next-line
   handleSetStateToNullAction: (keyTest?: string)=> Promise<ServiceResponse<any>>
   updateFunction: ()=> void
   updateObservationsListe: ()=> void
@@ -40,7 +41,9 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
   updateObservationsListe,
   keyTest
 }) => {
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
+  // eslint-disable-next-line
   const [stateObservations, setStateObservations] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [isPendingObservation, setIsPendingObservation] = useState<string|null>(null)
@@ -65,8 +68,11 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
     const newState = [...listeObservations]
     newState.push(newObservation)
     const res = await upsertListeObservationsByTestName(test, theme, newState)
+    // eslint-disable-next-line
     res.success && setNewObservation("")
+    // eslint-disable-next-line
     res && setStateObservations(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -74,8 +80,11 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
     setIsPendingObservation(observationToRemove)
     const newState = listeObservations.filter(observation => observation !== observationToRemove)
     const res = await upsertListeObservationsByTestName(test, theme, newState) 
+    // eslint-disable-next-line
     res.success && setNewObservation("")
+    // eslint-disable-next-line
     res && setStateObservations(res)
+    // eslint-disable-next-line
     res && setIsPendingObservation(null)
   }
 
@@ -87,8 +96,11 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
     setIsPending(true)
     const newStateLocal = `${stateLocal.trim()} ${observationToAdd.trim()}`
     const res = await addToTestThemeAction(newStateLocal, keyTest)
+    // eslint-disable-next-line
     res.success && setStateLocal(newStateLocal)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -96,16 +108,22 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
     setIsPending(true)
     const newStateLocal = `${stateLocal.replace(observationToRemove.trim(), "")}`
     const res = await removeToTestThemeAction(newStateLocal, keyTest)
+    // eslint-disable-next-line
     res.success && setStateLocal(newStateLocal)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
   const handleSetStateToNull = async()=> {
     setIsPending(true)
     const res = await handleSetStateToNullAction(keyTest)
+    // eslint-disable-next-line
     res.success && setStateLocal("")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

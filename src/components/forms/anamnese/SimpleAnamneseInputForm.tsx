@@ -1,15 +1,13 @@
-import React, { Dispatch, FC, Ref, SetStateAction, useActionState, useEffect, useRef } from 'react'
+import React, { Dispatch, FC, SetStateAction, useActionState, useEffect, useRef } from 'react'
 import { Input } from '../../ui/input'
 import { Button } from '../../ui/button'
 import { useParams } from 'next/navigation'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { AnamneseResults } from '@/@types/Anamnese'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { useToast } from '@/customHooks/useToast'
 
 type SimpleInputFormProps={
-  name: string
   placeholder?: string
   setEdit:Dispatch<SetStateAction<boolean>>
   buttonLabel?: string
@@ -20,11 +18,10 @@ type SimpleInputFormProps={
   updateFunctionFromStore: ()=> void
 }
 
-const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({name, defaultValue="", setEdit, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese, edit, themeTitle, updateFunctionFromStore}) => {
+const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({defaultValue="", setEdit, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese, edit, themeTitle, updateFunctionFromStore}) => {
   const {id} = useParams<{id: string}>()
   const [state, formAction, isPending] = useActionState(upsertAnamneseBySingleKeyValueWithFormDataAction, {})
   const {chosenThemes} = useAnamneseSearchDBStore()
-  const {updatePatientInfoFromDB} = usePatientInfoStore()
   const focusRef = useRef<HTMLInputElement>(null)
 
   useEffect(()=> {

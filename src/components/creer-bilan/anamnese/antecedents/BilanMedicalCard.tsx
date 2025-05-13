@@ -19,19 +19,25 @@ type BilanMedicalCardProps = {
 
 const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => {
   const { id: patientId }  = useParams<{id: string}>()
-  const {anamneseResults, bilanMedicauxResults, updateBilanMedicauxResults, loadingAnamneseResults} = useAnamneseSearchDBStore()
+  const {anamneseResults, bilanMedicauxResults, updateBilanMedicauxResults} = useAnamneseSearchDBStore()
   const {selectedBilans} = bilanMedicauxResults ?? {}
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [bilanLocal, setBilanLocal] = useState<string[]>(["", ""])
   const [dateBilanMedical, setDateBilanMedical] = useState<string>("")
+
+  useEffect(()=> {
+    if(!anamneseResults) return
+    updateBilanMedicauxResults(anamneseResults?.id)
+  }, [anamneseResults?.id])
   
   useEffect(()=> {
     if(bilanMedicauxResults){
       setBilanLocal(bilanMedicauxResults?.[keyBilan] as string[] ?? ["", ""])
       setDateBilanMedical(bilanMedicauxResults?.[keyBilan]?.[0] ?? "")
     }
-  }, [bilanMedicauxResults])
+  }, [bilanMedicauxResults, keyBilan])
 
   //On enregistre dans la BD la liste des bilans utilisées.
   const selectBilanMedical = async(checked: boolean, bilanNom: string, key: keyof BilanMedicauxResults)=> {
@@ -48,8 +54,11 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
       newState = copy.filter(val => val !== bilanNom)
     }
     const res = await upsertSelectedBilansMedicauxAction(newState, patientId, anamneseResults?.id, copyKey)
+    // eslint-disable-next-line
     res.success && setBilanLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -58,8 +67,11 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
     const newState = [...bilanLocal]
     newState[index] = value
     const res = await upsertBilanMedicalByKeyAction<string[]>(key, newState, patientId, anamneseResults?.id ?? undefined)
+    // eslint-disable-next-line
     res.success && setBilanLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

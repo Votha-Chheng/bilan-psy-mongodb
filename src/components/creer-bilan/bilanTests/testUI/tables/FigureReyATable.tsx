@@ -20,6 +20,7 @@ const FigureReyATable = () => {
   const [memoirePercentileLocal, setMemoirePercentileLocal] = useState<string>("")
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   useEffect(()=> {
@@ -33,7 +34,9 @@ const FigureReyATable = () => {
   const handleChangeState = async(value: string, keyFigureA: keyof figuresreya)=> {
     setIsPending(true)
     const res = await upsertFigureReyAByKeyValueAction<string>(keyFigureA, value, bilanId ?? "")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
 
   }

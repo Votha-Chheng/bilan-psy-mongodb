@@ -1,9 +1,8 @@
 import { AnamneseDTO } from "@/@types/Anamnese"
-import { BilanDTO, TestBilan } from "@/@types/BilanTests"
+import { BilanDTO } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
 import { Anamnese, Bilan } from "@prisma/client"
-import { Paragraph } from "docx"
 
 export const returnArrayIfJson = <T>(json: string|null): T|null=> {
   return json ? JSON.parse(json) as T : null
@@ -73,7 +72,7 @@ export const returnParseAnamneseResult = (anamnese: Anamnese): AnamneseDTO => {
 export const removeElementAtIndex = <T>(array: T[], indexToSkip: number): T[]=> {
   return array.filter((_el, index) => index !== indexToSkip);
 }
-
+// eslint-disable-next-line
 export const arrayExists = (array: any[]|null|undefined): boolean => {
   return Array.isArray(array) && array.length > 0
 }

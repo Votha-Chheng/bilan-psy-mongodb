@@ -34,7 +34,7 @@ const devPsyConfereExists = async(confere: string|undefined): Promise<ServiceRes
   }
 }
 
-export const createDevPsyConfereAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<DevPsyConfere|null>>=> {
+export const createDevPsyConfereAction = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<DevPsyConfere|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({

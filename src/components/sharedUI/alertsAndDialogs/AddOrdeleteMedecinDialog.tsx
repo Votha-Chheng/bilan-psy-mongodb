@@ -17,7 +17,7 @@ const AddOrdeleteMedecinDialog: FC<AddOrdeleteMedecinDialogProps> = ({open, setO
       <DialogContent aria-describedby="Fenêtre pour gérer la liste des médecins" className="min-w-[1080px] bg-white border-black border-4">
         <DialogHeader>
           <DialogTitle className='text-center border-b-2 border-black text-xl mb-5 pb-2.5 tracking-wider'>
-            Ajouter/Supprimer le nom d'un médecin dans la base de données
+            Ajouter/Supprimer le nom d’un médecin dans la base de données
           </DialogTitle>
           <AddMedecinForm/>
         </DialogHeader>

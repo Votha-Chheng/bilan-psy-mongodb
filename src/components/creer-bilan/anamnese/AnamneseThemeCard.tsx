@@ -57,7 +57,6 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data, u
         edit &&
         <SimpleAnamneseInputForm 
           buttonLabel={anamneseResults && anamneseResults[keyLabel] ? "Remplacer la description":"Ajouter la description"} 
-          name={keyLabel} 
           defaultValue={(anamneseResults && anamneseResults[keyLabel] as string|null|undefined) ?? undefined}
           keyAnamnese={keyLabel}
           themeTitle={label}
@@ -68,7 +67,7 @@ const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data, u
       }
       <Separator className='mb-2.5' />
       <Button className='w-fit' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les descriptions dans la base de données pour le thème "{label}"
+        <Database/> Voir les descriptions dans la base de données pour le thème &quot;{label}&quot;
       </Button>
     </Card>
   )

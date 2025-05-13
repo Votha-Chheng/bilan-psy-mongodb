@@ -45,7 +45,7 @@ const DeletAdjectifsComportementForm = () => {
           </div>
         ))
         :
-        <p className='text-center'>Pas d'adjectif dans la liste</p>
+        <p className='text-center'>Pas d&apos;adjectif dans la liste</p>
       }
     </div>
   )

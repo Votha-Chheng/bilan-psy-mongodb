@@ -27,7 +27,7 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
       const response = await fetchManyAmenagementItems(idsList)
       set({manyAmenagementsItems: response.data})
     } catch (error) {
-      console.log("Can't getManyAmenagementItems")
+      console.log("Can't getManyAmenagementItems", error)
     } finally {
       set({loadingManyAmenagementsItems: false})
     }
@@ -42,7 +42,7 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
       const response = await fetchManyAmenagementItems(idsList)
       set({manyAmenagementsItems: response.data})
     } catch (error) {
-      console.log("Can't getAllAmenagementItems")
+      console.log("Can't getAllAmenagementItems", error)
     } 
   },
   getAmenagementsByPatientId: async(patientId: string)=> {
@@ -52,7 +52,7 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
       set({amenagementsStateId: response.data?.id})
       set({amenagementItemsIds: response.data?.amenagementItemsIds})
     } catch (error) {
-      console.log("Can't getAmenagementsByPatientId")
+      console.log("Can't getAmenagementsByPatientId", error)
     } finally {
       set({loadingAmenagements: false})
     }
@@ -63,7 +63,7 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
       set({amenagementsStateId: response.data?.id})
       set({amenagementItemsIds: response.data?.amenagementItemsIds})
     } catch (error) {
-      console.log("Can't getAllAmenagementItems")
+      console.log("Can't getAllAmenagementItems", error)
     }
   },
   getAllAmenagementItems : async()=> {
@@ -79,7 +79,7 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
         set({categoriesList: null})
       }
     } catch (error) {
-      console.log("Can't getAllAmenagementItems")
+      console.log("Can't getAllAmenagementItems", error)
     }
   },
 }))

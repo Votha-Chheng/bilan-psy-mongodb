@@ -12,6 +12,7 @@ const ImitationPosisitionNepsy2Table = () => {
   const [imitationGestesMainsLocal, setImitationGestesMainsLocal] = useState<string>("")
   
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   useEffect(()=> {
@@ -27,8 +28,11 @@ const ImitationPosisitionNepsy2Table = () => {
     } 
     setIsPending(true)
     const res = await upsertImitationNepsy2ByKeyValueAction<string>("imitationGestesMains", value, bilanId ?? "")
+    // eslint-disable-next-line
     res.success && setImitationGestesMainsLocal(value)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
 
   }
@@ -51,6 +55,7 @@ const ImitationPosisitionNepsy2Table = () => {
           <td className='border-collapse border border-black px-2 font-bold'>Imitation des gestes mains</td>
           <td style={{backgroundColor:`${getBgColorForNoteStandard(+imitationGestesMainsLocal)}`}} className={`inline-flex gap-2 items-center border-collapse w-full px-5 justify-center`}>
             <Input 
+              disabled={isPending}
               type='number' 
               className='w-16 p-1 h-8 bg-white text-center' 
               value={imitationGestesMainsLocal} 

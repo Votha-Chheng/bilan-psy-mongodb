@@ -3,7 +3,6 @@ import AddAdjectifComportementForm from '@/components/forms/anamnese/AddAdjectif
 import DeletAdjectifsComportementForm from '@/components/creer-bilan/anamnese/DeletAdjectifsComportementForm'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
-import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import React, { Dispatch, FC, SetStateAction } from 'react'
 
 type ManageAdjectifsComportementDialogProps = {
@@ -17,9 +16,9 @@ const ManageAdjectifsComportementDialog: FC<ManageAdjectifsComportementDialogPro
     <Dialog open={open} onOpenChange={(isOpen)=> setOpen(isOpen)} >
       <DialogContent className="max-w-[900px] min-w-[900px]">
         <DialogHeader>
-          <DialogTitle className='uppercase text-center'>Gérer la liste d'adjectifs</DialogTitle>
+          <DialogTitle className='uppercase text-center'>Gérer la liste d’adjectifs</DialogTitle>
           <DialogDescription>
-            Ajouter/Supprimer la liste d'adjectifs liés au comportement 
+            Ajouter/Supprimer la liste d’adjectifs liés au comportement 
           </DialogDescription>
         </DialogHeader>
         <DeletAdjectifsComportementForm/>

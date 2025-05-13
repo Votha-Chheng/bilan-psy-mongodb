@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createMotifConsultationAction, motifConsultationExistsAction } from "./motifActions";
 
-export const createPatientAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
+export const createPatientAction = async (prevState: ServiceResponse<PatientInfoFromDB|null>, formData: FormData): Promise<ServiceResponse<PatientInfoFromDB|null>> => {
   const rawData = Object.fromEntries(formData)
   const response = validateWithZodSchema(CreatePatientSchema, rawData)
   
@@ -128,7 +128,7 @@ export const fetchPatientById = async (id: string): Promise<ServiceResponse<Pati
   }
 }
 
-export const deletePatientByIdAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<null>> => {
+export const deletePatientByIdAction = async (prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<null>> => {
   try {
     const rawData = Object.fromEntries(formData)
     const response = validateWithZodSchema(
@@ -161,7 +161,7 @@ export const deletePatientByIdAction = async (prevState: any, formData: FormData
   }
 }
 
-export const updateDateBilanAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<null>> => {
+export const updateDateBilanAction = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<null>> => {
   const rawData = Object.fromEntries(formData)
 
   const parsedData = validateWithZodSchema(
@@ -197,7 +197,7 @@ export const updateDateBilanAction = async(prevState: any, formData: FormData): 
   }
 }
 
-export const updateMotifConsultation = async(prevState: any, formData: FormData): Promise<ServiceResponse<null>> => {
+export const updateMotifConsultation = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<null>> => {
   const rawData = Object.fromEntries(formData)
 
   const parsedData = validateWithZodSchema(

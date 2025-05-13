@@ -11,16 +11,16 @@ type ManageAutonomieDescriptionsDialogProps = {
 }
 
 const ManageAutonomieDescriptionsDialog: FC<ManageAutonomieDescriptionsDialogProps> = ({open, setOpen}) => {
-  const {autonomieDescription, getAutonomieDescriptionsListe} = useAnamneseSearchDBStore()
+  const {autonomieDescription} = useAnamneseSearchDBStore()
   const {descriptionsListe, id} = autonomieDescription ?? {}
   
   return (
     <Dialog open={open} onOpenChange={(isOpen)=> setOpen(isOpen)} >
       <DialogContent className="max-w-[950px] min-w-[950px]">
         <DialogHeader>
-          <DialogTitle className='uppercase text-center'>Gérer la liste de descriptions pour l'autonomie</DialogTitle>
+          <DialogTitle className='uppercase text-center'>Gérer la liste de descriptions pour l’autonomie</DialogTitle>
           <DialogDescription>
-            Ajouter/Supprimer la liste d'adjectifs liés à l'autonomie 
+            Ajouter/Supprimer la liste d’adjectifs liés à l’autonomie 
           </DialogDescription>
         </DialogHeader>
         <DeleteElementFromListeForm liste={descriptionsListe ?? null} listeId={id} />

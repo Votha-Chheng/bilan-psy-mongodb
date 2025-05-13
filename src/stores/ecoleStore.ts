@@ -18,7 +18,7 @@ export const useEcoleStore = create<EcoleState>((set) => ({
       set({ listeEcoles: response.data })
 
     } catch (error) {
-      console.log("Can't fetch all patients")
+      console.log("Can't fetch all patients", error)
     }
   },
   updateListeEcoles: async () => {
@@ -27,7 +27,7 @@ export const useEcoleStore = create<EcoleState>((set) => ({
       set({ listeEcoles: response.data })
       
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
       set({ listeEcoles: null })
     }
   }

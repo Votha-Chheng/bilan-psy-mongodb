@@ -3,10 +3,9 @@ import { Card, CardTitle } from '@/components/ui/card'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { getAge } from '@/utils/getAge'
 import dayjs from 'dayjs'
-import { EditIcon, Loader2, LoaderIcon } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { EditIcon, Loader2 } from 'lucide-react'
+import React, { useState } from 'react'
 import MotifConsultation from './MotifConsultation'
-import { useParams } from 'next/navigation'
 
 const EnTete = () => {
   const {patientInfoGenerales, loadingPatientInfoFromDB} = usePatientInfoStore()

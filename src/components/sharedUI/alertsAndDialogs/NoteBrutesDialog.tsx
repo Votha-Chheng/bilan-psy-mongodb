@@ -21,7 +21,7 @@ const NoteBrutesDialog: FC<NoteBrutesDialogProps> = ({ open, setOpen, search, se
       <DialogContent aria-describedby="Fenêtre pour gérer la liste des médecins" className="min-w-[1080px] bg-white border-black border-4 min-h-[500px]">
         <DialogHeader>
           <DialogTitle className='text-center border-b-2 border-black text-xl mb-5 pb-2.5 tracking-wider'>
-            Notes brutes concernant l'anamnèse du patient {patientInfoGenerales?.prenom} {patientInfoGenerales?.nom}
+            Notes brutes concernant l&apos;anamnèse du patient {patientInfoGenerales?.prenom} {patientInfoGenerales?.nom}
           </DialogTitle>
         </DialogHeader>
         <SearchInput setSearch={setSearch} />

@@ -1,11 +1,9 @@
 import { useConclusionStore } from '@/stores/conclusionStore'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
-import { ProfilPsyItem, ProjetPsyItem } from '@prisma/client'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { useToast } from '@/customHooks/useToast'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Loader, Loader2, Trash2 } from 'lucide-react'
+import { Loader, Loader2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { openSans } from '@/fonts/openSans'
 import { Input } from '@/components/ui/input'
@@ -20,12 +18,13 @@ type ThemeConclusionProps = {
 
 const ThemeConclusion: FC<ThemeConclusionProps> = ({profilOuProjet, profilProjetPsyFromDB}) => {
   const {id: patientId} = useParams<{id: string}>()
-  const {getProfilPsyItems, updateConclusionByPatientId, profilPsyItems, projetPsyItems, getProjetPsyItems} = useConclusionStore()
+  const {getProfilPsyItems, updateConclusionByPatientId, getProjetPsyItems} = useConclusionStore()
 
   const [profilProjetPsyLocal, setProfilProjetPsyLocal] = useState<string[]>([])
   const [newProfilProjetPsyRecommandation, setNewProfilProjetPsyRecommandation] = useState<string>("")
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
+  // eslint-disable-next-line
   const [stateProfilProjetPsy, setStateProfilProjetPsy] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [isPendingProfilProjetPsy, setIsPendingProfilProjetPsy] = useState<boolean>(false)
@@ -38,26 +37,33 @@ const ThemeConclusion: FC<ThemeConclusionProps> = ({profilOuProjet, profilProjet
 
   const handleCreateProfilPsyItem = async()=> {
     setIsPending(true)
+    // eslint-disable-next-line
     let res: ServiceResponse<any> = {}
     if(profilOuProjet === "profilPsy"){
       res = await createProfilPsyItemAction(newProfilProjetPsyRecommandation) 
     } else {
       res = await createProjetPsyItemAction(newProfilProjetPsyRecommandation) 
     }
+    // eslint-disable-next-line
     res.success && setNewProfilProjetPsyRecommandation("")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
   const handleDeleteProfilPsyItem = async(id: string)=> {
     setIsPendingDelete(id)
+    // eslint-disable-next-line
     let res: ServiceResponse<any> = {}
     if(profilOuProjet === "profilPsy"){
       res = await deleteProfilPsyItemAction(id) 
     } else {
       res = await deleteProjetPsyItemAction(id)  
     }
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPendingDelete(null)
   }
 
@@ -66,8 +72,11 @@ const ThemeConclusion: FC<ThemeConclusionProps> = ({profilOuProjet, profilProjet
     const newState = [...profilProjetPsyLocal]
     newState.push(recommandation)
     const res = await upsertConclusionByKeyValueAction(profilOuProjet, newState, patientId)
+    // eslint-disable-next-line
     res.success && setProfilProjetPsyLocal(newState)
+    // eslint-disable-next-line
     res && setStateProfilProjetPsy(res)
+    // eslint-disable-next-line
     res && setIsPendingProfilProjetPsy(false)
   }
 
@@ -75,8 +84,11 @@ const ThemeConclusion: FC<ThemeConclusionProps> = ({profilOuProjet, profilProjet
     setIsPendingProfilProjetPsy(true)
     const newState = profilProjetPsyLocal.filter(value => value !== recommandationToRemove)
     const res = await upsertConclusionByKeyValueAction(profilOuProjet, newState.length === 0 ? null:newState, patientId)
+    // eslint-disable-next-line
     res.success && setProfilProjetPsyLocal(newState)
+    // eslint-disable-next-line
     res && setStateProfilProjetPsy(res)
+    // eslint-disable-next-line
     res && setIsPendingProfilProjetPsy(false)
   }
 

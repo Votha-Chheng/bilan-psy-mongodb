@@ -1,7 +1,5 @@
-import React, { Dispatch, FC, SetStateAction, useActionState, useEffect } from 'react'
-import { toast } from 'sonner'
+import React, { Dispatch, FC, SetStateAction, useActionState } from 'react'
 import { setPropertyToNullByKeyAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import SubmitButton from '@/components/ui/SubmitButton'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'

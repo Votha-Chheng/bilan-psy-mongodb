@@ -24,14 +24,19 @@ const CreateAmenagementItemDialog: FC<CreateAmenagementItemDialogProps> = ({open
   const [newAmenagement, setNewAmenagement] = useState<string>("")
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const handleCreateAmenagementItemAction = async(category: string, newAmenagement: string)=> {
     setIsPending(true)
     const res = await createAmenagementItemAction(newAmenagement.trim(), category.toUpperCase())
+    // eslint-disable-next-line
     res.success && setNewAmenagement("")
+    // eslint-disable-next-line
     res.success && setNewCategory("")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -49,7 +54,7 @@ const CreateAmenagementItemDialog: FC<CreateAmenagementItemDialogProps> = ({open
           </DialogTitle>
         </DialogHeader>
         <DialogDescription>
-          Créez ici un aménagement dans la base de données. Vous pourrez ensuite le sélectionner pour le mettre dans vos aménagements. Un aménagement doit contenir une catégorie et l'intitulé de l'aménagement.
+          Créez ici un aménagement dans la base de données. Vous pourrez ensuite le sélectionner pour le mettre dans vos aménagements. Un aménagement doit contenir une catégorie et l’intitulé de l’aménagement.
         </DialogDescription>
         <Separator/>
         <div className='flex gap-2 items-center'>
@@ -81,7 +86,7 @@ const CreateAmenagementItemDialog: FC<CreateAmenagementItemDialogProps> = ({open
           }
         </div>
         <div>
-          <Label className='whitespace-nowrap my-2'>&#10230; Texte de l'aménagement :</Label>
+          <Label className='whitespace-nowrap my-2'>&#10230; Texte de l’aménagement :</Label>
           <Textarea 
             placeholder="Intitulé de l'aménagement... Pas de retour à la ligne possible. Pour valider, vous pouvez appuyer sur la touche Entrée."
             className='placeholder:italic' 

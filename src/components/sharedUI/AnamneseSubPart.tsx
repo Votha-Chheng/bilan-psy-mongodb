@@ -1,5 +1,5 @@
 import { Loader2, MoveRight } from 'lucide-react'
-import React, { FC, HtmlHTMLAttributes, ReactNode } from 'react'
+import React, { FC, ReactNode } from 'react'
 
 type AnamneseSubPartProps = {
   children: ReactNode

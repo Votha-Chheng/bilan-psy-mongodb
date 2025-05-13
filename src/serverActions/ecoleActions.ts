@@ -7,7 +7,7 @@ import { validateWithZodSchema } from "@/utils/validateWithZodSchema";
 import { Ecole } from "@prisma/client";
 import { z } from "zod";
 
-export const createEcoleAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
+export const createEcoleAction = async (prevState: ServiceResponse<Ecole|null>, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema( 
     z.object({
@@ -38,7 +38,7 @@ export const createEcoleAction = async (prevState: any, formData: FormData): Pro
   }
 }
 
-export const deleteEcoleByIdAction = async (prevState: any, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
+export const deleteEcoleByIdAction = async (prevState: ServiceResponse<Ecole|null>, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema( 
     z.object({

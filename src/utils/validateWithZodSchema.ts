@@ -1,6 +1,7 @@
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import { ZodSchema } from "zod"
 
+// eslint-disable-next-line
 export const validateWithZodSchema = (schema: ZodSchema, data: any): ServiceResponse<unknown>=>{
   const result = schema.safeParse(data)
 

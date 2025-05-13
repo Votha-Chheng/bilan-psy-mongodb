@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { useParams } from 'next/navigation'
-import React, { FC, Ref, RefObject, useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { Button } from '@/components/ui/button'
 import { Database, Loader2 } from 'lucide-react'
@@ -33,7 +33,9 @@ const ApprentissagesCard:FC= () => {
     const newState = [...apprentissagesLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction("apprentissages", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateSelect(res)
+    // eslint-disable-next-line
     res && setIsPendingSelect(false)
   }
 
@@ -79,7 +81,7 @@ const ApprentissagesCard:FC= () => {
         themeTitle='Apprentissages'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "Apprentissages"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;Apprentissages&quot;
       </Button>
     </Card>
   )

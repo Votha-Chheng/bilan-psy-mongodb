@@ -13,7 +13,7 @@ const CompleteBilanPage = async() => {
       <header className='flex justify-between mx-7.5 py-4 items-center'>
         <Button asChild>
           <Link href='/dashboard'>
-            <ArrowLeftCircle/> Retour à l'accueil
+            <ArrowLeftCircle/> Retour à l&apos;accueil
           </Link>
         </Button>
         <h2 className='uppercase font-bold tracking-wider text-xl'>Complétez le bilan psychomoteur</h2>

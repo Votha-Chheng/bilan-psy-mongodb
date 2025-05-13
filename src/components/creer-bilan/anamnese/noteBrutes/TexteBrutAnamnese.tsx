@@ -15,12 +15,14 @@ const TexteBrutAnamnese: FC = () => {
   const {id} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {notesBrutes} = anamneseResults ?? {}
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const [text, setText] = useState<string>("")
 
   const savetext = async(text: string, id: string)=> {
     const res = await saveTextBrutAnamneseAction(text, id)
+    // eslint-disable-next-line
     res && setState(res)
   }
 
@@ -51,9 +53,9 @@ const TexteBrutAnamnese: FC = () => {
       <Separator className='my-5' />
       <RecueilProposForm />
       <h3 className='font-bold italic my-5'>
-        Prenez des notes brutes de ce que vous dit le patient pour pouvoir l'organiser plus tard dans les différentes parties de l'anamnèse. Le texte est enregistré automatiquement 10 secondes après la dernière frappe de touche.
+        Prenez des notes brutes de ce que vous dit le patient pour pouvoir l’organiser plus tard dans les différentes parties de l’anamnèse. Le texte est enregistré automatiquement 10 secondes après la dernière frappe de touche.
       </h3>
-      <Textarea value={text} className='placeholder:italic min-h-96 max-h-[500px]' placeholder="Tapez votre brouillon d'anamnèse ici..." onChange={(event)=> setText(event.currentTarget.value)} />
+      <Textarea value={text} className='placeholder:italic min-h-96 max-h-[500px]' placeholder="Tapez votre brouillon d’anamnèse ici..." onChange={(event)=> setText(event.currentTarget.value)} />
     </article>
   )
 }

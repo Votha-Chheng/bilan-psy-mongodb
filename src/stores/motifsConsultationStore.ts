@@ -1,6 +1,5 @@
-import { fetchAllMedecins } from '@/serverActions/medecinActions'
 import { fetchAllMotifsConsultation } from '@/serverActions/motifActions'
-import { Medecin, MotifConsultation } from '@prisma/client'
+import { MotifConsultation } from '@prisma/client'
 import { create } from 'zustand'
 
 type MotifConsultationState = {
@@ -18,7 +17,7 @@ export const useMotifsConsultationStore = create<MotifConsultationState>((set) =
       set({ listeMotifs: response.data })
 
     } catch (error) {
-      console.log("Can't fetch AllMotifsConsultation")
+      console.log("Can't fetch AllMotifsConsultation", error)
     }
   },
   updateListeMotifs: async () => {
@@ -27,7 +26,7 @@ export const useMotifsConsultationStore = create<MotifConsultationState>((set) =
       set({ listeMotifs: response.data })
       
     } catch (error) {
-      console.log("Can't fetch AllMotifsConsultation")
+      console.log("Can't fetch AllMotifsConsultation", error)
     }
   }
 }))

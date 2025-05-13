@@ -1,4 +1,4 @@
-import { MABC2ResultsDTO, VisuomotriceNEPSY2ResultsDTO } from "@/@types/BilanTests"
+import { VisuomotriceNEPSY2ResultsDTO } from "@/@types/BilanTests"
 import { Paragraph, Table, TextRun } from "docx"
 import { TestTitle } from "../../ui/TestTitle"
 import { allTests } from "@/datas/listeTests"

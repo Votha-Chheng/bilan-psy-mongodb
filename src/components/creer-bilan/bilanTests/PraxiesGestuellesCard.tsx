@@ -44,14 +44,16 @@ const PraxiesGestuellesCard: FC<PraxiesGestuellesCardProps> = ({
   labelTenue
 }) => {
   const {bilanId, updatePraxiesGestuelles} = useBilanTestsStore()
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const handleChangeCiseauState = async(value: string, keyPraxies: keyof praxiesgestuelles): Promise<void>=> {
     setIsPending(true)
     const res = await upsertPraxiesGestuellesByKeyValueAction<string>(keyPraxies, value, bilanId ?? "")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -60,7 +62,9 @@ const PraxiesGestuellesCard: FC<PraxiesGestuellesCardProps> = ({
     if(!checked){
       setIsPending(true)
       const res = await upsertPraxiesGestuellesByKeyValueAction<null>(keyHyperHypo, null, bilanId ?? "")
+      // eslint-disable-next-line
       res && setState(res)
+      // eslint-disable-next-line
       res && setIsPending(false)
       setHyperHypoLocal("")
     }

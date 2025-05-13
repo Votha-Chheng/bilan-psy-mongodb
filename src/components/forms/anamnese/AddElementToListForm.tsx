@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2, Plus } from 'lucide-react'
-import React, { FC, useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useActionState, useRef } from 'react'
 
 type AddElementToListFormProps = {
   listeElements: string[]|null|undefined
@@ -22,6 +22,7 @@ const AddElementToListForm: FC<AddElementToListFormProps> = ({ elementToAddLabel
   const formRef = useRef<HTMLFormElement>(null)
   
   const updateFunction = ()=> {
+    // eslint-disable-next-line
     keyListe === "typesSensorialite" ? getTypeSensorialite() : getListeAdjectifs()
   }
   useToast({state, updateFunction})

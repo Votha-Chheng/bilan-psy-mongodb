@@ -4,9 +4,8 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
-import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -14,7 +13,7 @@ const Continence = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {continence} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
   const [continenceLocal, setContinenceLocal] = useState<string[]>(["", "", "", ""])   //<---- [diurne, mois, nocturne, mois]
@@ -24,7 +23,7 @@ const Continence = () => {
   const handleChangeElement = async(value: string, index: number)=> {
     if(value === "") return
     setIspending(true)
-    let newState = [...continenceLocal] 
+    const newState = [...continenceLocal] 
     newState[index] = value
     if(value==="diurne non acquise"){
       newState[1] = ""
@@ -33,8 +32,11 @@ const Continence = () => {
       newState[3] = ""
     }
     const res = await upsertAnamneseByKeyValueAction("continence", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIspending(false)
+    // eslint-disable-next-line
     res.success && setContinenceLocal(newState)
   }
 
@@ -70,7 +72,7 @@ const Continence = () => {
         {    
           continenceLocal[0] === "diurne acquise" && 
           <div className='flex items-center gap-2.5'>
-          <span className={`whitespace-nowrap ${openSans.className}`}>à l'âge de :</span>
+          <span className={`whitespace-nowrap ${openSans.className}`}>à l’âge de :</span>
           <Input  
             disabled={isPending} 
             className='w-20' 
@@ -97,7 +99,7 @@ const Continence = () => {
         {    
           continenceLocal[2] === "nocturne acquise" && 
           <div className='flex items-center gap-2.5'>
-          <span className={`whitespace-nowrap ${openSans.className}`}>à l'âge de :</span>
+          <span className={`whitespace-nowrap ${openSans.className}`}>à l’âge de :</span>
           <Input 
             disabled={isPending} 
             value={ageNocturne}

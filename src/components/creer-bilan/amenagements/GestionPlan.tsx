@@ -1,4 +1,3 @@
-import { AmenagementItemDTO } from '@/@types/AmenagementsTypes'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import CreateAmenagementItemDialog from '@/components/sharedUI/alertsAndDialogs/CreateAmenagementItemDialog'
 import { Badge } from '@/components/ui/badge'
@@ -16,8 +15,8 @@ import React, { useState } from 'react'
 
 const GestionPlan = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, getAllAmenagementItems, amenagementItemsIds} = useAmenagementsStore()
-
+  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, amenagementItemsIds} = useAmenagementsStore()
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -28,7 +27,9 @@ const GestionPlan = () => {
     if(!amenagementIdToAddId) return null
     setIsPending(true)
     const res = await upsertAmenagementsByAddingElementAction(amenagementIdToAddId, patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -36,7 +37,9 @@ const GestionPlan = () => {
     if(!amenagementIdToRemoveId) return null
     setIsPending(true)
     const res = await upsertAmenagementsByRemovingElementAction(amenagementIdToRemoveId, patientId, amenagementItemsIds)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -75,6 +78,7 @@ const GestionPlan = () => {
                         id={`${amenagementItem.amenagement}${category}`} 
                         className='cursor-pointer'
                         onClick={()=> {
+                          // eslint-disable-next-line
                           amenagementItemsIds?.includes(amenagementItem?.id ?? "") 
                           ? handleRemoveAmenagementItemToPatientData(amenagementItem.id ?? null) 
                           : handleAddAmenagementItemToPatientData(amenagementItem.id ?? null)

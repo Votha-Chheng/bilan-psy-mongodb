@@ -11,14 +11,18 @@ const FlechesNepsy2Table = () => {
   const {score} = flechesnepsy2 ?? {}
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [scoreLocal, setScoreLocal] = useState<string>("")
 
   const handleSaveResults =  async(value: string)=> {
     setIsPending(true)
     const res = await upsertFlechesNepsy2ResultsAction("score", value, bilanId ?? "")
+    // eslint-disable-next-line
     res.success && setScoreLocal(value)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

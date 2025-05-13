@@ -30,7 +30,7 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
       const response = await fetchAllConclusion()
       set({conclusionListe: response.data ?? null})
     } catch (error) {
-      console.log("Can't fetch getConclusionList")
+      console.log("Can't fetch getConclusionList", error)
     } finally {
       set({loadingConclusionList: false})
     }
@@ -41,7 +41,7 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
       const response = await fetchAllProjetPsyItems()
       set({projetPsyItems: response.data})
     } catch (error) {
-      console.log("Can't fetch getProjetPsyItems")
+      console.log("Can't fetch getProjetPsyItems", error)
     }
   },
   profilPsyItems: null,
@@ -50,7 +50,7 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
       const response = await fetchAllProfilPsyItems()
       set({profilPsyItems: response.data})
     } catch (error) {
-      console.log("Can't fetch getProfilPsyItems")
+      console.log("Can't fetch getProfilPsyItems", error)
     }
   },
   loadingConclusionData: false,
@@ -62,7 +62,7 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
       set({ conclusion: response.data })
 
     } catch (error) {
-      console.log("Can't fetch getConclusionByPatientId")
+      console.log("Can't fetch getConclusionByPatientId", error)
     } finally {
       set({loadingConclusionData: false})
     }
@@ -73,7 +73,7 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
       set({ conclusion: response.data })
       
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
     }
   }
 }))

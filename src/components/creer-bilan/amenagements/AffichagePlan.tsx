@@ -1,4 +1,3 @@
-import { AmenagementCategoriesDTO, AmenagementItemDTO } from '@/@types/AmenagementsTypes'
 import LoadingDatas from '@/components/sharedUI/LoadingDatas'
 import { openSans } from '@/fonts/openSans'
 import { useAmenagementsStore } from '@/stores/amenagementsStore'

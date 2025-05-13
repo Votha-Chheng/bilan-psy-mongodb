@@ -14,7 +14,7 @@ type PatientInfoState = {
   updatePatientInfoFromDB: (id: string) => Promise<void>
 }
 
-export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
+export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   patientInfoGenerales: null,
   allPatients: [],
   loadingAllPatients: false,
@@ -26,7 +26,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
       set({ allPatients: response.data })
 
     } catch (error) {
-      console.log("Can't fetch all patients")
+      console.log("Can't fetch all patients", error)
     } finally {
       set({loadingAllPatients: false})
     }
@@ -54,7 +54,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
       })
       
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
     } finally {
       set({loadingPatientInfoFromDB: false})
     }
@@ -80,7 +80,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
         } 
       })
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
     }
   },
   updateAllPatients: async () => {
@@ -89,7 +89,7 @@ export const usePatientInfoStore = create<PatientInfoState>((set, get) => ({
       set({ allPatients: response.data })
       
     } catch (error) {
-      console.log("Can't fetch PatientById")
+      console.log("Can't fetch PatientById", error)
     }
   }
 }))

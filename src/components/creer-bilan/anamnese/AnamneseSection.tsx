@@ -1,7 +1,6 @@
 import { Card } from '@/components/ui/card'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TexteBrutAnamnese from './noteBrutes/TexteBrutAnamnese'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import AntecedentsPart from './antecedents/AntecedentsPart'
 import FamillePart from './famille/FamillePart'
@@ -11,7 +10,6 @@ import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 import ScolaritePart from './scolarite/ScolaritePart'
 import QuoditienPart from './quotidien/QuoditienPart'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { useMenuItemStore } from '@/stores/menuItemStore'
 import { Loader2 } from 'lucide-react'
 
 const AnamneseSection = () => {

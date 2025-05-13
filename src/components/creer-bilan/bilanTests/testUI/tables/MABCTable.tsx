@@ -16,6 +16,7 @@ const MABCTable = () => {
   const [equilibreLocal, setEquilibreLocal] = useState<string>("")
   const [totalLocal, setTotalLocal] = useState<string>("")
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const handleUpsertMABC2Action = async(key: keyof mabc2, value: string): Promise<void>=> {
@@ -28,7 +29,9 @@ const MABCTable = () => {
     }
     setIsPending(true)
     const res = await upsertMABC2ByKeyValueAction(key, value, bilanId ?? null)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

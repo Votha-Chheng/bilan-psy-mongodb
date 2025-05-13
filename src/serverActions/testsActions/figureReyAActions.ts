@@ -1,10 +1,10 @@
 "use server"
 
-import { FiguresReyAResultsDTO, FlechesNEPSY2ResultsDTO } from "@/@types/BilanTests"
+import { FiguresReyAResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { figuresreya, flechesnepsy2 } from "@prisma/client"
+import { figuresreya } from "@prisma/client"
 
 export const upsertFigureReyAByKeyValueAction = async<T>(key: keyof figuresreya, value: T, bilanId: string|null): Promise<ServiceResponse<figuresreya|null>>=> {
   const updatedValue= Array.isArray(value) ?{[key]: JSON.stringify(value)} : {[key]: value}

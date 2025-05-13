@@ -1,24 +1,22 @@
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { openSans } from '@/fonts/openSans'
-import React, { useActionState, useEffect, useRef, useState } from 'react'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import React, { useEffect, useState } from 'react'
+import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useParams } from 'next/navigation'
 import { useToast } from '@/customHooks/useToast'
 import { Input } from '@/components/ui/input'
-import AddElementToListForm from '@/components/forms/anamnese/AddElementToListForm'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import ManageAdjectifsComportementDialog from '@/components/sharedUI/alertsAndDialogs/ManageAdjectifsComportementDialog'
 import { Button } from '@/components/ui/button'
 import { List } from 'lucide-react'
-import { useAnamnesePartStore } from '@/stores/partieAnamneseStore'
 
 const AgeMarche = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {adjectifsComportement, getListeAdjectifs, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ageMarche} = anamneseResults ?? {}
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
 
@@ -28,11 +26,14 @@ const AgeMarche = () => {
 
   const handleChangeState = async(value: string, index: number)=> {
     setIspending(true)
-    let newState = [...ageMarcheLocal] 
+    const newState = [...ageMarcheLocal] 
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("ageMarche", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setAgeMarcheLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIspending(false)
   }
 
@@ -76,7 +77,7 @@ const AgeMarche = () => {
         |
         <div className='w-1/3'>
           <Button className='w-fit' onClick={()=> setOpenManagementAdjDialog(true)}>
-            <List/> Gérer la liste d'adjectifs
+            <List/> Gérer la liste d&apos;adjectifs
           </Button>
         </div>
       </div>

@@ -17,6 +17,7 @@ type PrecisionPraxiesGestuellesProps = {
 const PrecisionPraxiesGestuelles: FC<PrecisionPraxiesGestuellesProps> = ({precisionAvec, stateLocal, setStateLocal, keyPraxiesGestuelles}) => {
   const {bilanId, updatePraxiesGestuelles} = useBilanTestsStore()
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   
   const checkboxChoices = ["Les gestes sont adroits.", "Il y a une maladresse gestuelle.", "Une impulsivité motrice est présente."]
@@ -32,8 +33,11 @@ const PrecisionPraxiesGestuelles: FC<PrecisionPraxiesGestuellesProps> = ({precis
         newState = stateLocal.trim() + " " + choice.trim()
       }
       const res = await upsertPraxiesGestuellesByKeyValueAction<string>(keyPraxiesGestuelles, newState, bilanId ?? "")
+      // eslint-disable-next-line
       res.success && setStateLocal(newState)
+      // eslint-disable-next-line
       res && setState(res)
+      // eslint-disable-next-line
       res && setIsPending(false)
     }
   }

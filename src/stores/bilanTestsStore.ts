@@ -56,7 +56,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchBHKResults(bilanId)
       set({bhk: response.data})
     } catch (error) {
-      console.log("Can't updatebhk")
+      console.log("Can't updatebhk", error)
     }
   },
   tests: null,
@@ -66,7 +66,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchMABC2Results(bilanId)
       set({mabc2: response.data})
     } catch (error) {
-      console.log("Can't updatemabc2")
+      console.log("Can't updatemabc2", error)
     }
   },
   visuomotricenepsy2:null,
@@ -75,7 +75,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchVisuomotriceNepsy2Results(bilanId)
       set({visuomotricenepsy2: response.data})
     } catch (error) {
-      console.log("Can't updateConnaissancesDroiteGauche")
+      console.log("Can't updateConnaissancesDroiteGauche", error)
     }
   },
   praxiesgestuelles: null,
@@ -84,7 +84,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchPraxiesGestuellesResults(bilanId)
       set({praxiesgestuelles: response.data})
     } catch (error) {
-      console.log("Can't updateConnaissancesDroiteGauche")
+      console.log("Can't updateConnaissancesDroiteGauche", error)
     }
   },
   imitationpositionsnepsy2: null,
@@ -93,7 +93,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchImitationNepsy2(bilanId)
       set({imitationpositionsnepsy2: response.data})
     } catch (error) {
-      console.log("Can't updateConnaissancesDroiteGauche")
+      console.log("Can't updateConnaissancesDroiteGauche", error)
     }
   },
   lateralite: null,
@@ -104,7 +104,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchConnaissanceDroiteGaucheResults(bilanId)
       set({connaissancedroitegauche: response.data})
     } catch (error) {
-      console.log("Can't updateConnaissancesDroiteGauche")
+      console.log("Can't updateConnaissancesDroiteGauche", error)
     }
   },
   flechesnepsy2: null,
@@ -113,7 +113,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchNepsy2Results(bilanId)
       set({flechesnepsy2: response.data})
     } catch (error) {
-      console.log("Can't updateConnaissancesDroiteGauche")
+      console.log("Can't updateConnaissancesDroiteGauche", error)
     }
   },
   figuresreya : null,
@@ -122,7 +122,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchFigureReyAResults(bilanId)
       set({figuresreya: response.data})
     } catch (error) {
-      console.log("Can't updateFiguresReya")
+      console.log("Can't updateFiguresReya", error)
     }
   },
   figuresreyb: null,
@@ -131,7 +131,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchFigureReyBResults(bilanId)
       set({figuresreyb: response.data})
     } catch (error) {
-      console.log("Can't updateFiguresReyb")
+      console.log("Can't updateFiguresReyb", error)
     }
   },
   epreuvecubesnepsy2 : null,
@@ -140,7 +140,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       const response = await fetchEpreuveCubesNepsy2Results(bilanId)
       set({epreuvecubesnepsy2: response.data})
     } catch (error) {
-      console.log("Can't updateEpreuveCubesNepsy2")
+      console.log("Can't updateEpreuveCubesNepsy2", error)
     }
   },
   loadingBilanResults: false,
@@ -163,7 +163,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       set({figuresreyb: response.data?.figuresreyb})
       set({epreuvecubesnepsy2: response.data?.epreuvecubesnepsy2})
     } catch (error) {
-      console.log("Can't getBilanByPatientId")
+      console.log("Can't getBilanByPatientId", error)
     } finally {
       set({loadingBilanResults: false})
     }
@@ -186,7 +186,7 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
       set({figuresreyb: response.data?.figuresreyb})
       set({epreuvecubesnepsy2: response.data?.epreuvecubesnepsy2})
     } catch (error) {
-      console.log("Can't updateBilanByPatientId")
+      console.log("Can't updateBilanByPatientId", error)
     }
   },
 

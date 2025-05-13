@@ -1,12 +1,11 @@
-import AddElementToList from '@/components/creer-bilan/anamnese/AddElementToList'
+
 import AddElementToListGeneric from '@/components/creer-bilan/anamnese/antecedents/AddElementToListGeneric'
 import DeleteElementFromList from '@/components/forms/DeleteElementFromList'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
-import { useToast } from '@/customHooks/useToast'
 import { deleteTemperamentAction, upsertTemperamentAction } from '@/serverActions/listeActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 
 type ManageTemperamentDialogProps = {
   open: boolean

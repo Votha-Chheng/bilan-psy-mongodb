@@ -40,6 +40,7 @@ const CheckBoxListeConclusionItems: FC<CheckBoxListeConclusionItemsProps> = ({
             onClick={(event)=> {
               const [recommandation, id] = event.currentTarget.id.split("~~");
               if(id === projetPsy.id){
+                // eslint-disable-next-line
                 profilProjetPsyLocal.includes(recommandation) ? removeRecommandation(recommandation) : addRecommandation(recommandation)
               }
             }}
@@ -76,6 +77,7 @@ const CheckBoxListeConclusionItems: FC<CheckBoxListeConclusionItemsProps> = ({
             onClick={(event)=> {
               const [recommandation, id] = event.currentTarget.id.split("~~");
               if(id === profilPsy.id){
+                // eslint-disable-next-line
                 profilProjetPsyLocal.includes(recommandation) ? removeRecommandation(recommandation) : addRecommandation(recommandation)
               }
             }}

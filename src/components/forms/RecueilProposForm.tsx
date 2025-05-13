@@ -11,6 +11,7 @@ import { useToast } from '@/customHooks/useToast'
 const RecueilProposForm = () => {
   const {id} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -19,7 +20,9 @@ const RecueilProposForm = () => {
   const handleValueChange = async (value: string) => {
     setIsPending(true)
     const response = await upsertProposPapaOuMamanAction(id, value)
+    // eslint-disable-next-line
     response && setState(response)
+    // eslint-disable-next-line
     response && setIsPending(false)
   }
 

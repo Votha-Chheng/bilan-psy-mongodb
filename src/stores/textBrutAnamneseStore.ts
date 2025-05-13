@@ -21,7 +21,7 @@ export const useTextBrutAnamneseStore = create<TextBrutAnamneseState>((set) => (
       }, 1000)
       
     } catch (error) {
-      console.log("Can't fetch AllMotifsConsultation")
+      console.log("Can't fetch AllMotifsConsultation", error)
       set({ message: "Impossible d'enregistrer à cause d'une erreur côté serveur."})
     }
   }

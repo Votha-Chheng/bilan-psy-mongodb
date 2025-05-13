@@ -14,7 +14,7 @@ const AcquisitionLangage = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {acquisitionLangage } = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
   const [acquisitionLangageLocal, setAcquisitionLangageLocal] = useState<string[]>(["", "", ""]) //<---- 
@@ -22,11 +22,14 @@ const AcquisitionLangage = () => {
   const handleChangeElement = async(value: string, index: number)=> {
     setIspending(true)
     const newValue = value
-    let newState = [...acquisitionLangageLocal] 
+    const newState = [...acquisitionLangageLocal] 
     newState[index] = newValue
     const res = await upsertAnamneseByKeyValueAction("acquisitionLangage", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setAcquisitionLangageLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIspending(false)
   }
 

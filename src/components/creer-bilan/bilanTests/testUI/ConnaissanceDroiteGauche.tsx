@@ -14,12 +14,15 @@ const ConnaissanceDroiteGauche = () => {
   const connaissancesDroiteGaucheTest = allTests.find(test => test.nom==="Connaissance droite/gauche")
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const handleChangeConnaissanceDroiteGaucheAction = async(value: string, key: keyof ConnaissancesDroiteGaucheResultsDTO)=> {
     setIsPending(true)
     const res = await upsertConnaisanceDroiteGaucheByKeyValueAction<string>(key, value, bilanId ?? "")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

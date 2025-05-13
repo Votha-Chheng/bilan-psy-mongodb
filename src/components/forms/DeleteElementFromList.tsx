@@ -8,17 +8,21 @@ type DeleteElementFromListProps= {
   liste: string[]|null|undefined
   listeId: string|undefined|null
   updateFunction : ()=> void
+  // eslint-disable-next-line
   actionFunction: (listeId: string|undefined|null, value: string)=> Promise<ServiceResponse<any>>
 }
 
 const DeleteElementFromList: FC<DeleteElementFromListProps> = ({updateFunction, liste, listeId, actionFunction}) => {
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const handleDeleteAction = async(listeId: string|undefined|null, value: string): Promise<void> => {
     setIsPending(true)
     const res = await actionFunction(listeId, value)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

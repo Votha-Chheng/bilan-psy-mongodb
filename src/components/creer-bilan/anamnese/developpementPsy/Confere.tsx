@@ -14,7 +14,7 @@ const Confere = () => {
     const {id: patientId} = useParams<{id: string}>()
     const {devPsyConfereListe, getDevPsyConfereList, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
     const {confereDevPsy} = anamneseResults ?? {}
-  
+  // eslint-disable-next-line
     const [state, setState] = useState<ServiceResponse<any>>({})
     const [isPending, setIsPending] = useState<boolean>(false)
   
@@ -25,7 +25,9 @@ const Confere = () => {
     const handleChangeConfereAction = async(value: string)=> {
       setIsPending(true)
       const res = await upsertAnamneseByKeyValueAction("confereDevPsy", value, patientId)
+      // eslint-disable-next-line
       res && setState(res)
+      // eslint-disable-next-line
       res && setIsPending(false)
     }
   

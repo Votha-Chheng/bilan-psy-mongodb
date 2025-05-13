@@ -8,7 +8,7 @@ type AnamnesePartStore = {
 
 export const useAnamnesePartStore = create<AnamnesePartStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       anamenesePart: 0,
       setAnamnesePart: (part: number)=> set(()=> ({anamenesePart: part}))
     }),

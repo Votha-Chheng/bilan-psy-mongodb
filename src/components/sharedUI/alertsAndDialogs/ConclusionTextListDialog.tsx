@@ -1,10 +1,9 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import SearchInput from '@/components/ui/SearchInput'
 import { Separator } from '@/components/ui/separator'
 import { useConclusionStore } from '@/stores/conclusionStore'
 import { Loader } from 'lucide-react'
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
 
 type ConclusionTextListDialogProps = {
   open: boolean

@@ -3,9 +3,8 @@ import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBD
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
-import React, { FC, Ref, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
 import { Database, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -17,7 +16,7 @@ const AttentionCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {attention} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
@@ -27,8 +26,11 @@ const AttentionCard: FC = () => {
     setIsPending(true)
     const prevComment = attentionLocal[1]
     const res = await upsertAnamneseByKeyValueAction("attention", JSON.stringify([value, prevComment]), patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
+    // eslint-disable-next-line
     res.success && setAttentionLocal([value, prevComment])
   }
 
@@ -80,7 +82,7 @@ const AttentionCard: FC = () => {
         themeTitle='Sphère attentionnelle'
       />
        <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "Sphère attentionnelle"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;Sphère attentionnelle&quot;
       </Button>
     </Card>
   )

@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { deleteMedecinAction } from '@/serverActions/medecinActions'
 import { useMedecinStore } from '@/stores/medecinStore'
-import { Loader2Icon, Trash2, Trash2Icon } from 'lucide-react'
+import { Loader2Icon, Trash2 } from 'lucide-react'
 import React, { useActionState, useEffect, useState } from 'react'
 
 const DeleteMedecinForm = () => {

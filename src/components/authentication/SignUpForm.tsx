@@ -1,23 +1,39 @@
 'use client'
 
 import { signUpAction } from '@/serverActions/usersActions'
-import { useRouter } from 'next/navigation'
-import React, { FC, useActionState, useEffect } from 'react'
+import React, { FC, useActionState } from 'react'
 import { Card, CardContent, CardTitle } from '../ui/card'
 import { authClient } from '@/utils/auth-client'
 import TextInput from '../inputs/TextInput'
 import SubmitButton from '../ui/SubmitButton'
+import { Link, LoaderCircle } from 'lucide-react'
+import { Button } from '../ui/button'
 
 const SignUpForm: FC = () => {
   const [state, formAction, isPending] = useActionState(signUpAction, {})
-  const router = useRouter()
   const { data: session } = authClient.useSession();
+  
+  if(isPending) {
+    return (
+      <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
+        <p className='font-bold'>Chargement de la page ou redirection... </p>
+        <LoaderCircle className='animate-spin' />
+      </div>
+    )
+  }
 
-  useEffect(()=> {
-    if(session?.session){
-      router.push("/dashboard")
-    }
-  }, [router, session?.session])
+  if(state.success || session?.user) {
+    return (
+    <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
+      <Link href={`/dashboard`}>
+        <Button>
+          Cliquez pour accéder à votre tableau de bord
+        </Button>
+      </Link>
+    </div>
+    )
+  }
+
 
   return (
     <Card className='w-96 mx-auto p-5'>

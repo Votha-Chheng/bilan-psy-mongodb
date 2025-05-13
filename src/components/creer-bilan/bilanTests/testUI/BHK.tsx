@@ -3,7 +3,6 @@ import { allTests } from '@/datas/listeTests'
 import React, { useEffect, useState } from 'react'
 import BHKTable from './tables/BHKTable'
 import ThemeObservationGenerics from '../ThemeObservationGenerics'
-import { testsNames } from '@/@types/TestTypes'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { useObservationStore } from '@/stores/observationStore'
 import { upsertBHKResultsAction } from '@/serverActions/testsActions/bhkActions'
@@ -20,7 +19,7 @@ const BHK = () => {
   const {bhk, updatebhk, bilanId} = useBilanTestsStore()
   const {lecture, memorisation, comportement, ecriture, ressenti, autres} = bhk ?? {}
   const {bhkObservations, getBHKObservations} = useObservationStore()
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<string|null>(null)
 
@@ -72,10 +71,14 @@ const BHK = () => {
     setIsPending(key)
     const res = await upsertBHKResultsAction(key, value, bilanId ?? "")
     if(res.success) {
+      // eslint-disable-next-line
       key === "memorisation" && setMemorisationLocal(value)
+      // eslint-disable-next-line
       key === "ressenti" && setRessentiLocal(value)
     }
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(null)
   }
 
@@ -147,7 +150,7 @@ const BHK = () => {
       <Card className='mb-2.5'>
         <div className='flex items-center gap-2'>
           <p className='text-sm ml-4 flex items-center'>
-            <span>&ndash; <span className='underline underline-offset-4'>Le ressenti</span> de l'enfant à propos de l'écriture est :</span>
+            <span>&ndash; <span className='underline underline-offset-4'>Le ressenti</span> de l’enfant à propos de l’écriture est :</span>
           </p>
           <Select value={ressentiLocal} onValueChange={(value)=> handleChangeValue(value, "ressenti")} disabled={isPending==="ressenti"}>
             <SelectTrigger className="w-[150px] h-8">

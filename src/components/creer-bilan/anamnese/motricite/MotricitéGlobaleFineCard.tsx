@@ -35,10 +35,12 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
 
   const handleChangeMotriciteLocal = async(value: string, index: number)=> {
     setIsPendingSelect(true)
-    let newState = [...motriciteLocal]
+    const newState = [...motriciteLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction(keyLabel, JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateSelect(res)
+    // eslint-disable-next-line
     res && setIsPendingSelect(false)
   }
 
@@ -64,7 +66,7 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="des difficultés">des difficultés</SelectItem>
-            <SelectItem value="de l'aisance">de l'aisance</SelectItem>
+            <SelectItem value="de l’aisance">de l’aisance</SelectItem>
           </SelectContent>
         </Select>
         {isPendingSelect && <Loader2 className='animate-spin' />}
@@ -82,7 +84,7 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
         themeTitle={title}
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "{title}"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;{title}&quot;
       </Button>
     </Card>
   )

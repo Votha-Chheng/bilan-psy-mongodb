@@ -1,5 +1,6 @@
 import { ServiceResponse } from "@/@types/ServiceResponse"
 
+// eslint-disable-next-line
 export const validationError = (data: ServiceResponse<any>)=> {
   return {
     message:`Erreur --> ${data.errors?.map(err => `${err.message}`).join(" - ")}`,

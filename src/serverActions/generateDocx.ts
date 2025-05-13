@@ -1,6 +1,6 @@
 "use server"
 
-import { Document, ImageRun, Packer, Paragraph, TextRun } from "docx";
+import { Document, ImageRun, Packer, Paragraph } from "docx";
 import { serverError } from "@/utils/serviceResponseError";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import { Title } from "@/components/creer-bilan/convertToDocxComponents/Title";
@@ -11,7 +11,7 @@ import { InfosGenerales } from "@/components/creer-bilan/convertToDocxComponents
 import { DocumentConfidentiel } from "@/components/creer-bilan/convertToDocxComponents/DocumentConfidentiel";
 import { SeparationLine } from "@/components/creer-bilan/convertToDocxComponents/ui/SeparationLine";
 import { MotifConsultation } from "@/components/creer-bilan/convertToDocxComponents/MotifConsultation";
-import { AnamneseDTO, AnamneseResults } from "@/@types/Anamnese";
+import { AnamneseDTO } from "@/@types/Anamnese";
 import { GreyBgTitle } from "@/components/creer-bilan/convertToDocxComponents/ui/GreyBigTitle";
 import { AntecedentsDocx, ProposDocx } from "@/components/creer-bilan/convertToDocxComponents/anamneseDocx/antecedentsComponents";
 import { generateAnamneseItemsParagraphs } from "@/components/creer-bilan/convertToDocxComponents/anamneseDocx/generateAnamneseParagraphs";
@@ -359,6 +359,7 @@ export async function generateDocx(patientId: string): Promise<ServiceResponse<s
                 new ImageRun({
                   data: imageBuffer,
                   transformation: { width: 200, height: 100 },
+                  // eslint-disable-next-line
                 } as any),
               ],
             }),
@@ -407,6 +408,7 @@ export async function generateDocx(patientId: string): Promise<ServiceResponse<s
                 new ImageRun({
                   data: imageBuffer,
                   transformation: { width: 200, height: 100 },
+                  // eslint-disable-next-line
                 } as any),
               ],
             }),
@@ -425,9 +427,9 @@ export async function generateDocx(patientId: string): Promise<ServiceResponse<s
       data:Buffer.from(new Uint8Array(buffer)).toString("base64")
     }
 
-  } catch (error:any) {
+  } catch (error:unknown) {
     console.log("generateDocx action", error)
-    return serverError(error.toString())
+    return serverError(error)
     
   }
   

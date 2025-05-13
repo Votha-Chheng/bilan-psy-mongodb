@@ -1,19 +1,18 @@
 import { ServiceResponse } from '@/@types/ServiceResponse'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2, MoveRight } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const DossierMDPH = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {getAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
   const {dossierMDPH} = anamneseResults ?? {}
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [dossierMDPHLocal, setDossierMDPHLocal] = useState<string[]>(["", ""])
@@ -35,6 +34,7 @@ const DossierMDPH = () => {
     const newState = [...dossierMDPHLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction<string>("dossierMDPH", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setDossierMDPHLocal(newState)
     if(res){
       setState(res)

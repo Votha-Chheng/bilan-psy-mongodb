@@ -1,14 +1,12 @@
 import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBDialog'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import React, { Dispatch, FC, SetStateAction, useActionState, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { Button } from '@/components/ui/button'
 import { Database, Loader2 } from 'lucide-react'
-import HiddenAnamneseForm from '@/components/forms/anamnese/HiddenAnamneseForm'
 import { useParams } from 'next/navigation'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useToast } from '@/customHooks/useToast'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
@@ -31,10 +29,12 @@ const EcritureCard: FC = ({}) => {
   }, [ecriture])
 
   const handleChangeState = async(value: string, index: number)=> {
+    // eslint-disable-next-line
     index === 0 ? setIsPendingSelectFirst(true) : setIsPendingSelectSecond(true)
     const newState = [...ecritureLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("ecriture", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setStateSelect(res)
     if(res){
       setIsPendingSelectFirst(false)
@@ -94,7 +94,7 @@ const EcritureCard: FC = ({}) => {
         themeTitle='Écriture'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les commentaires dans la base de données pour le thème "Écriture"
+        <Database/> Voir les commentaires dans la base de données pour le thème &quot;Écriture&quot;
       </Button>
     </Card>
   )

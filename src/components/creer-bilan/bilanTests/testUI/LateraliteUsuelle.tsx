@@ -10,14 +10,16 @@ import React, { useState } from 'react'
 const LateraliteUsuelle = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {lateralite, updateBilanByPatientId} = useBilanTestsStore()
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const handleChangeLateralite = async(value: string)=> {
     setIsPending(true)
     const res = await upsertBilanByKeyValueAction<string>("lateralite", value, patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

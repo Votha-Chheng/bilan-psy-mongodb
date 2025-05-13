@@ -7,20 +7,22 @@ import { Loader2, Trash2 } from 'lucide-react'
 import React, { FC, useState } from 'react'
 
 type DeleteElementFromListeFormProps = {
-  //updateFunction: ()=> void
   liste: string[]|null
   listeId?: string
 }
 
 const DeleteElementFromListeForm: FC<DeleteElementFromListeFormProps> = ({liste, listeId}) => {
   const { getAutonomieDescriptionsListe} = useAnamneseSearchDBStore()
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const handleDeleteAction = async(listeId: string|undefined, value: string): Promise<void> => {
     setIsPending(true)
     const res = await deleteDescriptionAction(listeId, value)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
   const updateFunction = ()=> {
@@ -47,7 +49,7 @@ const DeleteElementFromListeForm: FC<DeleteElementFromListeFormProps> = ({liste,
           </div>
         ))
         :
-        <p className='text-center'>Pas d'adjectif dans la liste</p>
+        <p className='text-center'>Pas d’adjectif dans la liste</p>
       }
     </div>
   )

@@ -1,5 +1,5 @@
 import { Loader2, MoveRight } from 'lucide-react'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
 import BilansMedicaux from './BilansMedicaux'
 import DossierMDPHForm from '@/components/creer-bilan/anamnese/antecedents/DossierMDPH'
@@ -17,7 +17,7 @@ const AntecedentsPart:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
   const {neant} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -43,7 +43,7 @@ const AntecedentsPart:FC = () => {
       <AnamneseTitleItem/>
       <div className='flex gap-x-2 font-bold mb-5 items-center min-w-full'>
         <MoveRight/>
-        <span>Pas d'antécédents médicaux : </span>
+        <span>Pas d&apos;antécédents médicaux : </span>
         <Switch checked={neant ? JSON.parse(neant): false} onCheckedChange={(checked: boolean)=> handleChangeNeant(checked)} />
         { isPending && <Loader2 className='animate-spin' />}
       </div>

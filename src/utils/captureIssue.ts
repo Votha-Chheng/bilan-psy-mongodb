@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 export const captureIssue = (issuesList: any[]|undefined, key: string): boolean=> {
   if(issuesList && issuesList.length>0){
     const keyListe = issuesList.map(issue=> Object.keys(issue)[0])
@@ -6,6 +7,7 @@ export const captureIssue = (issuesList: any[]|undefined, key: string): boolean=
   return false
 }
 
+// eslint-disable-next-line
 export const getIssueMessage = (key: string, issuesList?: any[]): string|undefined=> {
   if(issuesList && issuesList?.length>0){
     const issue = issuesList.filter(issue=> Object.keys(issue)[0]===key)[0]

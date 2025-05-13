@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, JSX, ReactNode, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { Card } from '../ui/card'
 import AnamneseDBDialog from '../sharedUI/alertsAndDialogs/AnamneseDBDialog'
 import { openSans } from '@/fonts/openSans'
@@ -9,7 +9,6 @@ import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormD
 import { AnamneseResults } from '@/@types/Anamnese'
 import { Database, Loader2 } from 'lucide-react'
 import { Button } from '../ui/button'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
 import { useToast } from '@/customHooks/useToast'
 import ManageListeButton from '../sharedUI/buttons/ManageListeButton'
@@ -27,9 +26,9 @@ type SelectAndCommentsCardProps = {
 }
 
 const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, listeSelectItems, keyAnamnese, themeLabel, buttonAddElementToList=false, setOpenManagementDialog, labelButton, selectWidth="w-96"}) => {
-   const {id: patientId} = useParams<{id: string}>()
+  const {id: patientId} = useParams<{id: string}>()
   const {getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
-  
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
@@ -42,11 +41,14 @@ const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, lis
 
   const handleChangeState = async(value: string)=> {
     setIsPending(true)
-    let newState = [...stateLocal]
+    const newState = [...stateLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction<string>(keyAnamnese, JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
   const updateFunction = ()=> {
@@ -99,7 +101,7 @@ const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, lis
         themeTitle={themeLabel}
       />
       <Button className='w-fit ml-5 mt-2.5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "{themeLabel}"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;{themeLabel}&quot;
       </Button>
     </Card>
   )

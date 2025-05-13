@@ -5,7 +5,6 @@ import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
@@ -14,14 +13,16 @@ const DevoirsCard = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {devoirs} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const handleChangeState = async(value: string)=> {
     setIsPending(true)
     const res = await upsertAnamneseByKeyValueAction("devoirs", value, patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

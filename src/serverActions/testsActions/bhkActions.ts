@@ -1,6 +1,6 @@
 "use server"
 
-import { BHKResultsDTO, PraxiesGestuellesResultsDTO } from "@/@types/BilanTests"
+import { BHKResultsDTO } from "@/@types/BilanTests"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"

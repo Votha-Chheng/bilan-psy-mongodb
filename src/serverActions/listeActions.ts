@@ -10,7 +10,7 @@ import { AutonomieDescription, ListeAdjectifs, ListeTypeSensorialite, Temperamen
 import { z } from "zod"
 
 //formData = {listeId, typesSensorialite}
-export const upsertListeSensorialiteAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<ListeTypeSensorialite>> => {
+export const upsertListeSensorialiteAction = async(prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<ListeTypeSensorialite>> => {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({
@@ -77,7 +77,7 @@ export const upsertListeSensorialiteAction = async(prevState: any, formData: For
 }
 
 //formData = {listeId, adjectifsComportement}
-export const upsertListeAdjectifsComportementAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<ListeAdjectifs>> => {
+export const upsertListeAdjectifsComportementAction = async(prevState: ServiceResponse<ListeAdjectifs|null>, formData: FormData): Promise<ServiceResponse<ListeAdjectifs|null>> => {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(
     z.object({

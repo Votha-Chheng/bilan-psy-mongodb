@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
-import { Cross, X } from 'lucide-react'
+import { X } from 'lucide-react'
 
 type TextInputProps = {
   label: string

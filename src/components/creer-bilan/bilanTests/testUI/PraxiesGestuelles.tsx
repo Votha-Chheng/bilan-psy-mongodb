@@ -44,7 +44,7 @@ const PraxiesGestuelles = () => {
   const praxiesGestuelles = allTests.find(test => test.nom === nameTest)
 
   useEffect(()=> {
-    if(!praxiesGestuelles) return
+    if(!praxiesgestuelles) return
     setPrecisionDecoupageLocal(precisionDecoupage ?? "")
     setTenueDecoupageLocal(tenueDecoupage ?? "")
     setGestionTonusDecoupageLocal(gestionTonusDecoupage ?? "")
@@ -102,7 +102,7 @@ const PraxiesGestuelles = () => {
         setHyperHypoLocal={setHyperHypoCompasLocal}
         labelTenue="Tenue du compas"
       />
-      <p className='text-sm italic mt-5 mb-1 ml-2'>&ndash; Utilisation de l'équerre :</p>   
+      <p className='text-sm italic mt-5 mb-1 ml-2'>&ndash; Utilisation de l’équerre :</p>   
       <PraxiesGestuellesCard
         keyPrecision='precisionEquerre'
         keyTenue='tenueEquerre'

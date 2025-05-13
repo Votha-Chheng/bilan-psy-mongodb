@@ -3,7 +3,6 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { openSans } from '@/fonts/openSans'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Database, List, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -19,7 +18,7 @@ const AutonomieCard = () => {
   const {anamneseResults, getAnamneseResultsByPatientId, autonomieDescription, getAutonomieDescriptionsListe} = useAnamneseSearchDBStore()
   const {autonomie} = anamneseResults ?? {}
   const {descriptionsListe} = autonomieDescription ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [autonomieLocal, setAutonomieLocal] = useState<string[]>(["", ""])   //<----- [autonomie, observations]
@@ -38,11 +37,14 @@ const AutonomieCard = () => {
 
   const handleChangeState = async(value: string)=> {
     setIsPending(true)
-    let newState = [...autonomieLocal]
+    const newState = [...autonomieLocal]
     newState[0] = value
     const res = await upsertAnamneseByKeyValueAction("autonomie", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setAutonomieLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -78,7 +80,7 @@ const AutonomieCard = () => {
         {isPending ? <Loader2 className='animate-spin'/> : <p className='w-6'></p>}
         |
         <Button className='w-fit' onClick={()=> setOpenManagementAutonomieDialog(true)}>
-          <List/> Gérer les descriptions pour l'autonomie
+          <List/> Gérer les descriptions pour l’autonomie
         </Button>
       </div>
       <AddComentaireOuObservations
@@ -94,7 +96,7 @@ const AutonomieCard = () => {
         themeTitle='Autonomie'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenManagementAutonomieDialog(true)}>
-        <Database/> Voir les descriptions dans la base de données pour le thème "autonomie"
+        <Database/> Voir les descriptions dans la base de données pour le thème &quot;autonomie&quot;
       </Button>
     </Card>
   )

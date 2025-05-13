@@ -7,7 +7,7 @@ import { validateWithZodSchema } from "@/utils/validateWithZodSchema";
 import { Medecin } from "@prisma/client";
 import { z } from "zod";
 
-export const createMedecinAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
+export const createMedecinAction = async(prevState: ServiceResponse<Medecin|null>, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
   try {
     const rawData = Object.fromEntries(formData.entries());
     const parsedData = validateWithZodSchema( 
@@ -38,7 +38,7 @@ export const createMedecinAction = async(prevState: any, formData: FormData): Pr
   }
 }
 
-export const deleteMedecinAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
+export const deleteMedecinAction = async(prevState: ServiceResponse<Medecin|null>, formData: FormData): Promise<ServiceResponse<Medecin|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema(z.object({
     medecinId: z.string().min(1, "L'identifiant du médecin est requis."),

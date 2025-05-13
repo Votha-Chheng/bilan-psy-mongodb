@@ -3,8 +3,7 @@ import { Paragraph, Table, TextRun } from "docx";
 import { TestTitle } from "../../ui/TestTitle";
 import { allTests } from "@/datas/listeTests";
 import { defaultTextStyle } from "@/@types/DocxTypes";
-import { LineBreak } from "../../ui/LineBreak";
-
+// eslint-disable-next-line
 const subtitlePraxies = (subtitle: string, data: any): Paragraph|null=> {
   if(!data) return null
 

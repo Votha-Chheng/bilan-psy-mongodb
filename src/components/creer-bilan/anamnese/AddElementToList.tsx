@@ -8,6 +8,7 @@ import { Plus } from 'lucide-react'
 import React, { useState } from 'react'
 
 const AddElementToList = () => {
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [newAdjectif, setNewAdjectif] = useState<string>("")
@@ -19,7 +20,9 @@ const AddElementToList = () => {
     if(value === "") return
     setIsPending(true)
     const res = await upsertAutonomieDescriptionAction(value, id ?? undefined)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

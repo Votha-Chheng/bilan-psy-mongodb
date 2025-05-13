@@ -16,7 +16,7 @@ const SommeilCard = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {sommeilQuotidien} = anamneseResults ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [sommeilLocal, setSommeilLocal] = useState<string[]>(["", "", ""]) //<---- [dort seul, pendormissement, observation]
@@ -29,11 +29,14 @@ const SommeilCard = () => {
 
   const handleChangeState = async(value: string, index: number)=> {
     setIsPending(true)
-    let newState = [...sommeilLocal]
+    const newState = [...sommeilLocal]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction<string>("sommeilQuotidien", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setSommeilLocal(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -88,7 +91,7 @@ const SommeilCard = () => {
         themeTitle='Sommeil'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDialog(true)}>
-        <Database/> Voir les descriptions dans la base de données pour le thème "sommeil"
+        <Database/> Voir les descriptions dans la base de données pour le thème &quot;Sommeil&quot;
       </Button>
     </Card>
   )

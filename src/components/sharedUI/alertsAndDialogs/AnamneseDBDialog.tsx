@@ -6,7 +6,6 @@ import { PatientInfosGenerales } from '@/@types/PatientTypes'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Card, CardTitle } from '@/components/ui/card'
 import { Loader } from 'lucide-react'
-import { Anamnese } from '@prisma/client'
 
 type AnamneseDBDialogProps = {
   open: boolean

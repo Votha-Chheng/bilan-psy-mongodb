@@ -7,7 +7,7 @@ import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { SignInCredentialsSchema, SignUpCredentialsSchema } from "@/zodSchemas/userSchemas"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 
-export const signInAction = async(prevState: ServiceResponse<any>, formData: FormData): Promise<ServiceResponse<AuthenticatedUser|null>>=> {
+export const signInAction = async(prevState: ServiceResponse<AuthenticatedUser|null>, formData: FormData): Promise<ServiceResponse<AuthenticatedUser|null>>=> {
   const rawData = Object.fromEntries(formData)
   const response = validateWithZodSchema(SignInCredentialsSchema, rawData)
 
@@ -34,7 +34,7 @@ export const signInAction = async(prevState: ServiceResponse<any>, formData: For
   }
 }
 
-export const signUpAction = async(prevState: ServiceResponse<any>, formData: FormData): Promise<ServiceResponse<AuthenticatedUser|null>>=> {
+export const signUpAction = async(prevState: ServiceResponse<AuthenticatedUser|null>, formData: FormData): Promise<ServiceResponse<AuthenticatedUser|null>>=> {
   const rawData = Object.fromEntries(formData)
   const response = validateWithZodSchema(SignUpCredentialsSchema, rawData)
   const body = response.data as SignUpCredentials

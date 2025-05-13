@@ -1,22 +1,18 @@
 import { ServiceResponse } from '@/@types/ServiceResponse'
-import HiddenAnamneseForm from '@/components/forms/anamnese/HiddenAnamneseForm'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/customHooks/useToast'
 import { listeClasses } from '@/datas/listeClasses'
-import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
+import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
-import { elementsInArrayAllEpmty } from '@/utils/checkIfNullOrEmptyFunctions'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { useActionState, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const ClasseCard = () => {
   const {id: patientId} = useParams<{id: string}>()
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
-  
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const {classe} = anamneseResults ?? {}
@@ -31,7 +27,9 @@ const ClasseCard = () => {
   const handleChangeState = async(value: string)=> {
     setIsPending(true)
     const res = await upsertAnamneseByKeyValueAction("classe", value, patientId)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

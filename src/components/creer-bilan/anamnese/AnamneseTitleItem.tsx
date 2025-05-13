@@ -42,7 +42,8 @@ const AnamneseTitleItem = () => {
         anamenesePart !== 0 &&
         <div className='flex justify-center'>
           <Button className='w-fit' onClick={()=> setSeeNotesBrutes(true)} size="sm">
-            <Eye/> Voir les notes brutes prises pour l'anamnèse
+            <Eye/> Voir les notes brutes prises pour l’anamnèse
+            <Eye/> Voir les notes brutes prises pour lanamnèse
           </Button>
         </div>
       }

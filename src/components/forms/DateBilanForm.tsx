@@ -1,13 +1,13 @@
 "use client"
 
 import { updateDateBilanAction } from '@/serverActions/patientActions'
-import React, { Dispatch, FC, SetStateAction, useActionState, useEffect } from 'react'
+import React, { Dispatch, FC, SetStateAction, useActionState } from 'react'
 import SubmitButton from '../ui/SubmitButton'
 import TextInput from '../inputs/TextInput'
 import { useParams } from 'next/navigation'
-import { toast } from 'sonner'
 import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Button } from '../ui/button'
+import { useToast } from '@/customHooks/useToast'
 
 type DateBilanFormProps = {
   setChangeDateBilan: Dispatch<SetStateAction<boolean>>
@@ -20,18 +20,11 @@ const DateBilanForm: FC<DateBilanFormProps> = ({setChangeDateBilan, dateBilanExi
   const [state, formAction, isPending] = useActionState(updateDateBilanAction, {})
   const {updatePatientInfoFromDB} = usePatientInfoStore()
 
-  useEffect(()=> {
-    if(state.success){
-      updatePatientInfoFromDB(id)
-      setChangeDateBilan(false)
-      toast.success(state.message, {
-        action: {
-          label: "Fermer",
-          onClick: () => console.log("Fermer"),
-        },
-      })
-    }
-  }, [state])
+  const updateFunction = ()=> {
+    updatePatientInfoFromDB(id)
+    setChangeDateBilan(false)
+  }
+  useToast({state, updateFunction})
 
   return (
     <form action={formAction} className='flex'>

@@ -3,7 +3,6 @@ import { fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serv
 import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
 import { fetchAnamneseByKeysWithCache, fetchAnamneseResultsByPatientIdWithCache } from '@/serverActions/fetchingWithCache'
 import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite, fetchAutonomieDescriptions } from '@/serverActions/listeActions'
-import { Anamnese } from '@prisma/client'
 import { create } from 'zustand'
 
 type AnamneseSearchDBState = {
@@ -43,7 +42,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
       set({anamneseResults: result.data})
     } catch (error) {
-      console.log("Can't getAnamneseResultsByPatientId")
+      console.log("Can't getAnamneseResultsByPatientId", error)
     }
   },
   updateBilanMedicauxResults: async(anamneseId: string|null|undefined)=> {
@@ -51,12 +50,11 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)
       set({bilanMedicauxResults: result.data})
     } catch (error) {
-      console.log("Can't updateBilanMedicauxResults")
+      console.log("Can't updateBilanMedicauxResults", error)
     }
   },
   anamneseResults: null,
   initializeAnamneseResultsByPatientId: async(patientId: string)=> {
-    console.log("trigger initializeAnamneseResultsByPatientId")
     set({loadingAnamneseResults: true})
     try {
       const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
@@ -64,7 +62,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       console.log(result.data?.bilanMedicauxResults)
       set({bilanMedicauxResults: result.data?.bilanMedicauxResults})
     } catch (error) {
-      console.log("Can't getAnamneseResultsByPatientId")
+      console.log("Can't getAnamneseResultsByPatientId", error)
     } finally {
       set({loadingAnamneseResults: false})
     }
@@ -75,7 +73,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       const result = await fetchAllTemperaments()
       set({temperamentsDescription: result.data})
     } catch (error) {
-      console.log("Can't getListeTemperament")
+      console.log("Can't getListeTemperament", error)
     }
   },
   autonomieDescription: null,
@@ -85,7 +83,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({autonomieDescription: result.data})
       
     } catch (error) {
-      console.log("Can't getAutonomieDescriptionsListe")
+      console.log("Can't getAutonomieDescriptionsListe", error)
     }
   },
   anamneseInDBByDomaine: null,
@@ -98,7 +96,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({ devPsyConfereListe: response.data ?? [] })
 
     } catch (error) {
-      console.log("Can't getDevPsyConfereList")
+      console.log("Can't getDevPsyConfereList", error)
     }
   },
   getAnamneseDBByKeys: async(keys: (keyof Exclude<AnamneseResults, "bilanMedicauxResults">)[])=> {
@@ -108,7 +106,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({ anamneseInDBByDomaine: response.data })
 
     } catch (error) {
-      console.log("Can't getAnamneseDBByKeys")
+      console.log("Can't getAnamneseDBByKeys", error)
     } finally {
       set({loadingData: false})
     }
@@ -121,7 +119,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({ chosenThemes: result.data ?? []})
 
     } catch (error){
-      console.log("Can't initializeChosenThemes")
+      console.log("Can't initializeChosenThemes", error)
     }
   },
   setChosenThemes: (value:string[])=> {
@@ -137,7 +135,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({ listeAdjectifsId: id})
 
     } catch (error) {
-      console.log("Can't getAnamneseDBByKeys")
+      console.log("Can't getAnamneseDBByKeys", error)
     }
   },
   typeSensorialite: null,
@@ -147,7 +145,7 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
       set({ typeSensorialite: response.data })
 
     } catch (error) {
-      console.log("Can't getAnamneseDBByKeys")
+      console.log("Can't getAnamneseDBByKeys", error)
     }
   }
 }))

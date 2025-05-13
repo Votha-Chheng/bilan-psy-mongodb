@@ -1,8 +1,7 @@
 import { AnamneseResults, BilanMedicauxResults } from "@/@types/Anamnese";
-import { Paragraph, Table, TextRun } from "docx";
+import { Paragraph, TextRun } from "docx";
 import { generateDefaultParagraph, generateEmptyParagraph } from "../ui/ParagraphFunctions";
 import { seriesAntecedentsBody, seriesBilanMedicaux } from "@/datas/seriesForAnamneseDocx";
-import { generateAnamneseItemsParagraphs } from "./generateAnamneseParagraphs";
 import dayjs from "dayjs";
 import { anamneseSubTitle, anamneseTitle } from "../ui/anamneseSubtitle";
 
@@ -143,6 +142,7 @@ export const AntecedentsDocx = (anamneseResult: AnamneseResults|null): Paragraph
 
   let rawBody = []
   if(BilanMedicauxDocx(anamneseResult?.bilanMedicauxResults ?? null)){
+    // eslint-disable-next-line
     rawBody = [anamneseTitle("Antécédents médicaux personnels et suivis médicaux"), ...BilanMedicauxDocx(anamneseResult?.bilanMedicauxResults ?? null) as any[], DossierMDPH(anamneseResult), ...AntecedentsBody(anamneseResult)]
   } else {
     rawBody = [anamneseTitle("Antécédents médicaux personnels et suivis médicaux"), DossierMDPH(anamneseResult), ...AntecedentsBody(anamneseResult)]

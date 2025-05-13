@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { Database, Loader2} from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
@@ -41,8 +40,11 @@ const SensorialiteCard:FC = () => {
     const newState = [...sensorialiteLocale]
     newState[index] = value
     const res = await upsertAnamneseByKeyValueAction("sensorialite", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateSelect(res)
+    // eslint-disable-next-line
     res && setIsPendingSelect(false)
+    // eslint-disable-next-line
     res.success && setSensorialiteLocale(newState)
   }
 
@@ -99,7 +101,7 @@ const SensorialiteCard:FC = () => {
         themeTitle='Sensorialité'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "Sensorialité"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;Sensorialité&quot;
       </Button>
     </Card>
   )

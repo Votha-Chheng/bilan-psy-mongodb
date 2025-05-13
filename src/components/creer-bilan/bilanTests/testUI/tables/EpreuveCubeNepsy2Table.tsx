@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 const EpreuveCubeNepsy2Table = () => {
   const {epreuvecubesnepsy2, updateEpreuveCubesNepsy2, bilanId} = useBilanTestsStore()
   const {scoreNS} = epreuvecubesnepsy2 ?? {}
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -22,7 +23,9 @@ const EpreuveCubeNepsy2Table = () => {
   const handleChangeValue = async()=> {
     setIsPending(true)
     const res = await upsertEpreuveCubesNepsy2ByKeyValueAction<string>("scoreNS", scoreNSLocal, bilanId ?? "")
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
@@ -35,6 +38,7 @@ const EpreuveCubeNepsy2Table = () => {
           <td className='border-collapse border border-black px-2 font-bold'>Score en note standard</td>
           <td style={{backgroundColor:`${getBgColorForNoteStandard(+scoreNSLocal)}`}} className={`inline-flex gap-2 items-center border-collapse w-full px-5 justify-center`}>
             <Input 
+              disabled={isPending}
               onBlur={()=> handleChangeValue()}
               type='number' 
               className='w-16 p-1 h-8 bg-white text-center' 

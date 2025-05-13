@@ -1,8 +1,9 @@
 import { ServiceResponse } from '@/@types/ServiceResponse'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 
 type UseToastProps = {
+  // eslint-disable-next-line
   state: ServiceResponse<any>;
   updateFunction?: () => void;
 }

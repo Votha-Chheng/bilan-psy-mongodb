@@ -2,14 +2,11 @@ import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBD
 import { Card } from '@/components/ui/card'
 import { useToast } from '@/customHooks/useToast'
 import { upsertAnamneseByKeyValueAction, upsertAnamneseBySingleKeyValueWithFormDataAction } from '@/serverActions/anamneseActions'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { useParams } from 'next/navigation'
-import React, { FC, Ref, useActionState, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import AddComentaireOuObservations from '../AddComentaireOuObservations'
-import HiddenAnamneseForm from '@/components/forms/anamnese/HiddenAnamneseForm'
 import { Button } from '@/components/ui/button'
 import { Database, List, Loader2 } from 'lucide-react'
-import { removeElementAtIndex } from '@/utils/arrayFunctions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
@@ -23,7 +20,7 @@ const ComportementCard: FC = () => {
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   const {comportement} = anamneseResults ?? {}
-  
+  // eslint-disable-next-line
   const [stateCheck, setStateCheck] = useState<ServiceResponse<any>>({})
   const [isPendingCheck, setIsPendingCheck] = useState<boolean>(false)
   const [comportementLocal, setComportementLocal] = useState<string[]>(["", ""])    //<----- [observations, liste d'adjectifs mais séparés par des ,]
@@ -44,7 +41,7 @@ const ComportementCard: FC = () => {
   const handleChangeListeAdj = async(checked: boolean, adjectif: string)=> {
     setIsPendingCheck(true)
     let newState = []
-    let adjList = comportementLocal[1]  //<---- de type "ajdectis, adjectif..."
+    const adjList = comportementLocal[1]  //<---- de type "ajdectis, adjectif..."
     let newAdjList = ""
     if(checked){
       if(adjectifs[0] === "") {
@@ -65,7 +62,9 @@ const ComportementCard: FC = () => {
     }
     setComportementLocal(newState)
     const res = await upsertAnamneseByKeyValueAction<string>("comportement", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res && setStateCheck(res)
+    // eslint-disable-next-line
     res && setIsPendingCheck(false)
 
   }
@@ -114,7 +113,7 @@ const ComportementCard: FC = () => {
         </div>
         <div className='w-1/3'>
           <Button className='w-fit' onClick={()=> setOpenManagementAdjDialog(true)}>
-            <List/> Gérer la liste d'adjectifs
+            <List/> Gérer la liste d’adjectifs
           </Button>
         </div>
       </div>
@@ -132,7 +131,7 @@ const ComportementCard: FC = () => {
         themeTitle='Comportement'
       />
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
-        <Database/> Voir les observations dans la base de données pour le thème "Comportement"
+        <Database/> Voir les observations dans la base de données pour le thème &quot;Comportement&quot;
       </Button>
     </Card>
   )

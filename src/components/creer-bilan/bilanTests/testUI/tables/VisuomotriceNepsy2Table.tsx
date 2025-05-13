@@ -12,6 +12,7 @@ const VisuomotriceNepsy2Table = () => {
   const [precisionVisuoMoteurLocal, setPrecisionVisuoMoteurLocal] = useState<string>("")
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   useEffect(()=> {
@@ -27,8 +28,11 @@ const VisuomotriceNepsy2Table = () => {
     } 
     setIsPending(true)
     const res = await upsertVisuomotriceNepsy2ByKeyValueAction<string>("precisionVisuoMoteur", value, bilanId ?? "")
+    // eslint-disable-next-line
     res.success && setPrecisionVisuoMoteurLocal(value)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
 
   }

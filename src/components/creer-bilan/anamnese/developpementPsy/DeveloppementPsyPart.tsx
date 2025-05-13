@@ -1,7 +1,7 @@
 
 import AnamneseSubPart from '@/components/sharedUI/AnamneseSubPart'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import Confere from './Confere'
 import { Separator } from '@/components/ui/separator'
 import DevPsyBody from './DevPsyBody'

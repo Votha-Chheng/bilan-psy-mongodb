@@ -7,7 +7,6 @@ import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
 import { upsertAnamneseByKeyValueAction } from '@/serverActions/anamneseActions'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { List, Loader2, Trash2Icon } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -17,6 +16,7 @@ const DecritAuQuotidienCard = () => {
   const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {decritAuQuotidien} = anamneseResults ?? {}
   const {adjectifsComportement} = useAnamneseSearchDBStore()
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
   const [isPendingDelete, setIsPendingDelete] = useState<boolean>(false)
@@ -33,21 +33,27 @@ const DecritAuQuotidienCard = () => {
     const newState = [...selectedAdj]
     newState.push(value)
     const res = await upsertAnamneseByKeyValueAction("decritAuQuotidien", JSON.stringify(newState), patientId)
+    // eslint-disable-next-line
     res.success && setSelectedAdj(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
   const handleRemoveElementAction = async(value: string)=> {
     setIsPendingDelete(true)
     let final: string[]|null = null
-    let newState = selectedAdj.filter(val=> val !== value)
+    const newState = selectedAdj.filter(val=> val !== value)
     if(newState.length !== 0){
       final = newState
     }
     const res = await upsertAnamneseByKeyValueAction("decritAuQuotidien", final!==null ? JSON.stringify(final):final, patientId)
+    // eslint-disable-next-line
     res.success && setSelectedAdj(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPendingDelete(false)
   }
 
@@ -95,7 +101,7 @@ const DecritAuQuotidienCard = () => {
         {isPending ? <Loader2 className='animate-spin'/> : <p className='w-6'></p>}
         <div className='w-1/3 ml-5 -mt-2'>
           <Button className='w-fit' onClick={()=> setOpenManagementAdjDialog(true)}>
-            <List/> Gérer la liste d'adjectifs
+            <List/> Gérer la liste d’adjectifs
           </Button>
         </div>
       </div>

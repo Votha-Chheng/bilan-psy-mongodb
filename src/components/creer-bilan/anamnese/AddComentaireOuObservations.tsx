@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/customHooks/useToast'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { CornerUpLeft, EditIcon, Loader2, Trash2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { Dispatch, FC, SetStateAction, useActionState, useEffect, useRef, useState } from 'react'
@@ -47,7 +46,7 @@ const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
 
 
   const handleChangeLocalState = (value: string)=> {
-    let newState = [...completeArrayStateLocal]
+    const newState = [...completeArrayStateLocal]
     newState[commentObsIndex] = value
     setCompleteArrayStateLocal(newState)
   }

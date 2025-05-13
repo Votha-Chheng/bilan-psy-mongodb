@@ -1,6 +1,6 @@
 'use server'
 
-import { AnamneseDTO, AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
+import { AnamneseResults, BilanMedicalKeys, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions"
@@ -8,7 +8,7 @@ import { dataBaseError, serverError, validationError } from "@/utils/serviceResp
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { KeyAnamneseSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
 import { BilanMedicalSchema } from "@/zodSchemas/bilanMedicalSchema"
-import { Anamnese, BilanMedical, DevPsyConfere } from "@prisma/client"
+import { Anamnese, BilanMedical } from "@prisma/client"
 import { z } from "zod"
 import { getChosenThemeArray } from "@/utils/sortAnamneseDatas"
 
@@ -344,7 +344,7 @@ export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promi
 }
 
 //upsertAnamneseBySingleKeyValueAction need {key, value, patientId}
-export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
+export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: ServiceResponse<AnamneseResults|null>, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
   console.log(parsedData)
@@ -428,7 +428,7 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Anamne
 
 }
 
-export const setPropertyToNullByKeyAction = async(prevState: any, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>> => {
+export const setPropertyToNullByKeyAction = async(prevState: ServiceResponse<AnamneseResults|null>, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>> => {
   const rawData = Object.fromEntries(formData.entries())
   const validateData = validateWithZodSchema(KeyAnamneseSchema, rawData)
 

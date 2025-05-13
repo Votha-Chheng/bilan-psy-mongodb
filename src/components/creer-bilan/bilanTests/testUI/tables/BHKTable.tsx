@@ -12,6 +12,7 @@ const BHKTable = () => {
   const {qualiteEcriture, vitesseEcriture} = bhk ?? {}
 
   const [isPending, setIsPending] = useState<boolean>(false)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const [qualiteLocal, setQualiteLocal] = useState<string>("")
@@ -27,10 +28,14 @@ const BHKTable = () => {
     setIsPending(true)
     const res = await upsertBHKResultsAction(keyBHK, value, bilanId ?? "")
     if(res.success) {
+      // eslint-disable-next-line
       keyBHK === "qualiteEcriture" && setQualiteLocal(value)
+      // eslint-disable-next-line
       keyBHK === "vitesseEcriture" && setVitesseLocal(value)
     } 
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

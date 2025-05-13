@@ -1,6 +1,7 @@
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/customHooks/useToast'
 import { upsertBHKResultsAction } from '@/serverActions/testsActions/bhkActions'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { bhk } from '@prisma/client'
@@ -8,10 +9,11 @@ import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 const OutilScripteurCard = () => {
-  const {bhk, bilanId} = useBilanTestsStore()
+  const {bhk, bilanId, updatebhk} = useBilanTestsStore()
   const {tenueOutilScripteur, fonctionnalite, posturePoignet} = bhk ?? {}
 
   const [isPending, setIsPending] = useState<string|null>(null)
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
 
   const [tenueOutilScripteurLocal, setTenueOutilScripteurLocal] = useState<string[]>([])
@@ -31,8 +33,11 @@ const OutilScripteurCard = () => {
     const newState = [...tenueOutilScripteurLocal]
     newState[index] = value
     const res = await upsertBHKResultsAction("tenueOutilScripteur", newState, bilanId ?? "")
+    // eslint-disable-next-line
     res.success && setTenueOutilScripteurLocal(newState)
+    // eslint-disable-next-line
     res && setIsPending(null)
+    // eslint-disable-next-line
     res && setState(res)
   }
 
@@ -40,14 +45,20 @@ const OutilScripteurCard = () => {
     setIsPending(key)
     const res = await upsertBHKResultsAction(key, value, bilanId ?? "")
     if(key === "fonctionnalite"){
+      // eslint-disable-next-line
       res.success && setFonctionnaliteLocal(value)
     }
     if(key === "posturePoignet"){
+      // eslint-disable-next-line
       res.success && setPosturePoignetLocal(value)
     }
+    // eslint-disable-next-line
     res && setIsPending(null)
+    // eslint-disable-next-line
     res && setState(res)
   }
+
+  useToast({state, updateFunction: ()=> updatebhk(bilanId)})
 
   return (
     <Card className='gap-y-0 my-5'>
@@ -56,7 +67,7 @@ const OutilScripteurCard = () => {
         </span>
       </p>
       <div className='text-sm flex items-center gap-x-2 mb-2 ml-5'>
-        &bull; <span className='underline underline-offset-4'>Tenue de l'outil scripteur</span> : 
+        &bull; <span className='underline underline-offset-4'>Tenue de l’outil scripteur</span> : 
         <Select value={tenueOutilScripteurLocal[0] ?? ""} onValueChange={(value)=> handleChangeState(value, 0, "tenueOutilScripteur")} disabled={isPending==="tenueOutilScripteur"}>
           <SelectTrigger className="w-[150px] h-8">
             <SelectValue />

@@ -44,6 +44,7 @@ const ManageTestsBilanDialog: FC<ManageTestsBilanDialogProps> = ({setOpen, open}
   
   const [selectedTests, setSelectedTests] = useState<string[]>([])
 
+  // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse< any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -54,6 +55,7 @@ const ManageTestsBilanDialog: FC<ManageTestsBilanDialogProps> = ({setOpen, open}
   }, [tests])
 
   const setTestToNull = async(testName: string): Promise<void>=> {
+    // eslint-disable-next-line
     let res: ServiceResponse<any> = {}
     if(testName === "M-ABC2" ){
       res = await setMABC2ResultsToNull(mabc2?.id ?? null)
@@ -110,8 +112,11 @@ const ManageTestsBilanDialog: FC<ManageTestsBilanDialogProps> = ({setOpen, open}
     }
 
     const res = await upsertTestsListeAction(patientId, newState.length === 0 ? null : newState)
+    // eslint-disable-next-line
     res.success && setSelectedTests(newState)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 

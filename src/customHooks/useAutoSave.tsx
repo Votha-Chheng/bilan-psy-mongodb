@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 type UseAutoSaveProps = {
   preventAutoSave: boolean
   autosaveFunction: ()=> void
+  // eslint-disable-next-line
   dependenciesArray: any[]
   delay: number
 }

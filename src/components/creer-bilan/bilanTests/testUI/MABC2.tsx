@@ -16,7 +16,7 @@ const MABC2 = () => {
   const {mabc2, updatemabc2, bilanId} = useBilanTestsStore()
   const {getMABC2Observations, mabc2Observations} = useObservationStore()
   const {competencesMotrices, precisionUnimanuelle, coordinationsBimanuelles, coordinationsGlobalesRattrapes, precisionVisuoMotrice, coordinationsGlobalesLancers, motriciteGlobaleUnipodal, motriciteGlobaleDynamique, motriciteGlobaleSauts} = mabc2 ?? {}
-
+// eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -53,7 +53,9 @@ const MABC2 = () => {
   const handleChangeMABC2Action = async(key: keyof mabc2, value: string): Promise<void>=> {
     setIsPending(true)
     const res = await upsertMABC2ByKeyValueAction(key, value, bilanId ?? null)
+    // eslint-disable-next-line
     res && setState(res)
+    // eslint-disable-next-line
     res && setIsPending(false)
   }
 
