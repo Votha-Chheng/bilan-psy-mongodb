@@ -24,7 +24,7 @@ const SignInForm: FC = () => {
     )
   }
 
-  if(state.success || session?.user) {
+  if(session?.user) {
     return (
     <div className='w-full h-screen flex flex-col justify-center items-center gap-5'>
       <Link href={`/dashboard`}>
