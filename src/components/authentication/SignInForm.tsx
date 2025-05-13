@@ -15,7 +15,7 @@ const SignInForm: FC = () => {
   const [state, formAction, isPending] = useActionState(signInAction, {})
   const {data: session, isPending: isLoading } = authClient.useSession()
 
-  console.log(state)
+  console.log(state.success)
 
   if(isLoading || isPending) {
     return (
