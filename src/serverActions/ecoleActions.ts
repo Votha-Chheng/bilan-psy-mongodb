@@ -1,13 +1,13 @@
 'use server'
 
+import { EcoleDTO } from "@/@types/PatientTypes";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError";
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema";
-import { Ecole } from "@prisma/client";
 import { z } from "zod";
 
-export const createEcoleAction = async (prevState: ServiceResponse<Ecole|null>, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
+export const createEcoleAction = async (prevState: ServiceResponse<EcoleDTO|null>, formData: FormData): Promise<ServiceResponse<EcoleDTO|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema( 
     z.object({
@@ -38,7 +38,7 @@ export const createEcoleAction = async (prevState: ServiceResponse<Ecole|null>, 
   }
 }
 
-export const deleteEcoleByIdAction = async (prevState: ServiceResponse<Ecole|null>, formData: FormData): Promise<ServiceResponse<Ecole|null>> => {
+export const deleteEcoleByIdAction = async (prevState: ServiceResponse<EcoleDTO|null>, formData: FormData): Promise<ServiceResponse<EcoleDTO|null>> => {
   const rawData = Object.fromEntries(formData.entries());
   const parsedData = validateWithZodSchema( 
     z.object({
@@ -70,7 +70,7 @@ export const deleteEcoleByIdAction = async (prevState: ServiceResponse<Ecole|nul
   }
 }
 
-export const fetchAllEcoles = async (): Promise<ServiceResponse<Ecole[]|null>> => {
+export const fetchAllEcoles = async (): Promise<ServiceResponse<EcoleDTO[]|null>> => {
   console.log("fetchAllEcoles is triggered")
   try {
     const response = await db.ecole.findMany()
