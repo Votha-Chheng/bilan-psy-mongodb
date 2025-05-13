@@ -17,7 +17,7 @@ export const fetchAllConclusion = async(): Promise<ServiceResponse<{conclusionCo
     const allPatients = await fetchPatientsList()
     if(!allPatients.data) return  {success: false, data: null}
 
-    const data = res.map((conclusion=> ({conclusionCommentaires: conclusion.conclusionCommentaires, patientName: getPatientNameById(allPatients.data ?? null, conclusion.patientId)})))
+    const data = res.map(((conclusion: ConclusionRawData)=> ({conclusionCommentaires: conclusion.conclusionCommentaires, patientName: getPatientNameById(allPatients.data ?? null, conclusion.patientId ?? "")})))
 
     return {
       success: true,
