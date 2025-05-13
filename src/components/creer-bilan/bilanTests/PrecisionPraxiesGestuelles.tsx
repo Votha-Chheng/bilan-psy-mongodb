@@ -1,3 +1,4 @@
+import { PraxiesGestuellesResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/customHooks/useToast'
@@ -11,7 +12,7 @@ type PrecisionPraxiesGestuellesProps = {
   precisionAvec: string
   stateLocal: string
   setStateLocal: Dispatch<SetStateAction<string>>
-  keyPraxiesGestuelles: keyof praxiesgestuelles
+  keyPraxiesGestuelles: keyof PraxiesGestuellesResultsDTO
 }
 
 const PrecisionPraxiesGestuelles: FC<PrecisionPraxiesGestuellesProps> = ({precisionAvec, stateLocal, setStateLocal, keyPraxiesGestuelles}) => {
