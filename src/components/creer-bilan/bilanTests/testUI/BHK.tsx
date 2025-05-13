@@ -6,13 +6,13 @@ import ThemeObservationGenerics from '../ThemeObservationGenerics'
 import { useBilanTestsStore } from '@/stores/bilanTestsStore'
 import { useObservationStore } from '@/stores/observationStore'
 import { upsertBHKResultsAction } from '@/serverActions/testsActions/bhkActions'
-import { bhk } from '@prisma/client'
 import OutilScripteurCard from '../OutilScripteurCard'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/customHooks/useToast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2 } from 'lucide-react'
+import { BHKResultsDTO } from '@/@types/BilanTests'
 
 const BHK = () => {
 
@@ -55,18 +55,18 @@ const BHK = () => {
     getBHKObservations()
   }
   const addToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertBHKResultsAction<string>(keyTest as keyof bhk, newStateLocal.trim(), bilanId ?? "")
+    return await upsertBHKResultsAction<string>(keyTest as keyof BHKResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const removeToTestThemeAction = async(newStateLocal: string, keyTest?: string)=> {
-    return await upsertBHKResultsAction<string>(keyTest as keyof bhk, newStateLocal.trim(), bilanId ?? "")
+    return await upsertBHKResultsAction<string>(keyTest as keyof BHKResultsDTO, newStateLocal.trim(), bilanId ?? "")
   }
 
   const handleSetStateToNullAction = async(keyTest?: string)=> {
-    return await upsertBHKResultsAction<string>(keyTest as keyof bhk, "", bilanId ?? "")
+    return await upsertBHKResultsAction<string>(keyTest as keyof BHKResultsDTO, "", bilanId ?? "")
   }
 
-  const handleChangeValue = async(value: string, key: keyof bhk)=> {
+  const handleChangeValue = async(value: string, key: keyof BHKResultsDTO)=> {
     if(value===memorisation) return
     setIsPending(key)
     const res = await upsertBHKResultsAction(key, value, bilanId ?? "")
