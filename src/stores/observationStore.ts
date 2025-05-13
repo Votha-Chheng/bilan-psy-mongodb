@@ -1,25 +1,25 @@
-import { ObservationTestDTO } from "@/@types/TestTypes"
+import { ObservationDTO } from "@/@types/ObservationTestDTO"
 import { fetchObservationsByTestName } from "@/serverActions/observationActions"
 import { create } from "zustand"
 
 type ObservationState = {
-  epreuvecubesnepsy2Observations: ObservationTestDTO[]|null
+  epreuvecubesnepsy2Observations: ObservationDTO[]|null
   getEpreuveCubesNepsy2Observations: ()=> Promise<void>
-  figurereybObservations: ObservationTestDTO[]|null
+  figurereybObservations: ObservationDTO[]|null
   getFigureReyBObservations: ()=> Promise<void>
-  figurereyaObservations: ObservationTestDTO[]|null
+  figurereyaObservations: ObservationDTO[]|null
   getFigureReyAObservations: ()=> Promise<void>
-  bhkObservations: ObservationTestDTO[]|null
+  bhkObservations: ObservationDTO[]|null
   getBHKObservations: ()=> Promise<void>
-  imitationNepsy2Observations: ObservationTestDTO[]|null
+  imitationNepsy2Observations: ObservationDTO[]|null
   getImitationNepsy2Observations: ()=> Promise<void>
-  mabc2Observations: ObservationTestDTO[]|null
+  mabc2Observations: ObservationDTO[]|null
   getMABC2Observations: ()=> Promise<void>
-  tonusObservations: ObservationTestDTO[]|null
+  tonusObservations: ObservationDTO[]|null
   getTonusObservations:()=> Promise<void>
-  visuomotriceNepsy2Observations: ObservationTestDTO[]|null
+  visuomotriceNepsy2Observations: ObservationDTO[]|null
   getVisuomotriceNepsy2Observations:()=> Promise<void>
-  flechesNepsy2Observations: ObservationTestDTO[]|null
+  flechesNepsy2Observations: ObservationDTO[]|null
   getFlechesNepsy2Observations:()=> Promise<void>
 }
 
