@@ -28,7 +28,7 @@ const NotesBrutes: FC<NotesBrutesProps> = ({search}) => {
   }
 
   return (
-    <p style={{ whiteSpace: "pre-wrap" }}>
+    <p className='overflow-y-scroll' style={{ whiteSpace: "pre-wrap" }}>
       {parts && parts.map((part, idx) =>
         part.toLowerCase() === lowerQuery ? (
           <mark key={idx}>{part}</mark>
