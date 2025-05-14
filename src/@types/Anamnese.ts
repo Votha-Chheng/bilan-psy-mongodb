@@ -62,7 +62,7 @@ export type AnamneseRawData = {
   fratrie: string|null
   compositionFamiliale: string|null
   neant: string
-  dossierMDPH: string|null
+  dossierMDPH: string|null                          //<-- JSON transformé en string[] côté côté client
   maladiesEventuelles: string|null
   accompagnementSuivi: string|null
   autresAntecedents: string|null
@@ -114,7 +114,7 @@ export type AnamneseDTO = {
   fratrie?: string|null
   compositionFamiliale?: string|null
   neant?: string
-  dossierMDPH?: string|null
+  dossierMDPH?: string|null                           //<-- JSON transformé en string[] côté côté client
   maladiesEventuelles?: string|null
   accompagnementSuivi?: string|null
   autresAntecedents?: string|null
