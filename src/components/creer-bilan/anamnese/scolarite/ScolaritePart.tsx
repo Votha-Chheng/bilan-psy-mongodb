@@ -21,7 +21,7 @@ const ScolaritePart: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
   const [themeToDelete, setThemeToDelete] = useState<string|null>(null)
   const {cahiers, anterieur} = anamneseResults ?? {}
@@ -82,7 +82,7 @@ const ScolaritePart: FC = () => {
           label="Observations des cahiers"
           keyLabel="cahiers"
           data={cahiers}
-          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>      
 
@@ -91,7 +91,7 @@ const ScolaritePart: FC = () => {
           label="Scolarité antérieure"
           keyLabel="anterieur"
           data={anterieur}
-          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 

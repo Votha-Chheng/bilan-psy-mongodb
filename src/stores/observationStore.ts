@@ -1,4 +1,4 @@
-import { ObservationDTO, ObservationResponseJSON, ObservationTest } from "@/@types/ObservationTestDTO"
+import { ObservationDTO, ObservationResponseJSON } from "@/@types/ObservationTestDTO"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { create } from "zustand"
 

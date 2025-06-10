@@ -19,7 +19,7 @@ const ApprentissagesCard:FC= () => {
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {apprentissages} = anamneseResults ?? {}
 
   useEffect(()=> {
@@ -40,7 +40,7 @@ const ApprentissagesCard:FC= () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state:stateSelect, updateFunction})

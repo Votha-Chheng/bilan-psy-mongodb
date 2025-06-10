@@ -17,7 +17,7 @@ const ComportementCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
   const [openManagementAdjDialog, setOpenManagementAdjDialog] = useState<boolean>(false) 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   const {comportement} = anamneseResults ?? {}
   // eslint-disable-next-line
@@ -70,7 +70,7 @@ const ComportementCard: FC = () => {
   }
 
   const updateFunction = ()=>{
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state:stateCheck, updateFunction})
 

@@ -80,8 +80,9 @@ const fetchAllInfosForDocx = async(patientId: string): Promise<ServiceResponse<P
       })
     ])
 
-    const anameNesParsed: AnamneseDTO = {
+    const anameneseParsed: AnamneseDTO = {
       ...anamnese,
+      dossierMDPH: returnArrayIfJson(anamnese?.dossierMDPH ?? null),
       accouchement: returnArrayIfJson(anamnese?.accouchement ?? null),
       ageMarche: returnArrayIfJson(anamnese?.ageMarche ?? null),
       acquisitionLangage: returnArrayIfJson(anamnese?.acquisitionLangage ?? null),
@@ -162,7 +163,7 @@ const fetchAllInfosForDocx = async(patientId: string): Promise<ServiceResponse<P
       updated: patientInfo?.updated ?? null,
       ecole: patientInfo?.ecole ?? null,
       sexe: patientInfo?.sexe,
-      anamnese:anameNesParsed,
+      anamnese:anameneseParsed,
       bilan: bilanParsed,
       conclusion: conclusionparsed,
       amenagements: amenagementsGlobal

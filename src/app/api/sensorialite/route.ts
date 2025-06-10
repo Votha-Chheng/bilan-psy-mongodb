@@ -1,4 +1,4 @@
-import { ListeTypeSensorialite, ListeTypeSensorialiteDTO } from "@/@types/Anamnese"
+import { ListeTypeSensorialite } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"

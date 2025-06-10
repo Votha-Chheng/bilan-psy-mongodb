@@ -1,4 +1,3 @@
-import { BilanMedicauxRaw } from "@/@types/Anamnese";
 import { BilanRaw } from "@/@types/BilanTests";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";

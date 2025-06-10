@@ -15,7 +15,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 const EcritureCard: FC = ({}) => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ecriture} = anamneseResults ?? {}
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -43,7 +43,7 @@ const EcritureCard: FC = ({}) => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

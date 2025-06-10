@@ -1,6 +1,6 @@
 "use server"
 
-import { AmenagementItemDTO, AmenagementItemsIds, AmenagementsDTO } from "@/@types/AmenagementsTypes";
+import { AmenagementItemDTO, AmenagementItemsIds } from "@/@types/AmenagementsTypes";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError";

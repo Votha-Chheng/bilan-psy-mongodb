@@ -83,8 +83,8 @@ export const BilanMedicauxDocx = (bilanMedicauxResults: BilanMedicauxResults|nul
 
 const DossierMDPH = (anamneseResult: AnamneseResults|null) : Paragraph|null=> {
   const {dossierMDPH} = anamneseResult ?? {}
+  console.log("dossierMDPH", dossierMDPH)
   if(!dossierMDPH) return null
-  const parsedDossierMDPH: string[] = JSON.parse(dossierMDPH)
   return new Paragraph({
     spacing: {
       before: 75
@@ -95,7 +95,7 @@ const DossierMDPH = (anamneseResult: AnamneseResults|null) : Paragraph|null=> {
       new TextRun({
         font: "Calibri",
         size: 24,
-        text: ` ${parsedDossierMDPH[0]} ${parsedDossierMDPH[1] ? `| ${parsedDossierMDPH[1]}`:""} `
+        text: ` ${dossierMDPH[0]} ${dossierMDPH[1] ? `| ${dossierMDPH[1]}`:""} `
       }),
 
     ]

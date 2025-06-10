@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react'
 
 const ClasseCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -34,7 +34,7 @@ const ClasseCard = () => {
   }
 
   const updateFunction = ()=>{
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

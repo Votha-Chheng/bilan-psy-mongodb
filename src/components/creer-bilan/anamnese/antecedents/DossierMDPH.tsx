@@ -25,7 +25,7 @@ const DossierMDPH = () => {
   }, [dossierMDPH])
 
   const updateFunction = ()=> updateAnamneseResultsByPatientId(patientId)
-  useToast({state, updateFunction: ()=> console.log("updated")})
+  useToast({state, updateFunction})
 
 
   const handleChangeDossierMDPHAction = async(value: string, index: number): Promise<void>=> {

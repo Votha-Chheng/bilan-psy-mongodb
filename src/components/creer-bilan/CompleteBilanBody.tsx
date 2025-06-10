@@ -1,7 +1,7 @@
 "use client"
 
 import { useMenuItemStore } from '@/stores/menuItemStore'
-import React, { JSX, useEffect } from 'react'
+import React, { JSX } from 'react'
 import EnTete from './enTete/EnTete'
 import AnamneseSection from './anamnese/AnamneseSection'
 import BilanTestSection from './bilanTests/BilanTestSection'

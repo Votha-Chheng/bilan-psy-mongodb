@@ -5,7 +5,7 @@ import { serverError } from "@/utils/serviceResponseError"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  let keys = request.nextUrl.searchParams.get("keys")
+  const keys = request.nextUrl.searchParams.get("keys")
   if (!keys) {
     return NextResponse.json({
       success: false,

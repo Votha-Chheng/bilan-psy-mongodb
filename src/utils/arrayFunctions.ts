@@ -1,4 +1,3 @@
-import { AnamneseDTO, AnamneseRawData, AnamneseResults } from "@/@types/Anamnese"
 import { BilanDTO, BilanRaw } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
@@ -8,10 +7,14 @@ export const returnArrayIfJson = <T>(json: string|null): T|null=> {
 }
 
 export const returnParsedBilanResults = (bilan: BilanRaw): BilanDTO => {
-  const {tests, ...rest} = bilan ?? {}
+  const {tests, bhk, ...rest} = bilan ?? {}
 
   return {
     tests: returnArrayIfJson(tests),
+    bhk: {
+      ...bhk,
+      tenueOutilScripteur: returnArrayIfJson<string[]>(bhk?.tenueOutilScripteur ?? null)
+    },
     ...rest
   }
 }

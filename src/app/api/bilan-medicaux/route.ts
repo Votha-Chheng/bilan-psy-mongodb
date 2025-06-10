@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server"
 export async function GET(request: NextRequest): Promise<NextResponse> {
   let serviceReponse: ServiceResponse<BilanMedicauxRaw|null> = {data: null}
 
-  let anamneseId = request.nextUrl.searchParams.get("anamneseId")
+  const anamneseId = request.nextUrl.searchParams.get("anamneseId")
+  
   if(!anamneseId){
     serviceReponse = dataBaseError("L'ID de l'anamnèse est requis.")
     return NextResponse.json(serviceReponse)

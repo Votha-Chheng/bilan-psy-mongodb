@@ -1,4 +1,4 @@
-import { AnamneseRawData, AnamneseResults, BilanMedicauxResults } from "@/@types/Anamnese"
+import { AnamneseRawData } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"

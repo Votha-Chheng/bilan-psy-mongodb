@@ -18,7 +18,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 const CartableBureauCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {cartableBureau} = anamneseResults ?? {}
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -60,7 +60,7 @@ const CartableBureauCard:FC = () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

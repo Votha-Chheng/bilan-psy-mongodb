@@ -10,12 +10,12 @@ import { useToast } from '@/customHooks/useToast'
 
 const RecueilProposForm = () => {
   const {id} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  useToast({state, updateFunction: ()=> getAnamneseResultsByPatientId(id)})
+  useToast({state, updateFunction: ()=> updateAnamneseResultsByPatientId(id)})
 
   const handleValueChange = async (value: string) => {
     setIsPending(true)

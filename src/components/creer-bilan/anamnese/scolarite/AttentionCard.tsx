@@ -14,7 +14,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const AttentionCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {attention} = anamneseResults ?? {}
 // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -40,7 +40,7 @@ const AttentionCard: FC = () => {
   }, [attention])
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

@@ -66,7 +66,6 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set, get)
       const res = await fetch(`/api/bilan-medicaux?anamneseId=${anamneseId}`)
       const result = await res.json()
       const bilansParsed: BilanMedicauxResults = returnParseBilanMedicauxResults(result.data)
-      console.log(bilansParsed)
       set({bilanMedicauxResults: bilansParsed})
     } catch (error) {
       console.log("Can't initializeBilansMedicauxResultsByAnamneseId", error)
@@ -80,7 +79,6 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set, get)
       const res = await fetch(`/api/anamnese/${patientId}`)
       const result: ServiceResponse<AnamneseRawData|null> = await res.json()
       const {data} = result ?? {}
-      console.log(returnParseAnamneseResult(data))
       set({anamneseResults: returnParseAnamneseResult(data)})
 
     } catch (error) {

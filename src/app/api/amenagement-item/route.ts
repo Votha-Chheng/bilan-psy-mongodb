@@ -1,10 +1,10 @@
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";
 import { serverError } from "@/utils/serviceResponseError";
-import { AmenagementItem, Amenagements } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { AmenagementItem } from "@prisma/client";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   let serviceResponse: ServiceResponse<AmenagementItem[]|null> = {data: null}
   try {
     const res = await db.amenagementItem.findMany()

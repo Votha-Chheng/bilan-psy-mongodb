@@ -1,4 +1,4 @@
-import { BHKResultsDTO, BilanDTO, BilanRaw, ConnaissancesDroiteGaucheResultsDTO, EpreuveCubesNEPSY2ResultsDTO, FiguresReyAResultsDTO, FiguresReyBResultsDTO, FlechesNEPSY2ResultsDTO, ImitationPositionsNEPSY2ResultsDTO, MABC2ResultsDTO, PraxiesGestuellesResultsDTO, VisuomotriceNEPSY2ResultsDTO } from '@/@types/BilanTests'
+import { BHKResultsDTO, BilanRaw, ConnaissancesDroiteGaucheResultsDTO, EpreuveCubesNEPSY2ResultsDTO, FiguresReyAResultsDTO, FiguresReyBResultsDTO, FlechesNEPSY2ResultsDTO, ImitationPositionsNEPSY2ResultsDTO, MABC2ResultsDTO, PraxiesGestuellesResultsDTO, VisuomotriceNEPSY2ResultsDTO } from '@/@types/BilanTests'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { fetchBHKResults } from '@/serverActions/testsActions/bhkActions'
 import { fetchConnaissanceDroiteGaucheResults } from '@/serverActions/testsActions/connaissancesDroiteGaucheAction'
@@ -11,7 +11,6 @@ import { fetchMABC2Results } from '@/serverActions/testsActions/mabc2Actions'
 import { fetchPraxiesGestuellesResults } from '@/serverActions/testsActions/praxiesGestuellesActions'
 import { fetchVisuomotriceNepsy2Results } from '@/serverActions/testsActions/visuomotriceNepsy2Actions'
 import { returnArrayIfJson } from '@/utils/arrayFunctions'
-import { ServerResponse } from 'http'
 import { create } from 'zustand'
 
 type BilanTestsState = {

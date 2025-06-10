@@ -1,4 +1,3 @@
-import { AnamneseRawData, AnamneseResults, BilanMedicauxResults } from "@/@types/Anamnese"
 import { PatientInfosGenerales } from "@/@types/PatientTypes"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
