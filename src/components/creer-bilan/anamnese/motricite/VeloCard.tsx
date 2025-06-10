@@ -12,10 +12,11 @@ import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import { Separator } from '@/components/ui/separator'
 
 const VeloCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {getAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
+  const {updateAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
   const {velo} = anamneseResults ?? {}
   
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -40,7 +41,7 @@ const VeloCard:FC = () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
   
@@ -87,7 +88,8 @@ const VeloCard:FC = () => {
         label='commentaire'
         themeTitle='Acquisition du vélo sans les roulettes'
       />
-      <Button className='w-fit ml-5 mt-2.5' size="sm" onClick={()=> setOpenDBDialog(true)}>
+      <Separator className='my-2.5'/>
+      <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème &quot;Acquisition du vélo sans les roulettes&quot;
       </Button>
     </Card>

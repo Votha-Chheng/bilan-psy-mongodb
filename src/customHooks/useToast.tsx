@@ -13,7 +13,9 @@ export const useToast = ({state, updateFunction = ()=> {}}: UseToastProps): void
     if(!state) return 
     if(state.success === true){
       toast.success(state.message)
-      updateFunction()
+      if(updateFunction){
+        updateFunction()
+      }
     }
     if(state.success === false){
       toast.error(state.message)

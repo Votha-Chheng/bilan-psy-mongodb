@@ -12,7 +12,7 @@ type AnamneseThemeCardProps = {
   label: string
   keyLabel: keyof AnamneseResults
   data: string|undefined|null
-  updateFunctionFromStore: ()=> void
+  updateFunctionFromStore ? : ()=> void
 }
 
 const AnamneseThemeCard:FC<AnamneseThemeCardProps> = ({ label, keyLabel, data, updateFunctionFromStore }) => {

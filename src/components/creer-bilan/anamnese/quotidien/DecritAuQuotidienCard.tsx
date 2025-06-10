@@ -13,9 +13,9 @@ import React, { useEffect, useState } from 'react'
 
 const DecritAuQuotidienCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {decritAuQuotidien} = anamneseResults ?? {}
-  const {adjectifsComportement} = useAnamneseSearchDBStore()
+  const {adjectifsComportement, getListeAdjectifs} = useAnamneseSearchDBStore()
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -27,6 +27,10 @@ const DecritAuQuotidienCard = () => {
     if(!decritAuQuotidien) return
     setSelectedAdj(decritAuQuotidien)
   }, [decritAuQuotidien])
+
+  useEffect(()=> {
+    getListeAdjectifs()
+  }, [])
 
   const handleAddAdjectifAction = async(value: string)=> {
     setIsPending(true)
@@ -58,7 +62,7 @@ const DecritAuQuotidienCard = () => {
   }
 
   const updateFunction =()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})

@@ -16,7 +16,7 @@ const MotricitePart: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const motriciteThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Motricité")
 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {motriciteFine, motriciteGlobale, praxiesGestuelles, extraScolaire, autresMotricite} = anamneseResults ?? {}
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
@@ -62,7 +62,7 @@ const MotricitePart: FC = () => {
           keyLabel='praxiesGestuelles'
           label={"Praxies gestuelles"}
           data={praxiesGestuelles}
-          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -71,7 +71,7 @@ const MotricitePart: FC = () => {
           keyLabel='extraScolaire'
           label={"Activités extra-scolaires"}
           data={extraScolaire}
-          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
       
@@ -84,7 +84,7 @@ const MotricitePart: FC = () => {
           keyLabel='autresMotricite'
           label={"Autres (motricité)"}
           data={autresMotricite}
-          updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
     </article>

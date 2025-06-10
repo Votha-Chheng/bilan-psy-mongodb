@@ -7,21 +7,10 @@ import AnamneseSection from './anamnese/AnamneseSection'
 import BilanTestSection from './bilanTests/BilanTestSection'
 import ConclusionSection from './conclusion/ConclusionSection'
 import { arimo } from '@/fonts/arimo'
-import { useParams } from 'next/navigation'
-import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import AmenagementsSection from './amenagements/AmenagementsSection'
 
 const CompleteBilanBody = () => {
-  const {id: patientId} = useParams<{id: string}>()
   const {menuItem} = useMenuItemStore()
-  const { fetchSinglePatientById} = usePatientInfoStore()
-
-  useEffect(()=> {
-    if(patientId) {
-      fetchSinglePatientById(patientId)
-    }
-
-  }, [patientId])
 
   const returnComponent = (menuItem: string|null): JSX.Element=> {
     switch(menuItem){

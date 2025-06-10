@@ -1,6 +1,6 @@
 "use server"
 
-import { AmenagementItemDTO, AmenagementsDTO } from "@/@types/AmenagementsTypes";
+import { AmenagementItemDTO, AmenagementItemsIds, AmenagementsDTO } from "@/@types/AmenagementsTypes";
 import { ServiceResponse } from "@/@types/ServiceResponse";
 import db from "@/utils/db";
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError";
@@ -41,32 +41,6 @@ export const fetchManyAmenagementItems = async(itemsIds: string[]):Promise<Servi
   }
 }
 
-export const fetchAmenagementsByPatientId = async(patientId: string): Promise<ServiceResponse<AmenagementsDTO|null>> => {
-  try {
-    const res = await db.amenagements.findUnique({
-      where: {
-        patientId
-      },
-      select: {
-        id: true,
-        patientId: true,
-        amenagementItemsIds: true
-      }
-    })
-
-    if(!res) return {success: false, data: null}
-
-    return {
-      data: res,
-      success: true
-    }
-
-  } catch (error) {
-    console.log("Error in fetchAmenagementsByPatientId", error)
-    return serverError(error, "Impossible de retrouver les aménagements du patient.")
-  }
-}
-
 export const createAmenagementItemAction = async(amenagement: string, category: string): Promise<ServiceResponse<AmenagementItemDTO|null>> => {
   const parsedData = validateWithZodSchema(
     z.object({
@@ -104,12 +78,7 @@ export const createAmenagementItemAction = async(amenagement: string, category: 
   }
 }
 
-export const upsertAmenagementsByAddingElementAction = async(amenagementItemId: string, patientId: string): Promise<ServiceResponse<{
-  id: string;
-  patientId: string;
-  amenagementItemsIds: string[];
-}|null>>=> {
-  
+export const upsertAmenagementsByAddingElementAction = async(amenagementItemId: string, patientId: string): Promise<ServiceResponse<{id: string, patientId: string, amenagementItemsIds: string[]}|null>>=> {
   try {
     const res = await db.amenagements.upsert({
       where: {
@@ -139,11 +108,7 @@ export const upsertAmenagementsByAddingElementAction = async(amenagementItemId: 
   }
 }
 
-export const upsertAmenagementsByRemovingElementAction = async(amenagementItemId: string, patientId: string, amenagementsListeIds: string[]|null): Promise<ServiceResponse<{
-  id: string;
-  patientId: string;
-  amenagementItemsIds: string[];
-}|null>>=> {
+export const upsertAmenagementsByRemovingElementAction = async(amenagementItemId: string, patientId: string, amenagementsListeIds: string[]|null): Promise<ServiceResponse<AmenagementItemsIds|null>>=> {
 
   const newAmemenagementItemsIds = amenagementsListeIds?.filter(id=> id !== amenagementItemId)
   
@@ -171,5 +136,24 @@ export const upsertAmenagementsByRemovingElementAction = async(amenagementItemId
   } catch (error) {
     console.log("Error in upsertAmenagementsByRemovingElementAction", error)
     return serverError(error, "Impossible de modifier la liste des aménagements.")
+  }
+}
+
+export const deleteAmenagementItemAction = async(amenagementId: string): Promise<ServiceResponse<AmenagementItemDTO|null>> => {
+  try {
+    const res = await db.amenagementItem.delete({
+      where: {
+        id: amenagementId
+      }
+    })
+    if(!res) return dataBaseError()
+    return {
+      success: true,
+      data: res,
+      message: "Aménagement supprimé de la base de données."
+    }
+  } catch (error) {
+    console.log("Error in deleteAmenagementItemAction", error)
+    return serverError(error, "Impossible de supprimer l'aménagement.")
   }
 }

@@ -15,7 +15,7 @@ import { useParams } from 'next/navigation'
 
 const DevPsyBody = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {grossesse, stationAssise, quadrupedie, alimentation, autresDevPsy} = anamneseResults ?? {}
   
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
@@ -47,7 +47,7 @@ const DevPsyBody = () => {
           keyLabel='grossesse'
           label={"Grossesse"}
           data={grossesse}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -60,7 +60,7 @@ const DevPsyBody = () => {
           keyLabel='stationAssise'
           label={"Age de la station assise"}
           data={stationAssise}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
       <CardWrapper themeLabel="Quadrupédie">
@@ -68,7 +68,7 @@ const DevPsyBody = () => {
           keyLabel='quadrupedie'
           label={"Quadrupédie"}
           data={quadrupedie}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -89,7 +89,7 @@ const DevPsyBody = () => {
           keyLabel='alimentation'
           label={"Alimentation"}
           data={alimentation}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -98,7 +98,7 @@ const DevPsyBody = () => {
           keyLabel='autresDevPsy'
           label="Autres (développement psychomoteur)"
           data={autresDevPsy}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 

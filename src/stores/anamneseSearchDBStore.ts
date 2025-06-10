@@ -1,8 +1,9 @@
-import { AnamneseResults, BilanMedicauxResults, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
-import { fetchBilanMedicauxResultsByAnamneseId, fetchChosenThemes } from '@/serverActions/anamneseActions'
-import { fetchDevPsyConfereListe } from '@/serverActions/devPsyConfereActions'
-import { fetchAnamneseByKeysWithCache, fetchAnamneseResultsByPatientIdWithCache } from '@/serverActions/fetchingWithCache'
-import { fetchAllAdjectifs, fetchAllTemperaments, fetchAllTypeSensorialite } from '@/serverActions/listeActions'
+import { AnamneseRawData, AnamneseResults, BilanMedicauxResults, ListeAdjectifsDTO, ListeTypeSensorialite, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from '@/@types/Anamnese'
+import { ServiceResponse } from '@/@types/ServiceResponse'
+import { returnArrayIfJson } from '@/utils/arrayFunctions'
+import { returnParseAnamneseResult, returnParseBilanMedicauxResults } from '@/utils/parsingDatasFunctions'
+import { getChosenThemeArray } from '@/utils/sortAnamneseDatas'
+import { ListeAdjectifs, TemperamentDescription } from '@prisma/client'
 import { create } from 'zustand'
 
 type AnamneseSearchDBState = {
@@ -12,7 +13,8 @@ type AnamneseSearchDBState = {
   updateBilanMedicauxResults : (anamneseId: string|null|undefined)=> Promise<void>
   anamneseResults: AnamneseResults|null
   initializeAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
-  getAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
+  initializeBilansMedicauxResultsByAnamneseId: (anamneseId: string|null|undefined)=> Promise<void>
+  updateAnamneseResultsByPatientId: (patientId: string)=> Promise<void>
   temperamentsDescription: TemperamentDescriptionDTO|null|undefined
   getListeTemperament: ()=> Promise<void>
   anamneseInDBByDomaine: (Omit<AnamneseResults, "bilanMedicauxResults">)[]|null
@@ -22,7 +24,7 @@ type AnamneseSearchDBState = {
   loadingData: boolean
   resetAnamneseDB: ()=> void
   chosenThemes: string[]
-  initializeChosenThemes: (patientId: string)=> Promise<void>
+  initializeChosenThemes: ()=> void
   setChosenThemes: (value: string[])=> void
   listeAdjectifsId: string|null|undefined
   adjectifsComportement: string[]|null|undefined
@@ -31,34 +33,56 @@ type AnamneseSearchDBState = {
   getTypeSensorialite : ()=> Promise<void>
 }
 
-export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => ({
+export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set, get) => ({
   loadingAnamneseResults: false,
   loadingBilansMedicaux: false,
   bilanMedicauxResults : null,
-  getAnamneseResultsByPatientId: async(patientId: string)=> {
+  updateAnamneseResultsByPatientId: async(patientId: string)=> {
     try {
-      const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
-      set({anamneseResults: result.data})
+      const res = await fetch(`/api/anamnese/${patientId}`)
+      const result: ServiceResponse<AnamneseRawData|null> = await res.json()
+      const {data} = result ?? {}
+      set({anamneseResults: returnParseAnamneseResult(data)})
+
     } catch (error) {
       console.log("Can't getAnamneseResultsByPatientId", error)
     }
   },
   updateBilanMedicauxResults: async(anamneseId: string|null|undefined)=> {
     try {
-      const result = await fetchBilanMedicauxResultsByAnamneseId(anamneseId)
-      set({bilanMedicauxResults: result.data})
+      const res = await fetch(`/api/bilan-medicaux?anamneseId=${anamneseId}`)
+      const result = await res.json()
+      const bilansParsed: BilanMedicauxResults = returnParseBilanMedicauxResults(result.data)
+      console.log(bilansParsed)
+      set({bilanMedicauxResults: bilansParsed})
     } catch (error) {
       console.log("Can't updateBilanMedicauxResults", error)
     }
   },
   anamneseResults: null,
+  initializeBilansMedicauxResultsByAnamneseId: async(anamneseId: string|null|undefined)=> {
+    set({loadingBilansMedicaux: true})
+    try {
+      const res = await fetch(`/api/bilan-medicaux?anamneseId=${anamneseId}`)
+      const result = await res.json()
+      const bilansParsed: BilanMedicauxResults = returnParseBilanMedicauxResults(result.data)
+      console.log(bilansParsed)
+      set({bilanMedicauxResults: bilansParsed})
+    } catch (error) {
+      console.log("Can't initializeBilansMedicauxResultsByAnamneseId", error)
+    } finally {
+      set({loadingBilansMedicaux: false})
+    }
+  },
   initializeAnamneseResultsByPatientId: async(patientId: string)=> {
     set({loadingAnamneseResults: true})
     try {
-      const result = await fetchAnamneseResultsByPatientIdWithCache(patientId)
-      set({anamneseResults: result.data})
-      console.log(result.data?.bilanMedicauxResults)
-      set({bilanMedicauxResults: result.data?.bilanMedicauxResults})
+      const res = await fetch(`/api/anamnese/${patientId}`)
+      const result: ServiceResponse<AnamneseRawData|null> = await res.json()
+      const {data} = result ?? {}
+      console.log(returnParseAnamneseResult(data))
+      set({anamneseResults: returnParseAnamneseResult(data)})
+
     } catch (error) {
       console.log("Can't getAnamneseResultsByPatientId", error)
     } finally {
@@ -68,8 +92,11 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   temperamentsDescription: null,
   getListeTemperament: async()=> {
     try {
-      const result = await fetchAllTemperaments()
-      set({temperamentsDescription: result.data})
+      const response = await fetch("/api/temperament")
+      const res: ServiceResponse<TemperamentDescription> = await response.json()
+      const {data} = res ?? {}
+      const parsed: TemperamentDescriptionDTO = {id: data?.id ?? "", temperamentListe: returnArrayIfJson<string[]|null>(res.data?.temperamentListe ?? null)}
+      set({ temperamentsDescription: parsed })
     } catch (error) {
       console.log("Can't getListeTemperament", error)
     }
@@ -81,8 +108,9 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   bilanMedical: null,
   getDevPsyConfereList: async()=> {
     try {
-      const response = await fetchDevPsyConfereListe()
-      set({ devPsyConfereListe: response.data ?? [] })
+      const response = await fetch(`/api/confere-liste`)
+      const {data} = await response.json()
+      set({ devPsyConfereListe: data ?? [] })
 
     } catch (error) {
       console.log("Can't getDevPsyConfereList", error)
@@ -91,8 +119,9 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   getAnamneseDBByKeys: async(keys: (keyof Exclude<AnamneseResults, "bilanMedicauxResults">)[])=> {
     set({loadingData: true})
     try {
-      const response = await fetchAnamneseByKeysWithCache(keys)
-      set({ anamneseInDBByDomaine: response.data })
+      const response = await fetch(`/api/anamnese?keys=${JSON.stringify(keys)}`)
+      const res: ServiceResponse<(Omit<AnamneseResults, "bilanMedicauxResults">)[]|null> = await response.json()
+      set({ anamneseInDBByDomaine: res.data })
 
     } catch (error) {
       console.log("Can't getAnamneseDBByKeys", error)
@@ -102,10 +131,11 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   },
   resetAnamneseDB: () => set({ anamneseInDBByDomaine: null }),
   chosenThemes: [],
-  initializeChosenThemes: async(patientId: string)=> {
+  initializeChosenThemes: async()=> {
     try{
-      const result = await fetchChosenThemes(patientId)
-      set({ chosenThemes: result.data ?? []})
+      const anamnese = get().anamneseResults
+      const result = getChosenThemeArray(anamnese)
+      set({ chosenThemes: result ?? []})
 
     } catch (error){
       console.log("Can't initializeChosenThemes", error)
@@ -118,10 +148,12 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   adjectifsComportement: null,
   getListeAdjectifs : async()=> {
     try {
-      const response = await fetchAllAdjectifs()
-      const {adjectifsComportement, id} = response.data ?? {}
-      set({ adjectifsComportement})
-      set({ listeAdjectifsId: id})
+      const response = await fetch("/api/adjectifs")
+      const res: ServiceResponse<ListeAdjectifs> = await response.json()
+      const data: ListeAdjectifsDTO = {id: res.data?.id ?? "", adjectifsComportement: returnArrayIfJson<string[]|null>(res.data?.adjectifsComportement ?? null)}
+      console.log(data)
+      set({ adjectifsComportement: data.adjectifsComportement})
+      set({ listeAdjectifsId: data.id})
 
     } catch (error) {
       console.log("Can't getAnamneseDBByKeys", error)
@@ -130,8 +162,11 @@ export const useAnamneseSearchDBStore = create<AnamneseSearchDBState>((set) => (
   typeSensorialite: null,
   getTypeSensorialite : async()=> {
     try {
-      const response = await fetchAllTypeSensorialite()
-      set({ typeSensorialite: response.data })
+      const response = await fetch("/api/sensorialite")
+      const res: ServiceResponse<ListeTypeSensorialite> = await response.json()
+      const data = {id: res.data?.id ?? "", typesSensorialite: returnArrayIfJson<string[]|null>(res.data?.typesSensorialite ?? null)}
+      console.log("ListeTypeSensorialiteDTO", res)
+      set({ typeSensorialite: data })
 
     } catch (error) {
       console.log("Can't getAnamneseDBByKeys", error)

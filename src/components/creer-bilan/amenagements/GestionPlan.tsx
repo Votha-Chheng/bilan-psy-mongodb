@@ -1,3 +1,4 @@
+import { AmenagementItemDTO, AmenagementItemsIds } from '@/@types/AmenagementsTypes'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import CreateAmenagementItemDialog from '@/components/sharedUI/alertsAndDialogs/CreateAmenagementItemDialog'
 import { Badge } from '@/components/ui/badge'
@@ -7,18 +8,20 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/customHooks/useToast'
 import { openSans } from '@/fonts/openSans'
-import { upsertAmenagementsByAddingElementAction, upsertAmenagementsByRemovingElementAction } from '@/serverActions/amenagementsAction'
+import { deleteAmenagementItemAction, upsertAmenagementsByAddingElementAction, upsertAmenagementsByRemovingElementAction } from '@/serverActions/amenagementsAction'
 import { useAmenagementsStore } from '@/stores/amenagementsStore'
-import { ChevronRightCircle, ListCheckIcon } from 'lucide-react'
+import { ChevronRightCircle, ListCheckIcon, Loader2, Trash2Icon } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 const GestionPlan = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, amenagementItemsIds} = useAmenagementsStore()
-  // eslint-disable-next-line
-  const [state, setState] = useState<ServiceResponse<any>>({})
+  const {allAmenagementItems, categoriesList, updateAmenagementsByPatientId, amenagementItemsIds, getAllAmenagementItems} = useAmenagementsStore()
+
+  const [state, setState] = useState<ServiceResponse<AmenagementItemsIds|null>>({})
+  const [stateDelete, setStateDelete] = useState<ServiceResponse<AmenagementItemDTO|null>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
+  const [isPendingDelete, setIsPendingDelete] = useState<boolean>(false)
 
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [categoryNumber, setCategoryNumber] = useState<number>(0)
@@ -43,8 +46,22 @@ const GestionPlan = () => {
     res && setIsPending(false)
   }
 
+  const handleDeleteAmenagementItem = async(amenagementIdToDelete: string|null)=> {
+    if(!amenagementIdToDelete) return null
+    setIsPendingDelete(true)
+    const res = await deleteAmenagementItemAction(amenagementIdToDelete)
+     // eslint-disable-next-line
+    res && setStateDelete(res)
+    // eslint-disable-next-line
+    res && setIsPendingDelete(false)
+  }
+
   useToast({state, updateFunction: ()=> {
     updateAmenagementsByPatientId(patientId)
+  }})
+  
+  useToast({state:stateDelete, updateFunction: ()=> {
+    getAllAmenagementItems()
   }})
 
   return (
@@ -71,7 +88,7 @@ const GestionPlan = () => {
               <section className='flex gap-x-7 gap-y-5 my-5 flex-wrap'>
                 {
                   allAmenagementItems?.filter(amenagement => amenagement.category === category)?.map((amenagementItem, index)=> (
-                    <div key={index} className={`flex gap-1.5 items-center p-1.5 ${amenagementItemsIds?.includes(amenagementItem?.id ?? "") && 'border border-green-700 rounded-md'}`} >
+                    <div key={index} className={`flex gap-1.5 items-center p-1.5 border  rounded-md ${amenagementItemsIds?.includes(amenagementItem?.id ?? "") && 'border-green-700'}`} >
                       <Checkbox 
                         checked={amenagementItemsIds?.includes(amenagementItem?.id ?? "")}
                         disabled={isPending} 
@@ -85,6 +102,14 @@ const GestionPlan = () => {
                         }}
                       />
                       <Label className='cursor-pointer' htmlFor={`${amenagementItem.amenagement}${category}`}>{amenagementItem.amenagement}</Label>
+                      {
+                        !amenagementItemsIds?.includes(amenagementItem?.id ?? "") &&
+                        (
+                          isPendingDelete ? 
+                          <Loader2/> : 
+                          <Trash2Icon className='ml-2.5 cursor-pointer hover:scale-110 text-red-600' size={17.5} onClick={()=> handleDeleteAmenagementItem(amenagementItem?.id?? null)}/>
+                        )   
+                      }
                     </div>
                   ))
                 }

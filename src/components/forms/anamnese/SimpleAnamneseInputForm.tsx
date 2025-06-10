@@ -15,7 +15,7 @@ type SimpleInputFormProps={
   keyAnamnese: keyof AnamneseResults
   edit: boolean
   themeTitle: string
-  updateFunctionFromStore: ()=> void
+  updateFunctionFromStore?: ()=> void
 }
 
 const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({defaultValue="", setEdit, placeholder="Décrire...", buttonLabel="Valider", keyAnamnese, edit, themeTitle, updateFunctionFromStore}) => {
@@ -32,7 +32,9 @@ const SimpleAnamneseInputForm: FC<SimpleInputFormProps> = ({defaultValue="", set
 
 
   const updateFunction = ()=> {
-    updateFunctionFromStore()
+    if(updateFunctionFromStore){
+      updateFunctionFromStore ()
+    }
     setEdit(false)
   }
 

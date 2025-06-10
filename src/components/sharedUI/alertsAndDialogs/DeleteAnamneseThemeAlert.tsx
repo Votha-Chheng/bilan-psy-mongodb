@@ -18,11 +18,11 @@ type DeleteAnamneseThemeAlertProps = {
 
 const DeleteAnamneseThemeAlert: FC<DeleteAnamneseThemeAlertProps> = ({ themeToDelete, openDialog, setOpenDialog, keyToDelete, setKeyToDelete, setThemeToDelete }) => {
   const {id: patientId} = useParams<{id: string}>()
-  const {setChosenThemes, chosenThemes, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {setChosenThemes, chosenThemes, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const [state, formAction, isPending] = useActionState(setPropertyToNullByKeyAction, {})
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
     setOpenDialog(false)
     setKeyToDelete(null)
     const newThemeArray = chosenThemes.filter(theme => theme !== themeToDelete)

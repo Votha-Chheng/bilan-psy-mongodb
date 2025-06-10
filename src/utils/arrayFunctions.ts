@@ -1,4 +1,4 @@
-import { AnamneseDTO, AnamneseRawData } from "@/@types/Anamnese"
+import { AnamneseDTO, AnamneseRawData, AnamneseResults } from "@/@types/Anamnese"
 import { BilanDTO, BilanRaw } from "@/@types/BilanTests"
 import { allTests } from "@/datas/listeTests"
 import { orderedDomains } from "@/datas/orderedDomainsTests"
@@ -12,56 +12,6 @@ export const returnParsedBilanResults = (bilan: BilanRaw): BilanDTO => {
 
   return {
     tests: returnArrayIfJson(tests),
-    ...rest
-  }
-}
-
-export const returnParseAnamneseResult = (anamnese: AnamneseRawData): AnamneseDTO => {
-  const {
-    ageMarche,
-    acquisitionLangage,
-    continence,
-    accouchement,
-    motriciteGlobale,
-    motriciteFine,
-    velo,
-    sensorialite,
-    apprentissages,
-    outils,
-    ecriture,
-    cartableBureau,
-    relationsPairs,
-    comportement,
-    attention,
-    decritAuQuotidien,
-    sommeilQuotidien,
-    gestionEmotions,
-    gestionTemps,
-    temperament,
-    ...rest
-  } = anamnese ?? {}
-
-  return {
-    ageMarche: returnArrayIfJson(ageMarche ?? null), 
-    acquisitionLangage: returnArrayIfJson(acquisitionLangage), 
-    continence: returnArrayIfJson(continence), 
-    accouchement: returnArrayIfJson(accouchement),
-    motriciteGlobale: returnArrayIfJson(motriciteGlobale),
-    motriciteFine: returnArrayIfJson(motriciteFine),
-    velo: returnArrayIfJson(velo),
-    sensorialite: returnArrayIfJson(sensorialite),
-    apprentissages: returnArrayIfJson(apprentissages),
-    outils: returnArrayIfJson(outils),
-    ecriture: returnArrayIfJson(ecriture),
-    cartableBureau: returnArrayIfJson(cartableBureau),
-    relationsPairs: returnArrayIfJson(relationsPairs),
-    comportement: returnArrayIfJson(comportement),
-    attention: returnArrayIfJson(attention),
-    decritAuQuotidien: returnArrayIfJson(decritAuQuotidien),
-    sommeilQuotidien: returnArrayIfJson(sommeilQuotidien),
-    gestionEmotions: returnArrayIfJson(gestionEmotions),
-    gestionTemps: returnArrayIfJson(gestionTemps),
-    temperament: returnArrayIfJson(temperament),
     ...rest
   }
 }

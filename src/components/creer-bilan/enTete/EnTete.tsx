@@ -4,12 +4,20 @@ import { usePatientInfoStore } from '@/stores/patientInfoStore'
 import { getAge } from '@/utils/getAge'
 import dayjs from 'dayjs'
 import { EditIcon, Loader2 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MotifConsultation from './MotifConsultation'
+import { useParams } from 'next/navigation'
 
 const EnTete = () => {
-  const {patientInfoGenerales, loadingPatientInfoFromDB} = usePatientInfoStore()
+  const {id: patientId} = useParams<{id: string}>()
+  const {patientInfoGenerales, loadingPatientInfoFromDB, fetchSinglePatientById} = usePatientInfoStore()
   const [changeDateBilan, setChangeDateBilan] = useState<boolean>(false)
+
+
+  useEffect(()=> {
+    if(!patientId) return
+    fetchSinglePatientById(patientId)
+  }, [patientId])
 
   return (
     <article>

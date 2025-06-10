@@ -20,7 +20,7 @@ type MotriciteGlobaleFineCardProps = {
 
 const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFineState, keyLabel, title}) => {
   const {id: patientId} = useParams<{id: string}>()
-  const {getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
 
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
@@ -45,7 +45,7 @@ const MotriciteGlobaleFineCard:FC<MotriciteGlobaleFineCardProps> = ({globaleFine
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

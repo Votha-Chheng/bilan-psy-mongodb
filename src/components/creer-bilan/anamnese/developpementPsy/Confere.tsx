@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react'
 
 const Confere = () => {
     const {id: patientId} = useParams<{id: string}>()
-    const {devPsyConfereListe, getDevPsyConfereList, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+    const {devPsyConfereListe, getDevPsyConfereList, anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
     const {confereDevPsy} = anamneseResults ?? {}
   // eslint-disable-next-line
     const [state, setState] = useState<ServiceResponse<any>>({})
@@ -32,7 +32,7 @@ const Confere = () => {
     }
   
     const updateFunction = ()=> {
-      getAnamneseResultsByPatientId(patientId)
+      updateAnamneseResultsByPatientId(patientId)
     }
   
     useToast({state, updateFunction})

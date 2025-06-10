@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 
 const Continence = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {continence} = anamneseResults ?? {}
 // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -50,7 +50,7 @@ const Continence = () => {
 
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

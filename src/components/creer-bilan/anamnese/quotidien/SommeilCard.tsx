@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 
 const SommeilCard = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {sommeilQuotidien} = anamneseResults ?? {}
 // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -41,7 +41,7 @@ const SommeilCard = () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

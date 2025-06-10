@@ -1,5 +1,5 @@
-import { ObservationDTO } from "@/@types/ObservationTestDTO"
-import { fetchObservationsByTestName } from "@/serverActions/observationActions"
+import { ObservationDTO, ObservationResponseJSON, ObservationTest } from "@/@types/ObservationTestDTO"
+import { ServiceResponse } from "@/@types/ServiceResponse"
 import { create } from "zustand"
 
 type ObservationState = {
@@ -27,9 +27,19 @@ export const useObservationStore = create<ObservationState>((set) => ({
   epreuvecubesnepsy2Observations:null,
   getEpreuveCubesNepsy2Observations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Epreuve des cubes (Nepsy 2)")
-      const {data} = response ?? {}
-      set({epreuvecubesnepsy2Observations: data})
+      const response = await fetch("/api/observations/epreuvecubesnepsy2?machin=2")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+  
+        set({epreuvecubesnepsy2Observations: parsed})
+
+      }
 
     } catch (error) {
       console.log("getEpreuveCubesNepsy2Observations", error)
@@ -38,9 +48,19 @@ export const useObservationStore = create<ObservationState>((set) => ({
   figurereybObservations:null,
   getFigureReyBObservations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Epreuve visuoconstructive en deux dimensions (Figure de Rey B)")
-      const {data} = response ?? {}
-      set({figurereyaObservations: data})
+      const response = await fetch("/api/observations/figuresreyb")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+  
+        set({figurereyaObservations: parsed})
+
+      }
 
     } catch (error) {
       console.log("getFigureReyBObservations", error)
@@ -49,9 +69,18 @@ export const useObservationStore = create<ObservationState>((set) => ({
   figurereyaObservations:null,
   getFigureReyAObservations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Epreuve visuoconstructive en deux dimensions (Figure de Rey A)")
-      const {data} = response ?? {}
-      set({figurereyaObservations: data})
+      const response = await fetch("/api/observations/figuresreya")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+        set({figurereyaObservations: parsed})
+
+      }
 
     } catch (error) {
       console.log("getFigureReyAObservations", error)
@@ -60,9 +89,18 @@ export const useObservationStore = create<ObservationState>((set) => ({
   flechesNepsy2Observations:null,
   getFlechesNepsy2Observations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Epreuve visuo-spatiale des flèches (Nepsy 2)")
-      const {data} = response ?? {}
-      set({flechesNepsy2Observations: data})
+      const response = await fetch("/api/observations/flechesnepsy2")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+        set({flechesNepsy2Observations: parsed})
+
+      }
 
     } catch (error) {
       console.log("getFlechesNepsy2Observations", error)
@@ -71,9 +109,17 @@ export const useObservationStore = create<ObservationState>((set) => ({
   bhkObservations:null,
   getBHKObservations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("BHK (épreuve d'écriture)")
-      const {data} = response ?? {}
-      set({bhkObservations: data})
+      const response = await fetch("/api/observations/bhk")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+        set({bhkObservations: parsed})
+      }
 
     } catch (error) {
       console.log("getBHKObservations", error)
@@ -82,10 +128,17 @@ export const useObservationStore = create<ObservationState>((set) => ({
   imitationNepsy2Observations:null,
   getImitationNepsy2Observations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Imitation de positions de la Nepsy 2")
-      const {data} = response ?? {}
-      set({imitationNepsy2Observations: data})
+      const response = await fetch("/api/observations/imitationpositionsnepsy2")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
 
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+        set({imitationNepsy2Observations: parsed})
+      }
     } catch (error) {
       console.log("getImitationNepsy2Observations", error)
     }
@@ -93,9 +146,18 @@ export const useObservationStore = create<ObservationState>((set) => ({
   mabc2Observations: null,
   getMABC2Observations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("M-ABC2")
-      const {data} = response ?? {}
-      set({mabc2Observations: data})
+      const response = await fetch("/api/observations/mabc2")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+  
+        set({mabc2Observations: parsed})
+      }
 
     } catch (error) {
       console.log("getMABC2Observations", error)
@@ -104,9 +166,19 @@ export const useObservationStore = create<ObservationState>((set) => ({
   tonusObservations: null, 
   getTonusObservations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Tonus d'action")
-      const {data} = response ?? {}
-      set({tonusObservations: data})
+      const response = await fetch("/api/observations/tonus")
+      const responseJson: ServiceResponse<ObservationResponseJSON[]|null> = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = data.map((data: ObservationResponseJSON) => ({
+          ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+  
+        set({tonusObservations: parsed as ObservationDTO[]})
+
+      }
     } catch (error) {
       console.log("getTonusObservations", error)
     }
@@ -114,11 +186,19 @@ export const useObservationStore = create<ObservationState>((set) => ({
   visuomotriceNepsy2Observations: null,
   getVisuomotriceNepsy2Observations: async()=> {
     try {
-      const response = await fetchObservationsByTestName("Epreuve visuomotrice de la Nepsy 2")
-      const {data} = response ?? {}
-      set({visuomotriceNepsy2Observations: data})
+      const response = await fetch("/api/observations/visuomotricenepsy2")
+      const responseJson = await response.json()
+      const {data} = responseJson?? {}
+
+      if(data){
+        const parsed: ObservationDTO[] = responseJson.data.map((data: ObservationResponseJSON) => ({
+        ...data,
+          listeObservations: data?.listeObservations ? JSON.parse(data.listeObservations) as string[]|null : null
+        }))
+        set({visuomotriceNepsy2Observations: parsed})
+      }
     } catch (error) {
-      console.log("getTonusObservations", error)
+      console.log("getVisuomotriceNepsy2Observations", error)
     }
   },
 }))

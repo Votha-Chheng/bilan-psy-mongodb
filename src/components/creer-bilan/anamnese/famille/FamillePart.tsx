@@ -13,7 +13,7 @@ const FamillePart: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
   const familleThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Famille")
 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {fratrie, compositionFamiliale} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
@@ -41,7 +41,7 @@ const FamillePart: FC = () => {
           label="Fratrie"
           keyLabel="fratrie"
           data={fratrie}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -50,7 +50,7 @@ const FamillePart: FC = () => {
           label="Composition familiale"
           keyLabel="compositionFamiliale"
           data={compositionFamiliale}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
     </article>

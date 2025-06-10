@@ -14,10 +14,11 @@ import AddComentaireOuObservations from '../AddComentaireOuObservations'
 import { useToast } from '@/customHooks/useToast'
 import { ServiceResponse } from '@/@types/ServiceResponse'
 import { AnamneseResults } from '@/@types/Anamnese'
+import { Separator } from '@/components/ui/separator'
 
 const SensorialiteCard:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {sensorialite} = anamneseResults ?? {}
   const {getTypeSensorialite, typeSensorialite : liste} = useAnamneseSearchDBStore()
   const {typesSensorialite} = liste ?? {}
@@ -49,7 +50,7 @@ const SensorialiteCard:FC = () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state: stateSelect, updateFunction})
@@ -100,6 +101,7 @@ const SensorialiteCard:FC = () => {
         label='observation'
         themeTitle='Sensorialité'
       />
+      <Separator className='my-2.5'/>
       <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
         <Database/> Voir les observations dans la base de données pour le thème &quot;Sensorialité&quot;
       </Button>

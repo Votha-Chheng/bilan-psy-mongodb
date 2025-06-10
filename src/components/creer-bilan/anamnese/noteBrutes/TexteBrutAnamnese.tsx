@@ -13,7 +13,7 @@ import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 
 const TexteBrutAnamnese: FC = () => {
   const {id} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {notesBrutes} = anamneseResults ?? {}
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -37,7 +37,7 @@ const TexteBrutAnamnese: FC = () => {
   }, [notesBrutes])
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(id)
+    updateAnamneseResultsByPatientId(id)
   }
 
   const autosaveFunction = ()=> {

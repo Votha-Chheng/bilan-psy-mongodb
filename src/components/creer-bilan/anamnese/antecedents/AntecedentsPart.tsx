@@ -15,7 +15,7 @@ import LoadingDatas from '@/components/sharedUI/LoadingDatas'
 
 const AntecedentsPart:FC = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
   const {neant} = anamneseResults ?? {}
 // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -31,7 +31,7 @@ const AntecedentsPart:FC = () => {
   }
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})
@@ -48,7 +48,7 @@ const AntecedentsPart:FC = () => {
         { isPending && <Loader2 className='animate-spin' />}
       </div>
       {
-        neant && !JSON.parse(neant) &&
+        (neant==="false" || neant===undefined ) &&
         <article>
           <div className='flex gap-x-2 font-bold'>
             <MoveRight/>Bilans médicaux effectués :

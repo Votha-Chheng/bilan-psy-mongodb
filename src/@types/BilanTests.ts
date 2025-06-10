@@ -1,9 +1,21 @@
+import { bhk, connaissancedroitegauche, epreuvecubesnepsy2, figuresreya, figuresreyb, flechesnepsy2, imitationpositionsnepsy2, mabc2, praxiesgestuelles, visuomotricenepsy2 } from "@prisma/client"
+
 export type BilanRaw = {
   id: string|null,
   patientId: string|null
   tests: string|null
   lateralite?: string|null
   tonus?: string|null
+  bhk?: bhk|null
+  mabc2?: mabc2|null
+  visuomotricenepsy2?: visuomotricenepsy2|null
+  praxiesgestuelles?: praxiesgestuelles|null
+  imitationpositionsnepsy2?: imitationpositionsnepsy2|null
+  connaissancedroitegauche?: connaissancedroitegauche|null
+  flechesnepsy2?: flechesnepsy2|null
+  figuresreya?: figuresreya|null
+  figuresreyb?: figuresreyb|null
+  epreuvecubesnepsy2?: epreuvecubesnepsy2|null
 }
 
 export type BilanDTO = {

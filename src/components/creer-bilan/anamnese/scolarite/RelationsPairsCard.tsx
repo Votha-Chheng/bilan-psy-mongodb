@@ -17,7 +17,7 @@ const RelationsPairsCard: FC = () => {
   const {id: patientId} = useParams<{id: string}>()
  
   const [openDBDialog, setOpenDBDialog] = useState<boolean>(false) 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {relationsPairs} = anamneseResults ?? {}
   const [stateSelect, setStateSelect] = useState<ServiceResponse<AnamneseResults|null>>({})
   const [isPendingSelect, setIsPendingSelect] = useState<boolean>(false)
@@ -42,7 +42,7 @@ const RelationsPairsCard: FC = () => {
   }
 
   const updateFunction = ()=>{
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state: stateSelect, updateFunction})
 

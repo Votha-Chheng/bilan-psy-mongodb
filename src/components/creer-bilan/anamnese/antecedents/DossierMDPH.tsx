@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 
 const DossierMDPH = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {getAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
+  const {updateAnamneseResultsByPatientId, anamneseResults} = useAnamneseSearchDBStore()
   const {dossierMDPH} = anamneseResults ?? {}
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -20,13 +20,12 @@ const DossierMDPH = () => {
 
   useEffect(()=> {
     if(!dossierMDPH) return
-    const dossierMDPHArray: string[] = JSON.parse(dossierMDPH)
-    setDossierMDPHLocal(dossierMDPHArray)
-    setAddInfo(dossierMDPHArray[1])
+    setDossierMDPHLocal(dossierMDPH)
+    setAddInfo(dossierMDPH[1])
   }, [dossierMDPH])
 
-  const updateFunction = ()=> getAnamneseResultsByPatientId(patientId)
-  useToast({state, updateFunction})
+  const updateFunction = ()=> updateAnamneseResultsByPatientId(patientId)
+  useToast({state, updateFunction: ()=> console.log("updated")})
 
 
   const handleChangeDossierMDPHAction = async(value: string, index: number): Promise<void>=> {
@@ -60,7 +59,7 @@ const DossierMDPH = () => {
           </SelectContent>
         </Select>
         {
-          dossierMDPH &&
+          dossierMDPH?.[0] &&
           <div className='flex items-center w-full'>
             <p className='whitespace-nowrap mr-2'>
               Information complémentaire :

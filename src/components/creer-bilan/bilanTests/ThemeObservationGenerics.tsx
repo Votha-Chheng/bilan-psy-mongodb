@@ -51,8 +51,8 @@ const ThemeObservationGenerics: FC<ThemeObservationGenericsProps> = ({
   const [newObservation, setNewObservation] = useState<string>("")
 
   const observations: string[]|null = useMemo(()=> {
-    if(!observationsTest || observationsTest.length === 0) return null
-    const obs = observationsTest.find(observation => observation.theme === theme)
+    if(!observationsTest) return null
+    const obs = observationsTest?.find(observation => observation.theme === theme)
     if(obs) {
       return obs.listeObservations
     }

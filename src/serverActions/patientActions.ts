@@ -58,75 +58,39 @@ export const createPatientAction = async (prevState: ServiceResponse<PatientInfo
 
 }
 
-export const fetchPatientsList = async (): Promise<ServiceResponse<PatientInfosGenerales[]|null>> => {
-  console.log("fetchPatientsList is triggered")
-  try {
-    const res = await db.patient.findMany({
-      select: {
-        id: true,
-        nom: true,
-        prenom: true,
-        dateNaissance: true,
-        sexe: true,
-        adulte: true,
-        medecin: true,
-        motif: true,
-        createdAt: true,
-        updated: true,
-        ecole: true
-      },
-      orderBy: {
-        updated: "desc"
-      }
-    })
+// export const fetchPatientsList = async (): Promise<ServiceResponse<PatientInfosGenerales[]|null>> => {
+//   try {
+//     const res = await db.patient.findMany({
+//       select: {
+//         id: true,
+//         nom: true,
+//         prenom: true,
+//         dateNaissance: true,
+//         sexe: true,
+//         adulte: true,
+//         medecin: true,
+//         motif: true,
+//         createdAt: true,
+//         updated: true,
+//         ecole: true
+//       },
+//       orderBy: {
+//         updated: "desc"
+//       }
+//     })
 
-    if(!res) return dataBaseError("Aucun patient trouvé")
+//     if(!res) return dataBaseError("Aucun patient trouvé")
 
-    return {
-      data: res,
-      success: true,
-    }
+//     return {
+//       data: res,
+//       success: true,
+//     }
 
-  } catch (error) {
-    console.log("Error in fetchPatientsList", error)
-    return serverError(error, "Erreur lors de la récupération des patients.")
-  }
-}
-
-export const fetchPatientById = async (id: string): Promise<ServiceResponse<PatientInfosGenerales|null>> => {
-  console.log("fetchPatientById is triggered");
-  
-  try {
-    const res = await db.patient.findUnique({
-      where: {
-        id
-      },
-      select: {
-        id: true,
-        nom: true,
-        prenom: true,
-        dateNaissance: true,
-        sexe: true,
-        adulte: true,
-        medecin: true,
-        motif: true,
-        createdAt: true,
-        updated: true,
-        ecole: true,
-        dateBilan: true
-      }
-    })
-
-    return {
-      data: res,
-      success: true,
-    }
-
-  } catch (error) {
-    console.log("Error in fetchPatientById", error)
-    return serverError(error, "Erreur lors de la récupération du patient.")
-  }
-}
+//   } catch (error) {
+//     console.log("Error in fetchPatientsList", error)
+//     return serverError(error, "Erreur lors de la récupération des patients.")
+//   }
+// }
 
 export const deletePatientByIdAction = async (prevState: ServiceResponse<null>, formData: FormData): Promise<ServiceResponse<null>> => {
   try {

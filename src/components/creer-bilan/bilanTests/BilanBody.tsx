@@ -27,7 +27,7 @@ const BilanBody: FC = () => {
               partieBilan !==0 &&
               <Button type='button' className='flex gap-x-2' onClick={()=> setPartieBilan(partieBilan>0 ? partieBilan - 1 : partieBilan)} >
                 <SquareChevronLeft/> 
-                {domains[partieBilan-1].toUpperCase()}
+                {domains[partieBilan-1]?.toUpperCase()}
               </Button>
             }
           </div>

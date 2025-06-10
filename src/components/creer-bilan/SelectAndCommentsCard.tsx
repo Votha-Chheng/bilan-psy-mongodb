@@ -27,7 +27,7 @@ type SelectAndCommentsCardProps = {
 
 const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, listeSelectItems, keyAnamnese, themeLabel, buttonAddElementToList=false, setOpenManagementDialog, labelButton, selectWidth="w-96"}) => {
   const {id: patientId} = useParams<{id: string}>()
-  const {getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -52,7 +52,7 @@ const SelectAndCommentsCard: FC<SelectAndCommentsCardProps> = ({stateFromDB, lis
     res && setIsPending(false)
   }
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
   useToast({state, updateFunction})
 

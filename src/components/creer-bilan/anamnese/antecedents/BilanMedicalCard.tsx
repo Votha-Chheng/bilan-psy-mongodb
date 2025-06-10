@@ -10,27 +10,24 @@ import { upsertBilanMedicalByKeyAction, upsertSelectedBilansMedicauxAction } fro
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
 import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 
 type BilanMedicalCardProps = {
   bilanNom: string
   keyBilan: keyof BilanMedicauxResults
+  selectedBilans: string[]
+  setSelectedBilans: Dispatch<SetStateAction<string[]>>
 }
 
-const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => {
+const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan, selectedBilans, setSelectedBilans }) => {
   const { id: patientId }  = useParams<{id: string}>()
   const {anamneseResults, bilanMedicauxResults, updateBilanMedicauxResults} = useAnamneseSearchDBStore()
-  const {selectedBilans} = bilanMedicauxResults ?? {}
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIsPending] = useState<boolean>(false)
+
   const [bilanLocal, setBilanLocal] = useState<string[]>(["", ""])
   const [dateBilanMedical, setDateBilanMedical] = useState<string>("")
-
-  useEffect(()=> {
-    if(!anamneseResults) return
-    updateBilanMedicauxResults(anamneseResults?.id)
-  }, [anamneseResults?.id])
   
   useEffect(()=> {
     if(bilanMedicauxResults){
@@ -41,21 +38,22 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
 
   //On enregistre dans la BD la liste des bilans utilisées.
   const selectBilanMedical = async(checked: boolean, bilanNom: string, key: keyof BilanMedicauxResults)=> {
+    console.log("checked", checked)
     setIsPending(true)
     let copyKey = undefined
-    const copy = selectedBilans ? [...selectedBilans] : []
+    const copy = selectedBilans
     let newState = []
 
-    if(checked){
+    if(!checked){
       copy.push(bilanNom)
       newState = [...copy]
     } else {
       copyKey = key
       newState = copy.filter(val => val !== bilanNom)
     }
-    const res = await upsertSelectedBilansMedicauxAction(newState, patientId, anamneseResults?.id, copyKey)
+    const res = await upsertSelectedBilansMedicauxAction(newState, patientId, anamneseResults?.id || bilanMedicauxResults?.anamneseId , copyKey)
     // eslint-disable-next-line
-    res.success && setBilanLocal(newState)
+    res.success && setSelectedBilans(newState)
     // eslint-disable-next-line
     res && setState(res)
     // eslint-disable-next-line
@@ -86,7 +84,11 @@ const BilanMedicalCard: FC<BilanMedicalCardProps> = ({ bilanNom, keyBilan }) => 
         ? "border-green-700"
         : "border-transparent text-muted-foreground"}`}
     >
-      <Checkbox id={bilanNom} checked={bilanMedicauxResults?.selectedBilans?.includes(bilanNom)} onCheckedChange={(checked: boolean)=> selectBilanMedical(checked, bilanNom, keyBilan)} /> 
+      <Checkbox 
+        id={bilanNom} 
+        checked={bilanMedicauxResults?.selectedBilans?.includes(bilanNom) ?? false} 
+        onClick={()=> selectBilanMedical(bilanMedicauxResults?.selectedBilans?.includes(bilanNom) ?? false, bilanNom, keyBilan)} 
+      /> 
       <Label className={`text-base cursor-pointer `} htmlFor={bilanNom}>{bilanNom}</Label>
       {
         bilanMedicauxResults?.selectedBilans?.includes(bilanNom) &&

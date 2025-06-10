@@ -12,7 +12,7 @@ const AntecedentsBody = () => {
   const {id: patientId} = useParams<{id: string}>()
   const antecedentsThemes = anamneseKeysAndLabels.filter(theme => theme.domaine === "Antécédents médicaux personnels et suivis médicaux" && theme.theme)
   
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {maladiesEventuelles, handicap, accompagnementSuivi, autresAntecedents} = anamneseResults ?? {}
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
   const [keyToDelete, setKeyToDelete] = useState<keyof AnamneseResults|null>(null)
@@ -35,16 +35,7 @@ const AntecedentsBody = () => {
           keyLabel='maladiesEventuelles'
           label={"Maladies éventuelles"}
           data={maladiesEventuelles}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
-        />
-      </CardWrapper>
-
-      <CardWrapper themeLabel="Handicap" >
-        <AnamneseThemeCard
-          keyLabel='handicap'
-          label={"Handicap"}
-          data={handicap}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -53,7 +44,16 @@ const AntecedentsBody = () => {
           keyLabel='accompagnementSuivi'
           label={"Accompagnements et suivis"}
           data={accompagnementSuivi}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
+        />
+      </CardWrapper>
+
+      <CardWrapper themeLabel="Handicap" >
+        <AnamneseThemeCard
+          keyLabel='handicap'
+          label={"Handicap"}
+          data={handicap}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
 
@@ -62,7 +62,7 @@ const AntecedentsBody = () => {
           keyLabel='autresAntecedents'
           label={"Autres (antécédents)"}
           data={autresAntecedents}
-          updateFunctionFromStore= {()=> getAnamneseResultsByPatientId(patientId)}
+          updateFunctionFromStore= {()=> updateAnamneseResultsByPatientId(patientId)}
         />
       </CardWrapper>
     </div>

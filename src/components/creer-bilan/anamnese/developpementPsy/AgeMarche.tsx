@@ -14,7 +14,7 @@ import { List } from 'lucide-react'
 
 const AgeMarche = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {adjectifsComportement, getListeAdjectifs, anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {adjectifsComportement, getListeAdjectifs, anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ageMarche} = anamneseResults ?? {}
   // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
@@ -49,7 +49,7 @@ const AgeMarche = () => {
   }, [ageMarche])
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
     getListeAdjectifs()
   }
   useToast({state, updateFunction})

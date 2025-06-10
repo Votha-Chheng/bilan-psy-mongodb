@@ -7,16 +7,21 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import AddCommentaireOuObservations from '../AddComentaireOuObservations'
 import { ServiceResponse } from '@/@types/ServiceResponse'
-import { Loader2 } from 'lucide-react'
+import { Database, Loader2 } from 'lucide-react'
 import { useAnamneseSearchDBStore } from '@/stores/anamneseSearchDBStore'
+import AnamneseDBDialog from '@/components/sharedUI/alertsAndDialogs/AnamneseDBDialog'
+import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
 
 const AcquisitionLangage = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {acquisitionLangage } = anamneseResults ?? {}
 // eslint-disable-next-line
   const [state, setState] = useState<ServiceResponse<any>>({})
   const [isPending, setIspending] = useState<boolean>(false)
+
+  const [openDBDialog, setOpenDBDialog] = useState<boolean>(false)
   const [acquisitionLangageLocal, setAcquisitionLangageLocal] = useState<string[]>(["", "", ""]) //<---- 
 
   const handleChangeElement = async(value: string, index: number)=> {
@@ -41,13 +46,20 @@ const AcquisitionLangage = () => {
 
   
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
   }
 
   useToast({state, updateFunction})
 
   return (
     <Card className='pt-1.5 my-5 gap-0'>
+      <AnamneseDBDialog
+        open={openDBDialog}
+        setOpen={setOpenDBDialog}
+        dialogTitle={`Données enregistrées précédemment concernant le thème "Acquisition du langage" :`}
+        searchKeys={["acquisitionLangage"]}
+        indexDataToRetrieve={2}
+      />
       <div className='flex gap-2.5 items-center px-7.5 mb-5'>
         <div className='whitespace-nowrap'>&bull; <span className='underline font-bold underline-offset-2'>Acquisition du langage</span> : </div>
         <Select disabled={isPending} value={acquisitionLangageLocal[0]} onValueChange={(value: string)=> handleChangeElement(value, 0)}>
@@ -85,7 +97,10 @@ const AcquisitionLangage = () => {
         label="observation" 
         themeTitle="Acquisition du langage"
       />
-
+      <Separator className='mb-2.5' />
+      <Button className='w-fit ml-5' size="sm" onClick={()=> setOpenDBDialog(true)}>
+        <Database/> Voir les descriptions dans la base de données pour le thème &quot;Acquisition du langage&quot;
+      </Button>
     </Card>
   )
 }

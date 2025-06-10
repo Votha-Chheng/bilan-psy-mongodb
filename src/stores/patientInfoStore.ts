@@ -1,6 +1,6 @@
 
 import { PatientInfosGenerales } from '@/@types/PatientTypes'
-import { fetchAllPatientsWithCache, fetchPatientByIdWithCache } from '@/serverActions/fetchingWithCache'
+import { ServiceResponse } from '@/@types/ServiceResponse'
 import { create } from 'zustand'
 
 type PatientInfoState = {
@@ -22,8 +22,9 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   fetchAllPatients: async()=> {
     set({loadingAllPatients: true})
     try {
-      const response = await fetchAllPatientsWithCache()
-      set({ allPatients: response.data })
+      const response = await fetch("/api/patients")
+      const parsedResponse: ServiceResponse<PatientInfosGenerales[]|null> = await response.json()
+      set({ allPatients: parsedResponse.data })
 
     } catch (error) {
       console.log("Can't fetch all patients", error)
@@ -34,24 +35,10 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   fetchSinglePatientById: async (id: string) => {
     set({loadingPatientInfoFromDB: true})
     try {
-      const response = await fetchPatientByIdWithCache(id)
-      const {data} = response ?? {}
-      set({ 
-        patientInfoGenerales: {
-          id: data?.id,
-          nom: data?.nom ?? null,
-          prenom: data?.prenom?? null,
-          dateNaissance: data?.dateNaissance?? null,
-          sexe: data?.sexe,
-          adulte: data?.adulte ?? null,
-          medecin: data?.medecin,
-          motif: data?.motif,
-          ecole: data?.ecole,
-          dateBilan: data?.dateBilan?? null,
-          createdAt: data?.createdAt?? null,
-          updated: data?.updated?? null
-        } 
-      })
+      const response = await fetch(`/api/patients/${id}`)
+      const res = await response.json() as ServiceResponse<PatientInfosGenerales|null>
+      const {data} = res ?? {}
+      set({ patientInfoGenerales: data })
       
     } catch (error) {
       console.log("Can't fetch PatientById", error)
@@ -61,32 +48,19 @@ export const usePatientInfoStore = create<PatientInfoState>((set) => ({
   },
   updatePatientInfoFromDB: async (id: string) => {
     try {
-      const response = await fetchPatientByIdWithCache(id)
-      const {data} = response ?? {}
-      set({ 
-        patientInfoGenerales: {
-          id: data?.id,
-          nom: data?.nom ?? null,
-          prenom: data?.prenom?? null,
-          dateNaissance: data?.dateNaissance?? null,
-          sexe: data?.sexe,
-          adulte: data?.adulte ?? null,
-          medecin: data?.medecin,
-          motif: data?.motif,
-          ecole: data?.ecole,
-          dateBilan: data?.dateBilan?? null,
-          createdAt: data?.createdAt?? null,
-          updated: data?.updated?? null
-        } 
-      })
+      const response = await fetch(`/api/patients/${id}`)
+      const res = await response.json() as ServiceResponse<PatientInfosGenerales|null>
+      const {data} = res ?? {}
+      set({ patientInfoGenerales: data })
     } catch (error) {
       console.log("Can't fetch PatientById", error)
     }
   },
   updateAllPatients: async () => {
     try {
-      const response = await fetchAllPatientsWithCache()
-      set({ allPatients: response.data })
+      const response = await fetch("/api/patients")
+      const parsedResponse: ServiceResponse<PatientInfosGenerales[]|null> = await response.json()
+      set({ allPatients: parsedResponse.data })
       
     } catch (error) {
       console.log("Can't fetch PatientById", error)

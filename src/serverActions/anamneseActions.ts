@@ -3,13 +3,13 @@
 import { AnamneseRawData, AnamneseResults, BilanMedicalKeys, BilanMedicauxRaw, BilanMedicauxResults } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
-import { returnArrayIfJson, returnParseAnamneseResult } from "@/utils/arrayFunctions"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { KeyAnamneseSchema, KeyValueAnamneseSchema } from "@/zodSchemas/anamneseSchemas"
 import { BilanMedicalSchema } from "@/zodSchemas/bilanMedicalSchema"
 import { z } from "zod"
-import { getChosenThemeArray } from "@/utils/sortAnamneseDatas"
+import { revalidatePath } from "next/cache"
+import { returnParseAnamneseResult } from "@/utils/parsingDatasFunctions"
 
 export const createAnamneseAction = async(patientId: string): Promise<ServiceResponse<string|null>> => {
   try {
@@ -29,149 +29,6 @@ export const createAnamneseAction = async(patientId: string): Promise<ServiceRes
   } catch (error) {
     console.log("createAnamneseAction", error)
     return serverError(error)
-  }
-}
-
-export const fetchBilanMedicauxResultsByAnamneseId = async(anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults|null>> => {
-  console.log("fetchBilanMedicauxResultsByAnamneseId")
-
-  try {
-    if(!anamneseId) return {success: false, data: null}
-    const res = await db.bilanMedical.findUnique({
-      where: {
-        anamneseId
-      }
-    })
-    if(!res) return dataBaseError()
-    const bilansMedicauxResults = res as unknown as BilanMedicauxRaw
-    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans, ...rest} = bilansMedicauxResults ?? {}
-
-    const bilansParsed: BilanMedicauxResults = {
-      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
-      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
-      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
-      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
-      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
-      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
-      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
-    }
-
-    const data: BilanMedicauxResults = {
-      ...bilansParsed,
-      ...rest
-    }
-
-    return {
-      success: true,
-      data
-    }
-
-  } catch (error) {
-    console.log("Error in fetchAnamneseResultsByPatientId", error)
-    return serverError(error, "Erreur lors de l'accès à la base de données.")
-  }
-}
-
-export const fetchAnamneseResultsByPatientId = async(patientId: string): Promise<ServiceResponse<AnamneseResults|null>> => {
-  console.log("fetchAnamneseResultsByPatientId")
-
-  try {
-    const res = await db.anamnese.findUnique({
-      where: {
-        patientId
-      },
-      select: {
-        id: true,
-        notesBrutes: true,
-        patientId: true,
-        proposPapaOuMaman: true,
-        fratrie: true,
-        compositionFamiliale: true,
-        neant: true,
-        dossierMDPH: true,
-        maladiesEventuelles: true,
-        accompagnementSuivi: true,
-        autresAntecedents: true,
-        handicap: true,
-        confereDevPsy: true,
-        accouchement: true,                       //<-- JSON tranformé en string[] côté serveur
-        grossesse: true,
-        stationAssise: true,
-        quadrupedie: true,
-        alimentation: true,
-        autresDevPsy: true,
-        ageMarche: true,                           //<-- JSON tranformé en string[] côté serveur
-        acquisitionLangage: true,                  //<-- JSON tranformé en string[] côté serveur
-        continence : true,                        //<-- JSON tranformé en string[] côté serveur
-        velo: true,                              //<-- JSON tranformé en string[] côté serveur
-        motriciteGlobale: true,                      //<-- JSON tranformé en string[] côté serveur
-        motriciteFine: true,                     //<-- JSON tranformé en string[] côté serveur
-        praxiesGestuelles: true,
-        sensorialite: true,                  //<--- JSON de type string[type, commentaires] transformé coté serveur   
-        extraScolaire: true,
-        autresMotricite: true,
-        classe : true,
-        apprentissages: true, 
-        outils : true,                       //<--- JSON de type string[type, commentaires] transformé coté serveur  
-        ecriture: true,                        //<--- JSON de type [niveau, douleurs, observations] transformé coté serveur 
-        cartableBureau: true,
-        relationsPairs: true,                  //<--- JSON de type [sociable ou pas, observations] transformé coté serveur 
-        comportement : true,                   //<---JSON [observations, suite d'adjectifs...]
-        attention : true,                      //<---JSON [attentif, observations]
-        cahiers : true,
-        anterieur: true,
-        sommeilQuotidien: true,             //<---- [dort seul, difficultés à s'endormair, observations]
-        decritAuQuotidien: true,             //<---- [commentaires, suite de descriptions...]
-        autonomie:true,                      //<---- [commentaires, suite de descriptions...]
-        ecouteConsignes: true,
-        agitationMotrice: true,
-        devoirs : true,
-        gestionEmotions: true,                  //<--------- [difficultés, observations] 
-        gestionTemps: true,                     //<--------- [difficultés, observations] 
-        temperament: true,                      //<--------- [temperament, observations] 
-        alimentationQuotidien: true, 
-        autresQuotidien: true,
-        bilansMedicauxResults: {
-          select: {
-            id: true,
-            anamneseId: true,
-            bilanORL: true,
-            bilanOphtalmo: true,
-            bilanOrthophonique: true,
-            bilanOrthoptique: true, 
-            bilanNeuropsy: true, 
-            bilanNeuropediatre: true,
-            selectedBilans: true
-          }
-
-        }
-      },
-    })
-    
-    if(!res) return dataBaseError()
-    const {bilansMedicauxResults, ...rest} = res
-    const {bilanNeuropediatre, bilanNeuropsy, bilanORL, bilanOphtalmo, bilanOrthophonique, bilanOrthoptique, selectedBilans} = bilansMedicauxResults ?? {}
-
-    const bilansParsed: BilanMedicauxResults = {
-      bilanNeuropediatre: returnArrayIfJson(bilanNeuropediatre ?? null) ?? undefined,
-      bilanNeuropsy: returnArrayIfJson(bilanNeuropsy ?? null) ?? undefined,
-      bilanORL: returnArrayIfJson(bilanORL ?? null) ?? undefined,
-      bilanOphtalmo: returnArrayIfJson(bilanOphtalmo ?? null) ?? undefined,
-      bilanOrthophonique: returnArrayIfJson(bilanOrthophonique ?? null) ?? undefined,
-      bilanOrthoptique: returnArrayIfJson(bilanOrthoptique ?? null) ?? undefined,
-      selectedBilans: returnArrayIfJson(selectedBilans ?? null) ?? undefined
-    }
-    const copy = rest as unknown as AnamneseRawData
-    const data: AnamneseResults = { ...returnParseAnamneseResult(copy), bilanMedicauxResults: bilansParsed}
-    
-    return {
-      success: true,
-      data
-    }
-    
-  } catch (error) {
-    console.log("Error in fetchAnamneseResultsByPatientId", error)
-    return serverError(error, "Erreur lors de l'accès à la base de données.")
   }
 }
 
@@ -260,90 +117,14 @@ export const upsertProposPapaOuMamanAction = async(patientId: string, proposPapa
   }
 }
 
-export const fetchAnamneseByKeys = async(keys: (keyof AnamneseResults)[]): Promise<ServiceResponse<AnamneseResults[]|null>> => {
-  console.log("fetchAnamneseByKeys is triggered")
-  const selectObject = keys.reduce((acc, key) => {
-    acc[key] = true;
-    return acc;
-  }, {patientId: true} as Record<string, boolean>)
-
-  const whereObject = keys.reduce((acc, key) => {
-    acc[key] = { not: null };
-    return acc;
-  }, {} as Record<string, { not: null }>);
-
-  try {
-    const res = await db.anamnese.findMany({
-      select: selectObject,
-      where: whereObject
-    })
-
-    const datasArray = res.map((record: Record<string, string>) => {
-      const newRecord = {...record}
-      if ("motriciteGlobale" in newRecord){
-        newRecord["motriciteGlobale"] = JSON.parse(record["motriciteGlobale"]) 
-      }
-      if ("motriciteFine" in newRecord){
-        newRecord["motriciteFine"] = JSON.parse(record["motriciteFine"]) 
-      }
-      if ("velo" in newRecord){
-        newRecord["velo"] = JSON.parse(record["velo"]) 
-      }
-      if ("sensorialite" in newRecord){
-        newRecord["sensorialite"] = JSON.parse(record["sensorialite"]) 
-      }
-      if ("apprentissages" in newRecord){
-        newRecord["apprentissages"] = JSON.parse(record["apprentissages"]) 
-      }
-      if ("outils" in newRecord){
-        newRecord["outils"] = JSON.parse(record["outils"]) 
-      }
-      if ("ecriture" in newRecord){
-        newRecord["ecriture"] = JSON.parse(record["ecriture"]) 
-      }
-      if ("relationsPairs" in newRecord){
-        newRecord["relationsPairs"] = JSON.parse(record["relationsPairs"]) 
-      }
-      if ("comportement" in newRecord){
-        newRecord["comportement"] = JSON.parse(record["comportement"]) 
-      }
-      if ("attention" in newRecord){
-        newRecord["attention"] = JSON.parse(record["attention"]) 
-      }
-      if ("decritAuQuotidien" in newRecord){
-        newRecord["decritAuQuotidien"] = JSON.parse(record["decritAuQuotidien"]) 
-      }
-      if ("temperament" in newRecord){
-        newRecord["temperament"] = JSON.parse(record["temperament"]) 
-      }
-      if ("sommeilQuotidien" in newRecord){
-        newRecord["sommeilQuotidien"] = JSON.parse(record["sommeilQuotidien"]) 
-      }
-      if ("gestionEmotions" in newRecord){
-        newRecord["gestionEmotions"] = JSON.parse(record["gestionEmotions"]) 
-      }
-      if ("gestionTemps" in newRecord){
-        newRecord["gestionTemps"] = JSON.parse(record["gestionTemps"]) 
-      }
-      return newRecord
-    })
-
-    return {
-      success: true,
-      data: datasArray as unknown as AnamneseResults[],
-      message: "Descriptions récupérées avec succès."
-    }
-  } catch (error) {
-    console.log("Error in fetchAnamneseDescriptionByDomaine", error)
-    return serverError(error, "Erreur lors de la récupération des descriptions.")
-  }
-}
 
 //upsertAnamneseBySingleKeyValueAction need {key, value, patientId}
 export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState: ServiceResponse<AnamneseResults|null>, formData: FormData): Promise<ServiceResponse<AnamneseResults|null>>=> {
   const rawData = Object.fromEntries(formData.entries())
   const parsedData = validateWithZodSchema(KeyValueAnamneseSchema, rawData)
+
   if(!parsedData.success) return validationError(parsedData)
+
   const dataFinal = parsedData.data as {key: keyof AnamneseRawData, value: string, patientId: string}
   const {key, value, patientId} = dataFinal
 
@@ -377,6 +158,9 @@ export const upsertAnamneseBySingleKeyValueWithFormDataAction = async(prevState:
   } catch (error) {
     console.log("Error in upsertAnamneseBySingleKeyValueAction", error)
     return serverError(error, "Erreur lors de la mise à jour de l'anamnèse.")
+    
+  } finally {
+    revalidatePath(`/creer-bilan/${patientId}`)
   }
 }
 
@@ -419,6 +203,9 @@ export const upsertAnamneseByKeyValueAction = async<T>(anamneseKey: keyof Anamne
   } catch (error) {
     console.log("upsertAnamneseByKeyValueAction", error)
     return serverError(error)
+
+  } finally {
+    revalidatePath(`/creer-bilan/${patientId}`)
   }
 
 }
@@ -481,23 +268,32 @@ export const setBilanMedicalToNullByKeyAction = async(bilanMedicalKey: BilanMedi
   }
 }
 
-export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId?: string, keyToNull?: keyof BilanMedicauxResults):Promise<ServiceResponse<BilanMedicauxRaw|null>>=> {
-  let createdAnamneseId = undefined
+export const upsertSelectedBilansMedicauxAction = async(bilanListes: string[], patientId: string, anamneseId: string|null|undefined, keyToNull?: keyof BilanMedicauxResults):Promise<ServiceResponse<BilanMedicauxRaw|null>>=> {
+  let createdAnamneseId: string|null|undefined = undefined
 
   try {
     if(!anamneseId){
       const response = await createAnamneseAction(patientId)
-      createdAnamneseId = response.data
+      const {data} = response ?? {}
+
+      if(!data) {
+        return {
+          success: false,
+          message: "Impossible de créer l'anamnèse. Veuillez réessayer plus tard.",
+          data: null
+        }
+      }
+      createdAnamneseId = data
     }
 
-    const finalAnamneseId = anamneseId || createdAnamneseId
+    const finalAnamneseId = anamneseId ?? createdAnamneseId
 
     const finalBilanListes = bilanListes.length  === 0 ? null : JSON.stringify(bilanListes)
     const dataForUpdate = keyToNull ? {selectedBilans: finalBilanListes, [keyToNull] :  null} : {selectedBilans: finalBilanListes}
 
     const res = await db.bilanMedical.upsert({
       where: {
-        anamneseId: finalAnamneseId!
+        anamneseId: finalAnamneseId
       },
       create: {
         selectedBilans: JSON.stringify(bilanListes),
@@ -570,61 +366,5 @@ export const upsertBilanMedicalByKeyAction = async<T>(bilanMedicalKey: keyof Bil
   } catch (error) {
     console.log("upsertBilanMedicalByKeyAction", error)
     return serverError(error)
-  }
-}
-
-export const fetchBilanMedicalResultByKey = async(key: keyof BilanMedicauxRaw, anamneseId: string|null|undefined): Promise<ServiceResponse<BilanMedicauxResults>|null>=> {
-  try {
-    if(!anamneseId) return { success: false, message: "L'anamnese n'a pas été encore créee."}
-    const selectOptions = {
-      [key]: true,
-      selectedBilans: true
-    }
-    const res: Partial<BilanMedicauxRaw>|null = await db.bilanMedical.findUnique({
-      where: {
-        anamneseId
-      },
-      select: selectOptions
-    })
-
-    if(!res) return dataBaseError()
-
-    const data: string|null = returnArrayIfJson(res[key] ?? null)
-    const bilansListe: string[]|null = returnArrayIfJson(res.selectedBilans ?? null)
-
-    return {
-      success: true,
-      data : {[key]: data, selectedBilans: bilansListe ?? undefined}
-    }
-  } catch (error) {
-    console.log("fetchBilanMedicalResultByKey", error)
-    return serverError(error)
-  }
-}
-
-export const fetchChosenThemes = async(patientId: string): Promise<ServiceResponse<string[]>>=> {
-  console.log("fetchChosenThemes is triggered")
-  try {
-    const anamnese = await db.anamnese.findUnique({
-      where: {
-        patientId
-      }
-    })
-
-    if(!anamnese) return {
-      success: false,
-      data: []
-    }
-
-    const copy = {...anamnese} as AnamneseResults
-
-    const result = getChosenThemeArray(copy)
-    return {
-      success : true,
-      data: result
-    }
-  } catch (error) {
-    console.log("fetchChosenThemes", error)
-    return serverError(error, "Impossible de recueillir les thèmes choisis.")
   }
 }

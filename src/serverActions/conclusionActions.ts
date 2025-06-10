@@ -1,59 +1,9 @@
 'use server'
 
-import { ConclusionDTO, ConclusionRawData, ProfilPsyItemDTO, ProjetPsyItemDTO } from "@/@types/ConclusionTypes"
+import { ConclusionRawData, ProfilPsyItemDTO, ProjetPsyItemDTO } from "@/@types/ConclusionTypes"
 import { ServiceResponse } from "@/@types/ServiceResponse"
-import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-import { fetchPatientsList } from "./patientActions"
-import { getPatientNameById } from "@/utils/getPatientName"
-
-export const fetchAllConclusion = async(): Promise<ServiceResponse<{conclusionCommentaires: string|null, patientName: string|null}[]|null>>=> {
-  try {
-    const res = await db.conclusion.findMany()
-    
-    if(!res) return {success: false, data: null}
-
-    const allPatients = await fetchPatientsList()
-    if(!allPatients.data) return  {success: false, data: null}
-
-    const data = res.map(((conclusion: ConclusionRawData)=> ({conclusionCommentaires: conclusion.conclusionCommentaires, patientName: getPatientNameById(allPatients.data ?? null, conclusion.patientId ?? "")})))
-
-    return {
-      success: true,
-      data
-    }
-
-  } catch (error) {
-    console.log("fetchAllConclusion", error)
-    return serverError(error)
-  } 
-}
-
-export const fetchConclusionPatientId = async(patientId: string): Promise<ServiceResponse<ConclusionDTO|null>> => {
-  try {
-    const res = await db.conclusion.findUnique({
-      where: {
-        patientId
-      }
-    })
-    if(!res) return dataBaseError()
-    
-    const data: ConclusionDTO = {
-      ...res,
-      profilPsy: returnArrayIfJson(res.profilPsy),
-      projetPsy: returnArrayIfJson(res.projetPsy)
-    }
-
-    return {
-      data,
-      success: true
-    }
-  } catch (error) {
-    console.log("fetchConclusionPatientId", error)
-    return serverError(error)
-  }
-}
 
 export const upsertConclusionByKeyValueAction = async<T>(key: keyof ConclusionRawData, value: T, patientId: string): Promise<ServiceResponse<ConclusionRawData|null>>=> {
   const updatedValue= Array.isArray(value) ? {[key]: JSON.stringify(value)} : {[key]: value}
@@ -81,34 +31,6 @@ export const upsertConclusionByKeyValueAction = async<T>(key: keyof ConclusionRa
     }
   } catch (error) {
     console.log("upsertConclusionByKeyValueAction", error)
-    return serverError(error)
-  }
-}
-
-export const fetchAllProfilPsyItems = async(): Promise<ServiceResponse<ProfilPsyItemDTO[]|null>>=> {
-  try {
-    const res = await db.profilPsyItem.findMany()
-    if(!res) return dataBaseError()
-    return {
-      data: res,
-      success: true
-    }
-  } catch (error) {
-    console.log("fetchAllProfilPsyItems", error)
-    return serverError(error)
-  }
-}
-
-export const fetchAllProjetPsyItems = async(): Promise<ServiceResponse<ProjetPsyItemDTO[]|null>>=> {
-  try {
-    const res = await db.projetPsyItem.findMany()
-    if(!res) return dataBaseError()
-    return {
-      data: res,
-      success: true
-    }
-  } catch (error) {
-    console.log("fetchAllProjetPsyItems", error)
     return serverError(error)
   }
 }

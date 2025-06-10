@@ -3,7 +3,7 @@
 import { DevPsyConfere } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import db from "@/utils/db"
-import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
+import { serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
 import { z } from "zod"
 
@@ -67,21 +67,6 @@ export const createDevPsyConfereAction = async(prevState: ServiceResponse<null>,
     }
   } catch (error) {
     console.log("devPsyConfereExists", error)
-    return serverError(error)
-  }
-}
-
-export const fetchDevPsyConfereListe = async(): Promise<ServiceResponse<string[]|null>>=> {
-  try {
-    const res: DevPsyConfere[] = await db.devPsyConfere.findMany()
-    if(!res) return dataBaseError("Impossible de récupérer la liste des 'confère'!")
-    const liste = res.map(confere=> confere.confere)
-    return {
-      data : liste,
-      success: true
-    }
-  } catch (error) {
-    console.log("fetchDevPsyConfereListe", error)
     return serverError(error)
   }
 }

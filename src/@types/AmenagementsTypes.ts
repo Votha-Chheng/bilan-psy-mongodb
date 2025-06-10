@@ -21,3 +21,9 @@ export type AmenagementsGlobal = {
   listAmenagementsItems: AmenagementItemDTO[]|null
   categoriesList: string[]|null
 }
+
+export type AmenagementItemsIds = {
+  id: string|null
+  patientId: string|null
+  amenagementItemsIds: string[]|null
+}

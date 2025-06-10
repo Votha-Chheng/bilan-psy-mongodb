@@ -1,39 +1,10 @@
 "use server"
 
-import { ObservationDTO, ObservationTest } from "@/@types/ObservationTestDTO"
+import { ObservationTest } from "@/@types/ObservationTestDTO"
 import { ServiceResponse } from "@/@types/ServiceResponse"
 import { TestsNames } from "@/@types/TestTypes"
-import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError } from "@/utils/serviceResponseError"
-
-export const fetchObservationsByTestName = async(testName: TestsNames): Promise<ServiceResponse<ObservationDTO[]|null>> => {
-  try {
-    const res = await db.observationTest.findMany({
-      where: {
-        testName
-      }
-    })
-    if(!res || res.length === 0) return dataBaseError("Aucune observation trouvée !") 
-
-    const data: ObservationDTO[] = res.map((observation: ObservationTest) => ({
-      id: observation.id,
-      testNameAndThemeId: observation.testNameAndThemeId,
-      testName: observation.testName as TestsNames,
-      theme: observation.theme,
-      listeObservations: returnArrayIfJson(observation.listeObservations) as string[]|null
-    }))
-
-    return {
-      success: true,
-      data
-    }
-
-  } catch (error) {
-    console.log("fetchObservationsByTestName", error)
-    return serverError(error)
-  }
-}
 
 export const upsertListeObservationsByTestName = async(testName: TestsNames, theme: string, observations: string[]|null): Promise<ServiceResponse<ObservationTest|null>> => {
   

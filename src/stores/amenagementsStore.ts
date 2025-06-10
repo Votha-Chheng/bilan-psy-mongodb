@@ -1,5 +1,7 @@
 import { AmenagementItemDTO } from "@/@types/AmenagementsTypes"
-import { fetchAllAmenagementItems, fetchAmenagementsByPatientId, fetchManyAmenagementItems } from "@/serverActions/amenagementsAction"
+import { ServiceResponse } from "@/@types/ServiceResponse"
+import { fetchManyAmenagementItems } from "@/serverActions/amenagementsAction"
+import { Amenagements } from "@prisma/client"
 import { create } from "zustand"
 
 type AmenagementsState = {
@@ -24,8 +26,11 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
   getManyAmenagementItems : async(idsList: string[])=> {
     set({loadingManyAmenagementsItems: true})
     try {
-      const response = await fetchManyAmenagementItems(idsList)
-      set({manyAmenagementsItems: response.data})
+      const response = await fetch(`/api/many-amenagement-items?ids=${idsList.join(",")}`)
+      const {data} = await response.json() as ServiceResponse<AmenagementItemDTO[]|null>
+      console.log(data)
+      // const response = await fetchManyAmenagementItems(idsList)
+      set({manyAmenagementsItems: data})
     } catch (error) {
       console.log("Can't getManyAmenagementItems", error)
     } finally {
@@ -48,9 +53,11 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
   getAmenagementsByPatientId: async(patientId: string)=> {
     set({loadingAmenagements: true})
     try {
-      const response = await fetchAmenagementsByPatientId(patientId)
-      set({amenagementsStateId: response.data?.id})
-      set({amenagementItemsIds: response.data?.amenagementItemsIds})
+      const response =await fetch(`/api/amenagements/${patientId}`)
+      const {data} = await response.json() as ServiceResponse<Amenagements|null>
+
+      set({amenagementsStateId: data?.id})
+      set({amenagementItemsIds: data?.amenagementItemsIds})
     } catch (error) {
       console.log("Can't getAmenagementsByPatientId", error)
     } finally {
@@ -59,20 +66,24 @@ export const useAmenagementsStore = create<AmenagementsState>((set) => ({
   },
   updateAmenagementsByPatientId: async(patientId: string)=> {
     try {
-      const response = await fetchAmenagementsByPatientId(patientId)
-      set({amenagementsStateId: response.data?.id})
-      set({amenagementItemsIds: response.data?.amenagementItemsIds})
+      const response = await fetch(`/api/amenagements/${patientId}`, {cache: "no-store"})
+      const {data} = await response.json() as ServiceResponse<Amenagements|null>
+
+      set({amenagementsStateId: data?.id})
+      set({amenagementItemsIds: data?.amenagementItemsIds})
     } catch (error) {
       console.log("Can't getAllAmenagementItems", error)
     }
   },
   getAllAmenagementItems : async()=> {
     try {
-      const response = await fetchAllAmenagementItems()
-      set({allAmenagementItems: response.data})
+      const response = await fetch("/api/amenagement-item")
+      const parsedResponse = await response.json() as ServiceResponse<AmenagementItemDTO[]|null>
+      const {data} = parsedResponse ?? {}
+      set({allAmenagementItems: data})
 
-      if(response.data){
-        const categories = response.data.map(amenagementItem=> amenagementItem.category as string )
+      if(data){
+        const categories = data.map(amenagementItem=> amenagementItem.category as string )
         const setOfCategories = Array.from(new Set(categories))
         set({categoriesList: setOfCategories ?? null})
       } else {

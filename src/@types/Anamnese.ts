@@ -6,6 +6,7 @@ export const anamneseResultsKeys = [
   "fratrie",
   "compositionFamiliale",
   "dossierMDPH",
+  "accompagnementSuivi",
   "maladiesEventuelles",
   "handicap",
   "autresAntecedents",
@@ -47,7 +48,6 @@ export const anamneseResultsKeys = [
   "temperament", 
   "alimentationQuotidien", 
   "autresQuotidien",
-  
 ] as const
 
 export type BilanMedicalKeys = "bilanORL"|"bilanOphtalmo"|"bilanOrthophonique"| "bilanOrthoptique" | "bilanNeuropsy" | "bilanNeuropediatre"|"selectedBilans"
@@ -114,7 +114,7 @@ export type AnamneseDTO = {
   fratrie?: string|null
   compositionFamiliale?: string|null
   neant?: string
-  dossierMDPH?: string|null                           //<-- JSON transformé en string[] côté côté client
+  dossierMDPH?: string[]|null                           //<-- JSON transformé en string[] côté côté client
   maladiesEventuelles?: string|null
   accompagnementSuivi?: string|null
   autresAntecedents?: string|null
@@ -168,7 +168,7 @@ export type AnamneseResults = {
   fratrie?: string|null
   compositionFamiliale?: string|null
   neant?: string
-  dossierMDPH?: string|null
+  dossierMDPH?: string[]|null
   maladiesEventuelles?: string|null
   accompagnementSuivi?: string|null
   autresAntecedents?: string|null

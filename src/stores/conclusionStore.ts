@@ -1,6 +1,6 @@
 
 import { ConclusionDTO, ProfilPsyItemDTO, ProjetPsyItemDTO } from '@/@types/ConclusionTypes'
-import { fetchAllConclusion, fetchAllProfilPsyItems, fetchAllProjetPsyItems, fetchConclusionPatientId } from '@/serverActions/conclusionActions'
+import { returnArrayIfJson } from '@/utils/arrayFunctions'
 import { create } from 'zustand'
 
 type ConclusionState = {
@@ -26,8 +26,9 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
   getConclusionList: async()=> {
     set({loadingConclusionList: true})
     try {
-      const response = await fetchAllConclusion()
-      set({conclusionListe: response.data ?? null})
+      const response = await fetch("/api/conclusions")
+      const {data} = await response.json()
+      set({conclusionListe: data ?? null})
     } catch (error) {
       console.log("Can't fetch getConclusionList", error)
     } finally {
@@ -37,8 +38,9 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
   projetPsyItems: null,
   getProjetPsyItems : async()=> {
     try {
-      const response = await fetchAllProjetPsyItems()
-      set({projetPsyItems: response.data})
+      const response = await fetch(`/api/conclusions/projet-psy`)
+      const {data} = await response.json()
+      set({projetPsyItems: data})
     } catch (error) {
       console.log("Can't fetch getProjetPsyItems", error)
     }
@@ -46,8 +48,9 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
   profilPsyItems: null,
   getProfilPsyItems : async()=> {
     try {
-      const response = await fetchAllProfilPsyItems()
-      set({profilPsyItems: response.data})
+      const response = await fetch(`/api/conclusions/profil-psy`)
+      const {data} = await response.json()
+      set({profilPsyItems: data as ProfilPsyItemDTO[]})
     } catch (error) {
       console.log("Can't fetch getProfilPsyItems", error)
     }
@@ -57,8 +60,15 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
   getConclusionByPatientId: async(patientId: string)=> {
     set({loadingConclusionData: true})
     try {
-      const response = await fetchConclusionPatientId(patientId)
-      set({ conclusion: response.data })
+      const response = await fetch(`/api/conclusions/${patientId}`)
+      const responseData = await response.json()
+      const {data} = responseData
+      const parsedData: ConclusionDTO = {
+        ...data,
+        profilPsy: returnArrayIfJson(data.profilPsy),
+        projetPsy: returnArrayIfJson(data.projetPsy)
+      }
+      set({ conclusion: parsedData })
 
     } catch (error) {
       console.log("Can't fetch getConclusionByPatientId", error)
@@ -68,8 +78,15 @@ export const useConclusionStore = create<ConclusionState>((set) => ({
   },
   updateConclusionByPatientId: async (patientId: string) => {
     try {
-      const response = await fetchConclusionPatientId(patientId)
-      set({ conclusion: response.data })
+      const response = await fetch(`/api/conclusions/${patientId}`)
+      const responseData = await response.json()
+      const {data} = responseData
+      const parsedData: ConclusionDTO = {
+        ...data,
+        profilPsy: returnArrayIfJson(data.profilPsy),
+        projetPsy: returnArrayIfJson(data.projetPsy)
+      }
+      set({ conclusion: parsedData })
       
     } catch (error) {
       console.log("Can't fetch PatientById", error)

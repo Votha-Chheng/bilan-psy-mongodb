@@ -36,7 +36,7 @@ const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
 }) => {
   const {id: patientId} = useParams<{id: string}>()
   const [state, formAction, isPending] = useActionState(actionFunction, {})
-  const {getAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
+  const {updateAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
   const {chosenThemes} = useAnamneseSearchDBStore()
   const [editObs, setEditObs] = useState<boolean>(false) 
 
@@ -66,7 +66,7 @@ const AddCommentaireOuObservations: FC<AddCommentaireOuObservationsProps> = ({
   }, [editObs, chosenThemes, commentaireObservationFromDB])
 
   const updateFunction = ()=> {
-    getAnamneseResultsByPatientId(patientId)
+    updateAnamneseResultsByPatientId(patientId)
     setEditObs(false)
   }
   useToast({state, updateFunction})

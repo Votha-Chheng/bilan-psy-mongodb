@@ -15,3 +15,11 @@ export type ObservationDTO = {
   theme:string|null
   listeObservations: string[]|null 
 }
+
+export type ObservationResponseJSON = {
+  id: string
+  testNameAndThemeId: string|null 
+  theme: string
+  testName: TestsNames
+  listeObservations: string|null
+}

@@ -1,8 +1,7 @@
 "use server"
 
-import { ListeAdjectifs, ListeAdjectifsDTO, ListeTypeSensorialite, ListeTypeSensorialiteDTO, TemperamentDescriptionDTO } from "@/@types/Anamnese"
+import { ListeAdjectifs, ListeTypeSensorialite, TemperamentDescriptionDTO } from "@/@types/Anamnese"
 import { ServiceResponse } from "@/@types/ServiceResponse"
-import { returnArrayIfJson } from "@/utils/arrayFunctions"
 import db from "@/utils/db"
 import { dataBaseError, serverError, validationError } from "@/utils/serviceResponseError"
 import { validateWithZodSchema } from "@/utils/validateWithZodSchema"
@@ -112,30 +111,6 @@ export const upsertListeAdjectifsComportementAction = async(prevState: ServiceRe
   }
 }
 
-export const fetchAllTypeSensorialite = async(): Promise<ServiceResponse<ListeTypeSensorialiteDTO|null>>=> {
-  try {
-    const res = await db.listeTypeSensorialite.findMany()
-    if(!res) return dataBaseError("Impossible de récupérer la liste des types sensoriels.")
-    const rawData = res[0] as ListeTypeSensorialite
-
-    if(!rawData){
-      return {
-        success: true,
-        data: null
-      }
-    }
-    const copy = {...rawData, typesSensorialite: rawData.typesSensorialite? JSON.parse(rawData.typesSensorialite) as string[] : []}
-
-    return {
-      success: true,
-      data: copy
-    }
-  } catch (error) {
-    console.log("Error in upsertListeSensorialiteAction", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-
 export const upsertTemperamentAction = async(temperamentToAdd: string, listeId: string|null|undefined): Promise<ServiceResponse<TemperamentDescriptionDTO|null>> =>{
   const parsedData = validateWithZodSchema(
     z.string().min(1, "Il manque un adjectif à rajouter."), 
@@ -234,51 +209,6 @@ export const deleteTemperamentAction = async(listeId: string|undefined|null, tem
 
   } catch (error) {
     console.log("Error in deleteTemperamentAction", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-
-export const fetchAllTemperaments = async(): Promise<ServiceResponse<TemperamentDescriptionDTO|null>>=> {
-  try {
-    const res = await db.temperamentDescription.findMany()
-
-    if(!res) return dataBaseError()
-    if(res && res.length===0 ) return dataBaseError()
-    const rawData = res[0]
-
-    const data: TemperamentDescriptionDTO = {id: rawData.id, temperamentListe: rawData?.temperamentListe ? JSON.parse(rawData.temperamentListe):null}
-
-    return {
-      success: true,
-      data
-    }
-  } catch (error) {
-    console.log("Error in fetchAutonomieDescriptions", error)
-    return serverError(error, "Erreur lors de la récupération de la liste.")
-  }
-}
-export const fetchAllAdjectifs = async(): Promise<ServiceResponse<ListeAdjectifsDTO|null>>=> {
-  try {
-    const res = await db.listeAdjectifs.findMany()
-    if(!res) return dataBaseError("Impossible de récupérer la liste des types sensoriels.")
-
-    const rawData = res[0] as ListeAdjectifs
-
-    if(!rawData){
-      return {
-        success: true,
-        data: null
-      }
-    }
-
-    const data: ListeAdjectifsDTO = {...rawData, adjectifsComportement: returnArrayIfJson(rawData.adjectifsComportement)}
-
-    return {
-      success: true,
-      data
-    }
-  } catch (error) {
-    console.log("Error in upsertListeSensorialiteAction", error)
     return serverError(error, "Erreur lors de la récupération de la liste.")
   }
 }

@@ -17,7 +17,7 @@ import { useParams } from 'next/navigation'
 const QuoditienPart = () => {
   const {id: patientId} = useParams<{id: string}>()
 
-  const {anamneseResults, getAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
+  const {anamneseResults, updateAnamneseResultsByPatientId} = useAnamneseSearchDBStore()
   const {ecouteConsignes, agitationMotrice, gestionTemps, gestionEmotions, alimentationQuotidien, autresQuotidien, autonomie} = anamneseResults ?? {}
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
@@ -53,7 +53,7 @@ const QuoditienPart = () => {
             label="Autonomie"
             keyLabel="autonomie"
             data={autonomie}
-            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+            updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
         <CardWrapper themeLabel="Écoute des consignes" >
@@ -61,7 +61,7 @@ const QuoditienPart = () => {
             label="Écoute des consignes"
             keyLabel="ecouteConsignes"
             data={ecouteConsignes}
-            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+            updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
         <CardWrapper themeLabel="Agitation motrice" >
@@ -69,7 +69,7 @@ const QuoditienPart = () => {
             label="Agitation motrice"
             keyLabel="agitationMotrice"
             data={agitationMotrice}
-            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+            updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
         <CardWrapper themeLabel="Devoirs" >
@@ -94,7 +94,7 @@ const QuoditienPart = () => {
             label="Alimentation au quotidien"
             keyLabel="alimentationQuotidien"
             data={alimentationQuotidien}
-            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+            updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
 
@@ -103,7 +103,7 @@ const QuoditienPart = () => {
             label="Autres (quotidien)"
             keyLabel="autresQuotidien"
             data={autresQuotidien}
-            updateFunctionFromStore={()=> getAnamneseResultsByPatientId(patientId)}
+            updateFunctionFromStore={()=> updateAnamneseResultsByPatientId(patientId)}
           />
         </CardWrapper>
 

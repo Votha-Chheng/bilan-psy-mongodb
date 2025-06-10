@@ -29,7 +29,7 @@ model Anamnese {
   extraScolaire                     String?
   autresMotricite                   String?
   sensorialite                      String?           //<--- Données JSON de type string[type, commentaires]    
-  bilansMedicauxResults             BilanMedical?
+  bilansMedicauxResults             BilanMedical?     
   classe                            String?
   apprentissages                    String?           //<-- JSON [niveau, remarques]
   outils                            String?           //<-- JSON [niveau, commentaires]
@@ -56,7 +56,7 @@ model Anamnese {
 
 model BilanMedical {
   id                    String              @id @default(cuid()) @map("_id")
-  anamnese              Anamnese            @relation(fields: [anamneseId], references: [id], onDelete: Cascade)
+  anamnese              Anamnese            @relation(fields: [anamneseId], references: [id])
   anamneseId            String              @unique 
   selectedBilans        String?
   bilanOphtalmo         String?            //[date, dossier transmis]

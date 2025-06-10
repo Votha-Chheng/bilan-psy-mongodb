@@ -1,5 +1,5 @@
-import { BHKResultsDTO, ConnaissancesDroiteGaucheResultsDTO, EpreuveCubesNEPSY2ResultsDTO, FiguresReyAResultsDTO, FiguresReyBResultsDTO, FlechesNEPSY2ResultsDTO, ImitationPositionsNEPSY2ResultsDTO, MABC2ResultsDTO, PraxiesGestuellesResultsDTO, VisuomotriceNEPSY2ResultsDTO } from '@/@types/BilanTests'
-import { fetchBilanResultsByPatientId } from '@/serverActions/bilanActions'
+import { BHKResultsDTO, BilanDTO, BilanRaw, ConnaissancesDroiteGaucheResultsDTO, EpreuveCubesNEPSY2ResultsDTO, FiguresReyAResultsDTO, FiguresReyBResultsDTO, FlechesNEPSY2ResultsDTO, ImitationPositionsNEPSY2ResultsDTO, MABC2ResultsDTO, PraxiesGestuellesResultsDTO, VisuomotriceNEPSY2ResultsDTO } from '@/@types/BilanTests'
+import { ServiceResponse } from '@/@types/ServiceResponse'
 import { fetchBHKResults } from '@/serverActions/testsActions/bhkActions'
 import { fetchConnaissanceDroiteGaucheResults } from '@/serverActions/testsActions/connaissancesDroiteGaucheAction'
 import { fetchEpreuveCubesNepsy2Results } from '@/serverActions/testsActions/epreuveCubesNepsy2Action'
@@ -10,6 +10,8 @@ import { fetchImitationNepsy2 } from '@/serverActions/testsActions/imitationNeps
 import { fetchMABC2Results } from '@/serverActions/testsActions/mabc2Actions'
 import { fetchPraxiesGestuellesResults } from '@/serverActions/testsActions/praxiesGestuellesActions'
 import { fetchVisuomotriceNepsy2Results } from '@/serverActions/testsActions/visuomotriceNepsy2Actions'
+import { returnArrayIfJson } from '@/utils/arrayFunctions'
+import { ServerResponse } from 'http'
 import { create } from 'zustand'
 
 type BilanTestsState = {
@@ -147,21 +149,30 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
   getBilanByPatientId: async(patientId: string)=> {
     set({loadingBilanResults: true})
     try {
-      const response = await fetchBilanResultsByPatientId(patientId)
-      set({tests: response.data?.tests ?? null})
-      set({bilanId: response.data?.id})
-      set({mabc2: response.data?.mabc2})
-      set({connaissancedroitegauche: response.data?.connaissancedroitegauche})
-      set({lateralite: response.data?.lateralite})
-      set({tonus: response.data?.tonus})
-      set({visuomotricenepsy2: response.data?.visuomotricenepsy2})
-      set({imitationpositionsnepsy2: response.data?.imitationpositionsnepsy2})
-      set({praxiesgestuelles: response.data?.praxiesgestuelles})
-      set({bhk: response.data?.bhk})
-      set({flechesnepsy2: response.data?.flechesnepsy2})
-      set({figuresreya: response.data?.figuresreya})
-      set({figuresreyb: response.data?.figuresreyb})
-      set({epreuvecubesnepsy2: response.data?.epreuvecubesnepsy2})
+      const res = await fetch(`/api/bilan/${patientId}`)
+      const parsed: ServiceResponse<BilanRaw|null> = await res.json()
+
+      set({tests: returnArrayIfJson(parsed.data?.tests ?? null)})
+      set({bilanId: parsed.data?.id})
+      set({mabc2: parsed.data?.mabc2})
+      set({connaissancedroitegauche: parsed.data?.connaissancedroitegauche})
+      set({lateralite: parsed.data?.lateralite})
+      set({tonus: parsed.data?.tonus})
+      set({visuomotricenepsy2: parsed.data?.visuomotricenepsy2})
+      set({imitationpositionsnepsy2: parsed.data?.imitationpositionsnepsy2})
+      set({praxiesgestuelles: parsed.data?.praxiesgestuelles})
+
+      const parsedBHK = {
+        ...parsed.data?.bhk,
+        tenueOutilScripteur: returnArrayIfJson<string[]>(parsed.data?.bhk?.tenueOutilScripteur ?? null)
+      }
+
+      set({bhk:parsedBHK})
+      set({flechesnepsy2: parsed.data?.flechesnepsy2})
+      set({figuresreya: parsed.data?.figuresreya})
+      set({figuresreyb: parsed.data?.figuresreyb})
+      set({epreuvecubesnepsy2: parsed.data?.epreuvecubesnepsy2})
+
     } catch (error) {
       console.log("Can't getBilanByPatientId", error)
     } finally {
@@ -170,21 +181,34 @@ export const useBilanTestsStore = create<BilanTestsState>((set) => ({
   },
   updateBilanByPatientId: async(patientId: string)=> {
     try {
-      const response = await fetchBilanResultsByPatientId(patientId)
-      set({tests: response.data?.tests ?? null})
-      set({bilanId: response.data?.id})
-      set({mabc2: response.data?.mabc2})
-      set({connaissancedroitegauche: response.data?.connaissancedroitegauche})
-      set({lateralite: response.data?.lateralite})
-      set({tonus: response.data?.tonus})
-      set({visuomotricenepsy2: response.data?.visuomotricenepsy2})
-      set({imitationpositionsnepsy2: response.data?.imitationpositionsnepsy2})
-      set({praxiesgestuelles: response.data?.praxiesgestuelles})
-      set({bhk: response.data?.bhk})
-      set({flechesnepsy2: response.data?.flechesnepsy2})
-      set({figuresreya: response.data?.figuresreya})
-      set({figuresreyb: response.data?.figuresreyb})
-      set({epreuvecubesnepsy2: response.data?.epreuvecubesnepsy2})
+      try {
+      const res = await fetch(`/api/bilan/${patientId}`)
+      const parsed: ServiceResponse<BilanRaw|null> = await res.json()
+
+      set({tests: returnArrayIfJson(parsed.data?.tests ?? null)})
+      set({bilanId: parsed.data?.id})
+      set({mabc2: parsed.data?.mabc2})
+      set({connaissancedroitegauche: parsed.data?.connaissancedroitegauche})
+      set({lateralite: parsed.data?.lateralite})
+      set({tonus: parsed.data?.tonus})
+      set({visuomotricenepsy2: parsed.data?.visuomotricenepsy2})
+      set({imitationpositionsnepsy2: parsed.data?.imitationpositionsnepsy2})
+      set({praxiesgestuelles: parsed.data?.praxiesgestuelles})
+
+      const parsedBHK = {
+        ...parsed.data?.bhk,
+        tenueOutilScripteur: returnArrayIfJson<string[]>(parsed.data?.bhk?.tenueOutilScripteur ?? null)
+      }
+
+      set({bhk:parsedBHK})
+      set({flechesnepsy2: parsed.data?.flechesnepsy2})
+      set({figuresreya: parsed.data?.figuresreya})
+      set({figuresreyb: parsed.data?.figuresreyb})
+      set({epreuvecubesnepsy2: parsed.data?.epreuvecubesnepsy2})
+      
+    } catch (error) {
+      console.log("Can't getBilanByPatientId", error)
+    }
     } catch (error) {
       console.log("Can't updateBilanByPatientId", error)
     }

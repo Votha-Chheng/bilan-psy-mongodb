@@ -14,18 +14,15 @@ import { Loader2 } from 'lucide-react'
 
 const AnamneseSection = () => {
   const {id: patientId} = useParams<{id: string}>()
-  const {initializeChosenThemes, initializeAnamneseResultsByPatientId, loadingAnamneseResults} = useAnamneseSearchDBStore()
+  const {initializeChosenThemes, initializeAnamneseResultsByPatientId, initializeBilansMedicauxResultsByAnamneseId, loadingAnamneseResults, anamneseResults} = useAnamneseSearchDBStore()
   const {anamenesePart} = useAnamnesePartStore()
 
-
   useEffect(()=> {
-    initializeChosenThemes(patientId)
-  }, [])
-
-  useEffect(()=> {
+    if(!patientId) return
     initializeAnamneseResultsByPatientId(patientId)
-  }, [])
-
+    initializeBilansMedicauxResultsByAnamneseId(anamneseResults?.id)
+    initializeChosenThemes()
+  }, [patientId, anamneseResults?.id])
 
   return (
     <article>
